@@ -41,13 +41,13 @@ export const Header = () => {
             color="inherit"
             onClick={handleClick}
             sx={{
-              backgroundColor: 'green',
+              backgroundColor: 'orange',
               color: 'white',
               borderRadius: '24px',
               padding: '8px 16px',
               textTransform: 'none',
               '&:hover': {
-                backgroundColor: 'darkgreen',
+                backgroundColor: 'black',
               },
             }}
           >
