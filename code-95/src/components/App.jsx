@@ -1,12 +1,12 @@
-import { LoginPage } from './components/login';
-import { Header } from './components/header';
-import { Courses } from './components/courses';
-import { TicketsPage } from './components/tickets';
-import { FormedTest } from './components/formedTest';
-import { Admin } from './components/admin';
-import { UserInfo } from './components/userInfo';
+import { LoginPage } from './login.jsx';
+import { Header } from './header.jsx';
+import { Courses } from './courses.jsx';
+import { TicketsPage } from './tickets.jsx';
+import { FormedTest } from './formedTest.jsx';
+import { Admin } from './admin.jsx';
+import { UserInfo } from './userInfo.jsx';
 
-const App = () => {
+export const App = () => {
     return (
         <>
             <Header></Header>
@@ -28,5 +28,3 @@ const App = () => {
         </>
     );
 };
-
-export default App;
