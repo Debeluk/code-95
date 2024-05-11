@@ -5,8 +5,10 @@ import {
   Grid,
   Paper,
 } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 
 export const Courses = () => {
+  const navigate = useNavigate();
   const courseTitles = [
     'Базовий курс',
     'Цистерни',
@@ -18,6 +20,7 @@ export const Courses = () => {
 
   // Обработчик клика для карточек
   const handleCardClick = (course) => {
+    navigate('/tickets');
     console.log(`You clicked ${course}`);
   };
 

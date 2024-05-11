@@ -9,8 +9,17 @@ import {
   Paper,
   Grid,
 } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 
 export const LoginPage = () => {
+
+  // Функция входа
+  const navigate = useNavigate();
+  const handleLogin = () => {
+    // Perform login logic - tbd
+    navigate('/courses'); // Redirect to courses after login
+  };
+
   return (
     <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh', mt: 4, mb: 6,ml: 32, mr: 32 }}>
       <Paper elevation={3} sx={{ p: 4}}>
@@ -62,7 +71,7 @@ export const LoginPage = () => {
                     name="password"
                   />
                 </Box>
-                <Button variant="contained" color="primary" fullWidth type="submit">
+                <Button variant="contained" color="primary" fullWidth type="submit" onClick={handleLogin}>
                   Увійти
                 </Button>
               </form>
