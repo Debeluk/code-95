@@ -11,17 +11,18 @@ import {TicketsPage} from './tickets.jsx';
 import {FormedTest} from './formedTest.jsx';
 import {Admin} from './admin.jsx';
 import {UserInfo} from './userInfo.jsx';
+import {ProtectedRoute} from "./req/protectedRoute.jsx";
 
 export const App = () => {
     return (
         <Router>
             <Routes>
                 <Route path="/" element={<LoginPage/>}/>
-                <Route path="/courses" element={<><Header/><Courses/></>}/>
-                <Route path="/tickets" element={<><Header/><TicketsPage/></>}/>
-                <Route path="/test" element={<><Header/><FormedTest/></>}/>
-                <Route path="/admin" element={<><Header/><Admin/></>}/>
-                <Route path="/user-info" element={<><Header/><UserInfo/></>}/>
+                <Route path="/courses" element={<ProtectedRoute><Header/><Courses/></ProtectedRoute>}/>
+                <Route path="/tickets" element={<ProtectedRoute><Header/><TicketsPage/></ProtectedRoute>}/>
+                <Route path="/test" element={<ProtectedRoute><Header/><FormedTest/></ProtectedRoute>}/>
+                <Route path="/admin" element={<ProtectedRoute><Header/><Admin/></ProtectedRoute>}/>
+                <Route path="/user-info" element={<ProtectedRoute><Header/><UserInfo/></ProtectedRoute>}/>
             </Routes>
         </Router>
     );
