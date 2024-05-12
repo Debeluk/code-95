@@ -17,7 +17,7 @@ export const LoginPage = () => {
   const navigate = useNavigate();
   const handleLogin = () => {
     // Perform login logic - tbd
-    navigate('/courses'); // Redirect to courses after login
+    navigate('/courses');
   };
 
   return (
