@@ -1,16 +1,17 @@
 import axios from 'axios';
+import {LOGIN} from "../../constants/ApiURL.js";
 
 export const logUserIn = async (username, password) => {
     try {
-        const response = await axios.post('http://<backend-url>/api/v1/auth/login', {
-            username,
-            password
+        const response = await axios.post(LOGIN, {
+            username:username,
+            password:password
         });
 
         if (response.status === 200) {
             console.log('Login successful:', response.data);
-            localStorage.setItem('accessToken', response.data.access_token);
-            localStorage.setItem('refreshToken', response.data.refresh_token);
+            localStorage.setItem('accessToken', response.data.accessToken);
+            localStorage.setItem('refreshToken', response.data.refreshToken);
             return response.data;
         }
 
