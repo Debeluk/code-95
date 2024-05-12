@@ -1,8 +1,19 @@
 import React from 'react';
-import {Navigate} from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
+import secureLocalStorage from 'react-secure-storage';
 
-export const ProtectedRoute = ({children}) => {
-    const isAuthenticated = localStorage.getItem('accessToken');
+export const ProtectedRoute = ({ children, requiredRole }) => {
+    const accessToken = secureLocalStorage.getItem('accessToken');
+    const user = secureLocalStorage.getItem('currentUser') ? JSON.parse(secureLocalStorage.getItem('currentUser')) : null;
+    const userRole = user ? user.userRole : null;
 
-    return isAuthenticated ? children : <Navigate to="/" replace/>;
+    if (!accessToken) {
+        return <Navigate to="/" replace />;
+    }
+
+    if (requiredRole && userRole !== requiredRole) {
+        return <Navigate to="/" replace />;
+    }
+
+    return children;
 };

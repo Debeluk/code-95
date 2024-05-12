@@ -18,11 +18,31 @@ export const App = () => {
         <Router>
             <Routes>
                 <Route path="/" element={<LoginPage/>}/>
-                <Route path="/courses" element={<ProtectedRoute><Header/><Courses/></ProtectedRoute>}/>
-                <Route path="/tickets" element={<ProtectedRoute><Header/><TicketsPage/></ProtectedRoute>}/>
-                <Route path="/test" element={<ProtectedRoute><Header/><FormedTest/></ProtectedRoute>}/>
-                <Route path="/admin" element={<ProtectedRoute><Header/><Admin/></ProtectedRoute>}/>
-                <Route path="/user-info" element={<ProtectedRoute><Header/><UserInfo/></ProtectedRoute>}/>
+                <Route path="/courses" element={
+                    <ProtectedRoute requiredRole="USER">
+                        <Header/><Courses/>
+                    </ProtectedRoute>
+                }/>
+                <Route path="/tickets" element={
+                    <ProtectedRoute requiredRole="USER">
+                        <Header/><TicketsPage/>
+                    </ProtectedRoute>
+                }/>
+                <Route path="/test" element={
+                    <ProtectedRoute requiredRole="USER">
+                        <Header/><FormedTest/>
+                    </ProtectedRoute>
+                }/>
+                <Route path="/admin" element={
+                    <ProtectedRoute requiredRole="ADMIN">
+                        <Header/><Admin/>
+                    </ProtectedRoute>
+                }/>
+                <Route path="/user-info" element={
+                    <ProtectedRoute requiredRole="ADMIN">
+                        <Header/><UserInfo/>
+                    </ProtectedRoute>
+                }/>
             </Routes>
         </Router>
     );

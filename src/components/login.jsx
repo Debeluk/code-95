@@ -19,17 +19,20 @@ export const LoginPage = () => {
     const handleLogin = (event) => {
         event.preventDefault();
         logUserIn(username, password)
-            .then(result => {
-                if (result) {
+            .then(userData => {
+                if (userData) {
                     Notiflix.Notify.success('Login successful!');
-                    navigate('/courses');
+                    if (userData.userRole === 'ADMIN') {
+                        navigate('/admin');
+                    } else {
+                        navigate('/courses');
+                    }
                 } else {
                     Notiflix.Notify.failure('Login failed. Please check your credentials.');
                 }
             })
             .catch(error => {
                 Notiflix.Notify.failure('An error occurred during login. Please try again.');
-                console.error('Login error:', error);
             });
     };
 
