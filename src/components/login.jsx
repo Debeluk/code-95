@@ -16,19 +16,21 @@ export const LoginPage = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
 
-    const handleLogin = async (event) => {
+    const handleLogin = (event) => {
         event.preventDefault();
-        try {
-            const result = await logUserIn(username, password);
-            if (result) {
-                Notiflix.Notify.success('Login successful!');
-                navigate('/courses');
-            } else {
-                Notiflix.Notify.failure('Login failed. Please check your credentials.');
-            }
-        } catch (error) {
-            Notiflix.Notify.failure('An error occurred during login. Please try again.');
-        }
+        logUserIn(username, password)
+            .then(result => {
+                if (result) {
+                    Notiflix.Notify.success('Login successful!');
+                    navigate('/courses');
+                } else {
+                    Notiflix.Notify.failure('Login failed. Please check your credentials.');
+                }
+            })
+            .catch(error => {
+                Notiflix.Notify.failure('An error occurred during login. Please try again.');
+                console.error('Login error:', error);
+            });
     };
 
     return (
