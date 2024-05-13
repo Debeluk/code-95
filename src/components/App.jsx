@@ -6,6 +6,7 @@ import {
 } from 'react-router-dom';
 import {LoginPage} from './login.jsx';
 import {Header} from './header.jsx';
+import {Footer} from "./footer.jsx";
 import {Courses} from './courses.jsx';
 import {TicketsPage} from './tickets.jsx';
 import {FormedTest} from './formedTest.jsx';
@@ -20,17 +21,17 @@ export const App = () => {
                 <Route path="/" element={<LoginPage/>}/>
                 <Route path="/courses" element={
                     <ProtectedRoute requiredRole="USER">
-                        <Header/><Courses/>
+                        <Header/><Courses/><Footer/>
                     </ProtectedRoute>
                 }/>
                 <Route path="/tickets" element={
                     <ProtectedRoute requiredRole="USER">
-                        <Header/><TicketsPage/>
+                        <Header/><TicketsPage/><Footer/>
                     </ProtectedRoute>
                 }/>
                 <Route path="/test" element={
                     <ProtectedRoute requiredRole="USER">
-                        <Header/><FormedTest/>
+                        <Header/><FormedTest/><Footer/>
                     </ProtectedRoute>
                 }/>
                 <Route path="/admin" element={
