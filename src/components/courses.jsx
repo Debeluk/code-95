@@ -2,36 +2,46 @@ import React, {useState, useEffect} from 'react';
 import {Box, Typography, Grid, Paper} from '@mui/material';
 import {useNavigate} from 'react-router-dom';
 import secureLocalStorage from "react-secure-storage";
+import {useStore} from "../store/store.js";
+import axios from "axios";
+import {GET_COURSE} from "../constants/ApiURL.js";
+import {ACCESS_TOKEN} from "../constants/authConstants.js";
 
 export const Courses = () => {
     const navigate = useNavigate();
-    const [courses, setCourses] = useState([]);
+    const { courses, backupLoaded, setCourses, setSelectedCourse, deselectCourse } = useStore(state => ({
+        courses: state.courses,
+        backupLoaded: state.backupLoaded,
+        setCourses: state.setCourses,
+        setSelectedCourse: state.setSelectedCourse,
+        deselectCourse: state.deselectCourse
+    }));
 
     useEffect(() => {
-        // Assuming courses data is fetched and stored as an array of course objects
-        const storedCourses = secureLocalStorage.getItem('courses');
-        if (storedCourses) {
-            setCourses(JSON.parse(storedCourses));
+        if (!backupLoaded) return;
+        deselectCourse();
+        if (courses.length === 0) {
+            axios
+                .get(GET_COURSE, {
+                headers: {
+                    Authorization: `Bearer ${secureLocalStorage.getItem(ACCESS_TOKEN)}`
+                }
+            })
+                .then((res) => {
+                    setCourses(res.data);
+                })
+                .catch((err) => {
+                    console.error(err);
+                });
         }
-    }, []);
+    }, [backupLoaded]);
 
     const handleCardClick = (courseName) => {
-        // Clear specific keys related to course selection
-        secureLocalStorage.removeItem('chosenCourseId');
-        secureLocalStorage.removeItem('chosenCourseName');
-
-        // Find course from stored courses based on the name
         const course = courses.find(c => c.name === courseName);
         if (course) {
             console.log(`You clicked course with ID: ${course.id}`);
             console.log(`Number of tickets in this course: ${course.tickets}`);
-
-            // Store the chosen course ID in secure storage
-            secureLocalStorage.setItem('chosenCourseId', course.id.toString());
-
-            // Store the chosen course name in secure storage
-            secureLocalStorage.setItem('chosenCourseName', course.name);
-
+            setSelectedCourse(course);
             navigate('/tickets');
         } else {
             console.log("Course not found.");

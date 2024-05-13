@@ -1,32 +1,41 @@
 import React, {useState, useEffect} from 'react';
 import {Box, Typography, Grid, Button} from '@mui/material';
 import {useNavigate} from 'react-router-dom';
-import secureLocalStorage from "react-secure-storage";
-import {GetQuestionsFromTicket} from "./req/axios.jsx";
+import {useStore} from "../store/store.js";
 
 export const TicketsPage = () => {
     const navigate = useNavigate();
     const [ticketNumbers, setTicketNumbers] = useState([]);
     const [courseName, setCourseName] = useState('');
-    const [chosenCourseId, setChosenCourseId] = useState('');
+    const { selectedCourse, backupLoaded, setTicket, selectRandomQuestions } = useStore(state => ({
+        selectedCourse: state.selectedCourse,
+        backupLoaded: state.backupLoaded,
+        setTicket: state.setQuestionTicket,
+        selectRandomQuestions: state.selectRandomQuestions
+    }))
 
     useEffect(() => {
-        const storedChosenCourseId = parseInt(secureLocalStorage.getItem('chosenCourseId'), 10);
-        setChosenCourseId(storedChosenCourseId);
-        const courses = secureLocalStorage.getItem('courses') ? JSON.parse(secureLocalStorage.getItem('courses')) : [];
-        const chosenCourse = courses.find(course => course.id === storedChosenCourseId);
-
-        if (chosenCourse) {
-            setCourseName(chosenCourse.name);
-            setTicketNumbers(Array.from({length: chosenCourse.tickets}, (_, i) => i + 1));
-        }
-    }, []);
+        if (!backupLoaded) return;
+        setCourseName(selectedCourse.name);
+        setTicketNumbers(Array.from({length: selectedCourse.tickets}, (_, i) => i + 1));
+    }, [backupLoaded]);
 
     const handleTicketSelection = (ticketNumber) => {
-        secureLocalStorage.removeItem('chosenTicket');
-        secureLocalStorage.removeItem('ticketQuestions');
-        GetQuestionsFromTicket(chosenCourseId, ticketNumber);
-        secureLocalStorage.setItem('chosenTicket', ticketNumber.toString());
+        setTicket(ticketNumber);
+        // axios.get(GET_TICKET_QUESTIONS(chosenCourseId, ticketNumber), {
+        //     headers: {
+        //         Authorization: `Bearer ${secureLocalStorage.getItem('accessToken')}`
+        //     }
+        // })
+        //     .then(response => {
+        //         console.log('Questions fetched successfully:', response.data);
+        //         secureLocalStorage.setItem('ticketQuestions', JSON.stringify(response.data));
+        //     })
+        //     .catch(error => {
+        //         console.error('Failed to fetch questions for the ticket:', error);
+        //     });
+        // GetQuestionsFromTicket(chosenCourseId, ticketNumber);
+        // secureLocalStorage.setItem('chosenTicket', ticketNumber.toString());
         navigate('/test');
     };
 
@@ -36,6 +45,11 @@ export const TicketsPage = () => {
             const randomTicket = ticketNumbers[randomIndex];
             handleTicketSelection(randomTicket);
         }
+    };
+
+    const handleRandomQuestions = () => {
+        selectRandomQuestions(true);
+        navigate('/test');
     };
 
     return (

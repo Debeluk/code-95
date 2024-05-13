@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {
     BrowserRouter as Router,
     Routes,
@@ -13,8 +13,16 @@ import {FormedTest} from './formedTest.jsx';
 import {Admin} from './admin.jsx';
 import {UserInfo} from './userInfo.jsx';
 import {ProtectedRoute} from "./req/protectedRoute.jsx";
+import {loadState, saveState} from "../store/persistence.js";
 
 export const App = () => {
+    useEffect(() => {
+        loadState();
+        window.addEventListener('beforeunload', saveState);
+        return () => {
+            window.addEventListener('beforeunload', saveState);
+        }
+    }, []);
     return (
         <Router>
             <Routes>

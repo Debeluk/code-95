@@ -8,35 +8,62 @@ import {
     Grid, List, ListItem,
 } from '@mui/material';
 import {useNavigate} from 'react-router-dom';
-import {logUserIn} from "./req/axios.jsx";
 import Notiflix from 'notiflix';
+import axios from "axios";
+import {GET_CURRENT_USER, LOGIN} from "../constants/ApiURL.js";
+import secureLocalStorage from "react-secure-storage";
+import {useStore} from "../store/store.js";
+import Loader from "./Loader/Loader.jsx";
+import {ACCESS_TOKEN, REFRESH_TOKEN} from "../constants/authConstants.js";
 
 export const LoginPage = () => {
     const navigate = useNavigate();
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
+    const setCurrentUser = useStore(state => state.setCurrentUser);
 
     const handleLogin = (event) => {
         event.preventDefault();
-        logUserIn(username, password)
-            .then(userData => {
-                if (userData) {
-                    Notiflix.Notify.success('Login successful!');
-                    if (userData.userRole === 'ADMIN') {
-                        navigate('/admin');
-                    } else {
-                        navigate('/courses');
+        setIsLoading(true);
+        axios.post(LOGIN, {
+            username: username,
+            password: password
+        })
+            .then((res) => {
+                console.log('Login successful:', res.data);
+                secureLocalStorage.setItem(ACCESS_TOKEN, res.data.accessToken);
+                secureLocalStorage.setItem(REFRESH_TOKEN, res.data.refreshToken);
+                axios.get(GET_CURRENT_USER, {
+                    headers: {
+                        Authorization: `Bearer ${res.data.accessToken}`
                     }
-                } else {
-                    Notiflix.Notify.failure('Login failed. Please check your credentials.');
-                }
+                })
+                    .then((response) => {
+                        setCurrentUser(response.data);
+                        Notiflix.Notify.success('Login successful!');
+                        if (response.data.userRole === 'ADMIN') {
+                            navigate('/admin');
+                        } else {
+                            navigate('/courses');
+                        }
+                        setIsLoading(false);
+                    })
+                    .catch((err) => {
+                        setIsLoading(false);
+                        console.error('Error during login or fetching user details:', err.message);
+                        Notiflix.Notify.failure('An error occurred during login. Please try again.');
+                    })
             })
-            .catch(error => {
-                Notiflix.Notify.failure('An error occurred during login. Please try again.');
+            .catch((err) => {
+                console.error('Error during login or fetching user details:', err.message);
+                Notiflix.Notify.failure('Login failed. Please check your credentials.');
+                setIsLoading(false);
             });
     };
 
     return (
+        <><Loader isLoading={isLoading} />
         <Box sx={{
             display: 'flex',
             justifyContent: 'center',
@@ -110,5 +137,6 @@ export const LoginPage = () => {
                 </Grid>
             </Paper>
         </Box>
+        </>
     );
 };

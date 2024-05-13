@@ -8,10 +8,14 @@ import {
   Menu,
   MenuItem,
 } from '@mui/material';
+import {useStore} from "../store/store.js"
 
 export const Header = () => {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
+  const { user } = useStore(state =>({
+      user: state.currentUser,
+  }));
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -52,7 +56,7 @@ export const Header = () => {
             }}
           >
             <Box display="flex" alignItems="center">
-              <Typography variant="subtitle1" mr={1}>Name</Typography>
+              <Typography variant="subtitle1" mr={1}>{user.name ?? 'Name'}</Typography>
               <Typography variant="caption">dropdown</Typography>
             </Box>
           </Button>
