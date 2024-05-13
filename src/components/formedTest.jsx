@@ -1,162 +1,147 @@
-import React, { useState } from 'react';
+import React, {useState, useEffect} from 'react';
 import {
-  Box,
-  Typography,
-  Grid,
-  Button,
-  FormControl,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
+    Box, Typography, Grid, Button, FormControl, Dialog, DialogActions, DialogContent,
+    DialogContentText, DialogTitle
 } from '@mui/material';
+import secureLocalStorage from "react-secure-storage";
 
 export const FormedTest = () => {
-  const questionNumbers = Array.from({ length: 25 }, (_, i) => i + 1);
-  const [openDialog, setOpenDialog] = useState(false);
+    const [openDialog, setOpenDialog] = useState(false);
+    const [questions, setQuestions] = useState([]);
+    const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+    const [courseName, setCourseName] = useState('');
+    const [ticketNumber, setTicketNumber] = useState('');
 
-  const handleOpenDialog = () => {
-    setOpenDialog(true);
-  };
+    useEffect(() => {
+        // Assuming ticketQuestions is an array of questions
+        const storedQuestions = secureLocalStorage.getItem('ticketQuestions');
+        if (storedQuestions) {
+            setQuestions(JSON.parse(storedQuestions));
+        } else {
+            // Log or handle the case where no questions are found
+            console.error("No questions found in storage.");
+        }
+        const storedCourseName = secureLocalStorage.getItem('chosenCourseName');
+        setCourseName(storedCourseName);
 
-  const handleCloseDialog = () => {
-    setOpenDialog(false);
-  };
+        const storedChosenTicket = secureLocalStorage.getItem('chosenTicket');
+        setTicketNumber(storedChosenTicket);
+    }, []);
 
-  const handleEndTest = () => {
-    // Обработка завершения теста (например, отправка результатов на бекенд)
-    console.log('Тест завершен');
-    setOpenDialog(false);
-  };
+    const handleOpenDialog = () => {
+        setOpenDialog(true);
+    };
 
-  return (
-    <Box sx={{ mt: 4, mb: 6, ml: 32, mr: 32 }}>
-      {/* Заголовок страницы */}
-      <Box display="flex" justifyContent="space-between" mb={1}>
-        <Typography variant="h4" gutterBottom>
-          Назва курсу
-        </Typography>
-        <Typography variant="h5" gutterBottom>
-          Номер білету
-        </Typography>
-      </Box>
+    const handleCloseDialog = () => {
+        setOpenDialog(false);
+    };
 
-      {/* Кнопки вопросов */}
-      <Grid container spacing={1} mb={2}>
-        {questionNumbers.map((number) => (
-          <Grid item xs="auto" key={number}>
-            <Button
-              variant="outlined"
-              color="primary"
-              sx={{
-                minWidth: '38px',
-                minHeight: '38px',
-                borderRadius: '8px',
-                textTransform: 'none',
-                padding: '0',
-              }}
+    const handleEndTest = () => {
+        console.log('Тест завершен');
+        setOpenDialog(false);
+    };
+
+    const handleQuestionSelect = (index) => {
+        setCurrentQuestionIndex(index);
+    };
+
+    return (
+        <Box sx={{mt: 4, mb: 6, ml: 32, mr: 32}}>
+            <Box display="flex" justifyContent="space-between" mb={1}>
+                <Typography variant="h4" gutterBottom>{courseName}</Typography>
+                <Typography variant="h5" gutterBottom>Білет № {ticketNumber}</Typography>
+            </Box>
+
+            <Grid container spacing={1} mb={2}>
+                {questions.map((_, index) => (
+                    <Grid item xs="auto" key={index}>
+                        <Button
+                            variant="outlined"
+                            color="primary"
+                            onClick={() => handleQuestionSelect(index)}
+                            sx={{
+                                minWidth: '38px',
+                                minHeight: '38px',
+                                borderRadius: '8px',
+                                textTransform: 'none',
+                                padding: '0',
+                                backgroundColor: currentQuestionIndex === index ? '#4caf50' : undefined
+                            }}
+                        >
+                            {index + 1}
+                        </Button>
+                    </Grid>
+                ))}
+            </Grid>
+
+            {questions.length > 0 && (
+                <Box
+                    display="flex"
+                    flexDirection="column"
+                    justifyContent="space-between"
+                    minHeight="200px"
+                    maxHeight="400px"
+                    marginBottom="20px"
+                    p={4}
+                    sx={{borderRadius: '8px', backgroundColor: '#f9f9f9', boxShadow: 2}}
+                >
+                    <Typography variant="h6" gutterBottom>{questions[currentQuestionIndex].question}</Typography>
+                    <FormControl component="fieldset" sx={{mt: 4}}>
+                        <Grid container spacing={2} justifyContent="center">
+                            {questions[currentQuestionIndex].answers.map((answer, idx) => (
+                                <Grid item xs={12} sm={4} key={idx}>
+                                    <Button
+                                        variant="contained"
+                                        color="primary"
+                                        fullWidth
+                                        sx={{textTransform: 'none', maxHeight: '42px'}}
+                                    >
+                                        {answer.answer}
+                                    </Button>
+                                </Grid>
+                            ))}
+                        </Grid>
+                    </FormControl>
+                </Box>
+            )}
+
+            <Box display="flex" justifyContent="flex-end">
+                <Button
+                    variant="contained"
+                    color="error"
+                    onClick={handleOpenDialog}
+                    sx={{
+                        borderRadius: '16px',
+                        textTransform: 'none',
+                        minWidth: '120px',
+                        minHeight: '40px',
+                    }}
+                >
+                    Завершити тест
+                </Button>
+            </Box>
+
+            <Dialog
+                open={openDialog}
+                onClose={handleCloseDialog}
+                aria-labelledby="confirm-dialog-title"
+                aria-describedby="confirm-dialog-description"
             >
-              {number}
-            </Button>
-          </Grid>
-        ))}
-      </Grid>
-
-      {/* Зона с вопросом и ответами */}
-      <Box
-        display="flex"
-        flexDirection="column"
-        justifyContent="space-between"
-        minHeight="200px"
-        maxHeight="400px"
-        marginBottom="20px"
-        p={4}
-        sx={{ borderRadius: '8px', backgroundColor: '#f9f9f9', boxShadow: 2 }}
-      >
-        {/* Вопрос */}
-        <Typography variant="h6" gutterBottom>
-          Як зупинити час?
-        </Typography>
-
-        {/* Ответы */}
-        <FormControl component="fieldset" sx={{ mt: 4 }}>
-          <Grid container spacing={2} justifyContent="center">
-            <Grid item xs={12} sm={4}>
-              <Button
-                variant="contained"
-                color="primary"
-                fullWidth
-                sx={{ textTransform: 'none', maxHeight: '42px' }}
-              >
-                Час не зупинити
-              </Button>
-            </Grid>
-            <Grid item xs={12} sm={4}>
-              <Button
-                variant="contained"
-                color="primary"
-                fullWidth
-                sx={{ textTransform: 'none', maxHeight: '42px' }}
-              >
-                Зупинити Час
-              </Button>
-            </Grid>
-            <Grid item xs={12} sm={4}>
-              <Button
-                variant="contained"
-                color="primary"
-                fullWidth
-                sx={{ textTransform: 'none', maxHeight: '42px' }}
-              >
-                Крокус
-              </Button>
-            </Grid>
-          </Grid>
-        </FormControl>
-      </Box>
-
-      {/* Кнопка "Завершити тест" */}
-      <Box display="flex" justifyContent="flex-end">
-        <Button
-          variant="contained"
-          color="error"
-          onClick={handleOpenDialog}
-          sx={{
-            borderRadius: '16px',
-            textTransform: 'none',
-            minWidth: '120px',
-            minHeight: '40px',
-          }}
-        >
-          Завершити тест
-        </Button>
-      </Box>
-
-      {/* Модальное окно подтверждения */}
-      <Dialog
-        open={openDialog}
-        onClose={handleCloseDialog}
-        aria-labelledby="confirm-dialog-title"
-        aria-describedby="confirm-dialog-description"
-      >
-        <DialogTitle id="confirm-dialog-title">
-          Підтвердити завершення тесту
-        </DialogTitle>
-        <DialogContent>
-          <DialogContentText id="confirm-dialog-description">
-            Ви впевнені, що хочете завершити тест?
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseDialog} color="primary">
-            Відміна
-          </Button>
-          <Button onClick={handleEndTest} color="error" variant="contained">
-            Завершити тест
-          </Button>
-        </DialogActions>
-      </Dialog>
-    </Box>
-  );
+                <DialogTitle id="confirm-dialog-title">Підтвердити завершення тесту</DialogTitle>
+                <DialogContent>
+                    <DialogContentText id="confirm-dialog-description">
+                        Ви впевнені, що хочете завершити тест?
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleCloseDialog} color="primary">
+                        Відміна
+                    </Button>
+                    <Button onClick={handleEndTest} color="error" variant="contained">
+                        Завершити тест
+                    </Button>
+                </DialogActions>
+            </Dialog>
+        </Box>
+    );
 };

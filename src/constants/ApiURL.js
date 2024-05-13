@@ -20,5 +20,5 @@ export const USER_USE = `${BACKEND_URL}${API}${V1}${USER}/{user_id}`; //GET TO G
 export const CREATE_COURSE = `${BACKEND_URL}${API}${V1}${COURSE}`;
 export const DELETE_COURSE = `${BACKEND_URL}${API}${V1}${COURSE}/{course_id}`;
 export const GET_COURSE = `${BACKEND_URL}${API}${V1}${COURSE}/available`;
-export const GET_TICKET_QUESTIONS = `${BACKEND_URL}${API}${V1}${COURSE}/{course_id}/ticket/{ticket_number}`; //GET 'TOTAL / 10' QUESTIONS BASED ON TICKET NUMBER OF COURSE
+export const GET_TICKET_QUESTIONS = `${BACKEND_URL}${API}${V1}${COURSE}/`; //GET 'TOTAL / 10' QUESTIONS BASED ON TICKET NUMBER OF COURSE
 export const GET_RANDOM = `${BACKEND_URL}${API}${V1}${COURSE}/{course_id}/random`; //GET 25 RANDOM QUESTIONS FROM ONE COURSE
