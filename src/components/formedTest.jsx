@@ -33,13 +33,16 @@ export const FormedTest = () => {
 
     useEffect(() => {
         if (!backupLoaded) {
-            navigate('/course');  // Перенаправление, если данные не загружены
             return;
         }
-
+        if (!isSelectedRandomQuestions && selectedQuestionTicket === null) {
+            console.log("vova")
+            navigate('/courses');
+            return;
+        }
         const fetchQuestions = async () => {
-            resetQuestions(); // Очищаем состояние вопросов при монтировании компонента
-            if (selectedQuestionTicket !== null) {
+            resetQuestions();
+            if (selectedQuestionTicket !== null) { //useState для ответов функция принимает айди вопроса и айди ответа / useState для вопросов /
                 try {
                     const response = await axios.get(GET_TICKET_QUESTIONS(selectedCourse.id, selectedQuestionTicket), {
                         headers: {

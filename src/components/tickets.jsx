@@ -76,13 +76,7 @@ export const TicketsPage = () => {
             console.error('Failed to fetch random questions:', error);
         }
     };
-
-    useEffect(() => {
-        if (!isSelectedRandomQuestions && selectedQuestionTicket === null) {
-            navigate('/course');
-        }
-    }, [isSelectedRandomQuestions, selectedQuestionTicket, navigate]);
-
+    
     return (
         <Box sx={{pb: 50, mt: 4, mb: 6, ml: 32, mr: 32}}>
             <Box textAlign="center" mb={4}>
