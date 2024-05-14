@@ -2,41 +2,54 @@ import React, {useState, useEffect} from 'react';
 import {Box, Typography, Grid, Button} from '@mui/material';
 import {useNavigate} from 'react-router-dom';
 import {useStore} from "../store/store.js";
+import axios from 'axios';
+import {GET_TICKET_QUESTIONS, GET_RANDOM_TICKET_QUESTIONS} from '../constants/ApiURL';
+import secureLocalStorage from 'react-secure-storage';
 
 export const TicketsPage = () => {
     const navigate = useNavigate();
     const [ticketNumbers, setTicketNumbers] = useState([]);
     const [courseName, setCourseName] = useState('');
-    const { selectedCourse, backupLoaded, setTicket, selectRandomQuestions } = useStore(state => ({
+    const {
+        selectedCourse,
+        backupLoaded,
+        setTicket,
+        selectRandomQuestions,
+        setQuestions,
+        resetQuestions,
+        isSelectedRandomQuestions,
+        selectedQuestionTicket
+    } = useStore(state => ({
         selectedCourse: state.selectedCourse,
         backupLoaded: state.backupLoaded,
         setTicket: state.setQuestionTicket,
-        selectRandomQuestions: state.selectRandomQuestions
-    }))
+        selectRandomQuestions: state.selectRandomQuestions,
+        setQuestions: state.setQuestions,
+        resetQuestions: state.resetQuestions,
+        isSelectedRandomQuestions: state.isSelectedRandomQuestions,
+        selectedQuestionTicket: state.selectedQuestionTicket,
+    }));
 
     useEffect(() => {
         if (!backupLoaded) return;
         setCourseName(selectedCourse.name);
         setTicketNumbers(Array.from({length: selectedCourse.tickets}, (_, i) => i + 1));
-    }, [backupLoaded]);
+    }, [backupLoaded, selectedCourse]);
 
-    const handleTicketSelection = (ticketNumber) => {
+    const handleTicketSelection = async (ticketNumber) => {
+        resetQuestions();
         setTicket(ticketNumber);
-        // axios.get(GET_TICKET_QUESTIONS(chosenCourseId, ticketNumber), {
-        //     headers: {
-        //         Authorization: `Bearer ${secureLocalStorage.getItem('accessToken')}`
-        //     }
-        // })
-        //     .then(response => {
-        //         console.log('Questions fetched successfully:', response.data);
-        //         secureLocalStorage.setItem('ticketQuestions', JSON.stringify(response.data));
-        //     })
-        //     .catch(error => {
-        //         console.error('Failed to fetch questions for the ticket:', error);
-        //     });
-        // GetQuestionsFromTicket(chosenCourseId, ticketNumber);
-        // secureLocalStorage.setItem('chosenTicket', ticketNumber.toString());
-        navigate('/test');
+        try {
+            const response = await axios.get(GET_TICKET_QUESTIONS(selectedCourse.id, ticketNumber), {
+                headers: {
+                    Authorization: `Bearer ${secureLocalStorage.getItem('accessToken')}`
+                }
+            });
+            setQuestions(response.data);
+            navigate('/test');
+        } catch (error) {
+            console.error('Failed to fetch questions for the ticket:', error);
+        }
     };
 
     const handleRandomTicket = () => {
@@ -47,10 +60,28 @@ export const TicketsPage = () => {
         }
     };
 
-    const handleRandomQuestions = () => {
+    const handleRandomQuestions = async () => {
+        resetQuestions();
         selectRandomQuestions(true);
-        navigate('/test');
+        setTicket(null);  // Сбрасываем выбранный билет
+        try {
+            const response = await axios.get(GET_RANDOM_TICKET_QUESTIONS(selectedCourse.id), {
+                headers: {
+                    Authorization: `Bearer ${secureLocalStorage.getItem('accessToken')}`
+                }
+            });
+            setQuestions(response.data);
+            navigate('/test');
+        } catch (error) {
+            console.error('Failed to fetch random questions:', error);
+        }
     };
+
+    useEffect(() => {
+        if (!isSelectedRandomQuestions && selectedQuestionTicket === null) {
+            navigate('/course');
+        }
+    }, [isSelectedRandomQuestions, selectedQuestionTicket, navigate]);
 
     return (
         <Box sx={{pb: 50, mt: 4, mb: 6, ml: 32, mr: 32}}>
@@ -104,6 +135,7 @@ export const TicketsPage = () => {
                     <Button
                         variant="contained"
                         color="inherit"
+                        onClick={handleRandomQuestions}
                         sx={{
                             minWidth: '270px',
                             minHeight: '50px',

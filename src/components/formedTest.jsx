@@ -3,30 +3,69 @@ import {
     Box, Typography, Grid, Button, FormControl, Dialog, DialogActions, DialogContent,
     DialogContentText, DialogTitle
 } from '@mui/material';
-import secureLocalStorage from "react-secure-storage";
+import {useStore} from "../store/store.js";
+import axios from 'axios';
+import {GET_TICKET_QUESTIONS, GET_RANDOM_TICKET_QUESTIONS} from '../constants/ApiURL';
+import secureLocalStorage from 'react-secure-storage';
+import {useNavigate} from 'react-router-dom';
 
 export const FormedTest = () => {
     const [openDialog, setOpenDialog] = useState(false);
-    const [questions, setQuestions] = useState([]);
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-    const [courseName, setCourseName] = useState('');
-    const [ticketNumber, setTicketNumber] = useState('');
+    const {
+        selectedCourse,
+        selectedQuestionTicket,
+        isSelectedRandomQuestions,
+        questions,
+        setQuestions,
+        resetQuestions,
+        backupLoaded
+    } = useStore(state => ({
+        selectedCourse: state.selectedCourse,
+        selectedQuestionTicket: state.selectedQuestionTicket,
+        isSelectedRandomQuestions: state.isSelectedRandomQuestions,
+        questions: state.questions,
+        setQuestions: state.setQuestions,
+        resetQuestions: state.resetQuestions,
+        backupLoaded: state.backupLoaded,
+    }));
+    const navigate = useNavigate();
 
     useEffect(() => {
-        // Assuming ticketQuestions is an array of questions
-        const storedQuestions = secureLocalStorage.getItem('ticketQuestions');
-        if (storedQuestions) {
-            setQuestions(JSON.parse(storedQuestions));
-        } else {
-            // Log or handle the case where no questions are found
-            console.error("No questions found in storage.");
+        if (!backupLoaded) {
+            navigate('/course');  // Перенаправление, если данные не загружены
+            return;
         }
-        const storedCourseName = secureLocalStorage.getItem('chosenCourseName');
-        setCourseName(storedCourseName);
 
-        const storedChosenTicket = secureLocalStorage.getItem('chosenTicket');
-        setTicketNumber(storedChosenTicket);
-    }, []);
+        const fetchQuestions = async () => {
+            resetQuestions(); // Очищаем состояние вопросов при монтировании компонента
+            if (selectedQuestionTicket !== null) {
+                try {
+                    const response = await axios.get(GET_TICKET_QUESTIONS(selectedCourse.id, selectedQuestionTicket), {
+                        headers: {
+                            Authorization: `Bearer ${secureLocalStorage.getItem('accessToken')}`
+                        }
+                    });
+                    setQuestions(response.data);
+                } catch (error) {
+                    console.error('Failed to fetch questions for the ticket:', error);
+                }
+            } else if (isSelectedRandomQuestions) {
+                try {
+                    const response = await axios.get(GET_RANDOM_TICKET_QUESTIONS(selectedCourse.id), {
+                        headers: {
+                            Authorization: `Bearer ${secureLocalStorage.getItem('accessToken')}`
+                        }
+                    });
+                    setQuestions(response.data);
+                } catch (error) {
+                    console.error('Failed to fetch random questions:', error);
+                }
+            }
+        };
+
+        fetchQuestions();
+    }, [selectedQuestionTicket, isSelectedRandomQuestions, selectedCourse, setQuestions, resetQuestions, backupLoaded, navigate]);
 
     const handleOpenDialog = () => {
         setOpenDialog(true);
@@ -48,8 +87,9 @@ export const FormedTest = () => {
     return (
         <Box sx={{mt: 4, mb: 6, ml: 32, mr: 32}}>
             <Box display="flex" justifyContent="space-between" mb={1}>
-                <Typography variant="h4" gutterBottom>{courseName}</Typography>
-                <Typography variant="h5" gutterBottom>Білет № {ticketNumber}</Typography>
+                <Typography variant="h4" gutterBottom>{selectedCourse.name}</Typography>
+                <Typography variant="h5" gutterBottom>Білет
+                    № {selectedQuestionTicket ?? 'Випадкові питання'}</Typography>
             </Box>
 
             <Grid container spacing={1} mb={2}>
