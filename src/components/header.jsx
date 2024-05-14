@@ -13,6 +13,7 @@ import {
     DialogContentText,
     DialogTitle,
 } from '@mui/material';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import {useStore} from "../store/store.js";
 import secureLocalStorage from 'react-secure-storage';
 import {useNavigate} from 'react-router-dom';
@@ -87,7 +88,7 @@ export const Header = () => {
                     >
                         <Box display="flex" alignItems="center">
                             <Typography variant="subtitle1" mr={1}>{user.name ?? 'Name'}</Typography>
-                            <Typography variant="caption">dropdown</Typography>
+                            <ExpandMoreIcon/>
                         </Box>
                     </Button>
                 </Box>
@@ -107,15 +108,21 @@ export const Header = () => {
                 PaperProps={{
                     elevation: 3,
                     style: {
-                        maxHeight: 200,
-                        width: '20ch',
+                        maxHeight: 180,
+                        width: '200px',
                         marginTop: '20px',
                     },
                 }}
             >
-                <MenuItem disabled>
-                    <Box sx={{width: '100%', display: 'flex', justifyContent: 'center'}}>
-                        Доступ до: 17.12.02
+                <MenuItem disabled sx={{padding: '0px'}}>
+                    <Box sx={{
+                        width: '100%',
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        padding: '8px'
+                    }}>
+                        Доступ до: {new Date(user.expireAt).toLocaleDateString('uk-UA') ?? 'дата не вказана'}
                     </Box>
                 </MenuItem>
                 <MenuItem onClick={handleOpenDialog} sx={{justifyContent: 'center'}}>Вийти</MenuItem>
