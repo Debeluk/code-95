@@ -12,8 +12,8 @@ import {
   DialogTitle
 } from '@mui/material';
 import { useStore } from '../store/store.js';
-import { axiosInstance } from './req/axiosInterceptor.js';
-import { GET_TICKET_QUESTIONS, GET_RANDOM_TICKET_QUESTIONS } from '../constants/ApiURL';
+import { axiosInstance } from '../components/Interceptor/axiosInterceptor.js';
+import { GET_TICKET_QUESTIONS, GET_RANDOM_TICKET_QUESTIONS } from '../constants/ApiURL.js';
 import { useNavigate } from 'react-router-dom';
 
 // Utility function to shuffle an array

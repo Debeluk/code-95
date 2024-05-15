@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Box, Typography, Grid, Button } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { useStore } from '../store/store.js';
-import { axiosInstance } from './req/axiosInterceptor.js';
-import { GET_TICKET_QUESTIONS, GET_RANDOM_TICKET_QUESTIONS } from '../constants/ApiURL';
+import { axiosInstance } from '../components/Interceptor/axiosInterceptor.js';
+import { GET_TICKET_QUESTIONS, GET_RANDOM_TICKET_QUESTIONS } from '../constants/ApiURL.js';
 
 export const TicketsPage = () => {
   const navigate = useNavigate();

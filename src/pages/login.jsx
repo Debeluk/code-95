@@ -2,11 +2,11 @@ import React, { useState } from 'react';
 import { Box, Typography, TextField, Button, Paper, Grid, List, ListItem } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import Notiflix from 'notiflix';
-import { axiosInstance } from './req/axiosInterceptor.js';
-import { GET_CURRENT_USER, LOGIN } from '../constants/ApiURL';
+import { axiosInstance } from '../components/Interceptor/axiosInterceptor.js';
+import { GET_CURRENT_USER, LOGIN } from '../constants/ApiURL.js';
 import secureLocalStorage from 'react-secure-storage';
-import { useStore } from '../store/store';
-import Loader from './Loader/Loader';
+import { useStore } from '../store/store.js';
+import Loader from '../components/Loader/Loader.jsx';
 import axios from 'axios';
 
 export const LoginPage = () => {

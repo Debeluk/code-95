@@ -6,7 +6,7 @@ import { useStore } from '../store/store.js';
 import axios from 'axios';
 import { GET_COURSE } from '../constants/ApiURL.js';
 import { ACCESS_TOKEN } from '../constants/authConstants.js';
-import { axiosInstance } from './req/axiosInterceptor.js';
+import { axiosInstance } from '../components/Interceptor/axiosInterceptor.js';
 
 export const Courses = () => {
   const navigate = useNavigate();

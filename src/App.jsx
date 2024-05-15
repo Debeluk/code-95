@@ -1,15 +1,15 @@
 import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { LoginPage } from './login.jsx';
-import { Header } from './header.jsx';
-import { Footer } from './footer.jsx';
-import { Courses } from './courses.jsx';
-import { TicketsPage } from './tickets.jsx';
-import { FormedTest } from './formedTest.jsx';
-import { Admin } from './admin.jsx';
-import { UserInfo } from './userInfo.jsx';
-import { ProtectedRoute } from './req/protectedRoute.jsx';
-import { loadState, saveState } from '../store/persistence.js';
+import { LoginPage } from './pages/login.jsx';
+import { Header } from './pages/header.jsx';
+import { Footer } from './pages/footer.jsx';
+import { Courses } from './pages/courses.jsx';
+import { TicketsPage } from './pages/tickets.jsx';
+import { FormedTest } from './pages/formedTest.jsx';
+import { Admin } from './pages/admin.jsx';
+import { UserInfo } from './pages/userInfo.jsx';
+import { ProtectedRoute } from './components/req/protectedRoute.jsx';
+import { loadState, saveState } from './store/persistence.js';
 
 export const App = () => {
   useEffect(() => {
