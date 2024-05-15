@@ -14,27 +14,22 @@ export const TicketsPage = () => {
     backupLoaded,
     setTicket,
     selectRandomQuestions,
-    setQuestions,
-    resetQuestions
   } = useStore((state) => ({
     selectedCourse: state.selectedCourse,
     backupLoaded: state.backupLoaded,
     setTicket: state.setQuestionTicket,
     selectRandomQuestions: state.selectRandomQuestions,
-    setQuestions: state.setQuestions,
-    resetQuestions: state.resetQuestions,
-    isSelectedRandomQuestions: state.isSelectedRandomQuestions,
-    selectedQuestionTicket: state.selectedQuestionTicket
   }));
+  const [questions, setQuestions] = useState([]);
 
   useEffect(() => {
-    if (!backupLoaded) return;
+    if (!backupLoaded || !selectedCourse) return;
     setCourseName(selectedCourse.name);
     setTicketNumbers(Array.from({ length: selectedCourse.tickets }, (_, i) => i + 1));
   }, [backupLoaded, selectedCourse]);
 
   const handleTicketSelection = (ticketNumber) => {
-    resetQuestions();
+    setQuestions([]);
     setTicket(ticketNumber);
     axiosInstance
       .get(GET_TICKET_QUESTIONS(selectedCourse.id, ticketNumber))
@@ -56,9 +51,9 @@ export const TicketsPage = () => {
   };
 
   const handleRandomQuestions = () => {
-    resetQuestions();
+    setQuestions([]);
     selectRandomQuestions(true);
-    setTicket(null);
+    setTicket(null); // Сбрасываем выбранный билет
     axiosInstance
       .get(GET_RANDOM_TICKET_QUESTIONS(selectedCourse.id))
       .then((response) => {

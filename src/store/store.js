@@ -15,7 +15,6 @@ export const useStore = create((set) => ({
       selectedQuestionType: null,
       selectedQuestionTicket: null,
       backupLoaded: true,
-      questions: [],
       isSelectedRandomQuestions: null
     }),
   deselectCourse: () =>
@@ -27,7 +26,9 @@ export const useStore = create((set) => ({
   selectRandomQuestions: (type) => set({ isSelectedRandomQuestions: type }),
   setQuestionTicket: (ticket) => set({ selectedQuestionTicket: ticket }),
   backupLoaded: false,
-  questions: [],
-  setQuestions: (questions) => set({ questions: questions }),
-  resetQuestions: () => set({ questions: [] })
+  clearSelectedQuestionTicket: () =>
+    set({
+      selectedQuestionTicket: null,
+      isSelectedRandomQuestions: null
+    })
 }));
