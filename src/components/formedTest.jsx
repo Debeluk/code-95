@@ -12,9 +12,8 @@ import {
   DialogTitle
 } from '@mui/material';
 import { useStore } from '../store/store.js';
-import axios from 'axios';
+import { axiosInstance } from './req/axiosInterceptor.js';
 import { GET_TICKET_QUESTIONS, GET_RANDOM_TICKET_QUESTIONS } from '../constants/ApiURL';
-import secureLocalStorage from 'react-secure-storage';
 import { useNavigate } from 'react-router-dom';
 
 export const FormedTest = () => {
@@ -44,38 +43,28 @@ export const FormedTest = () => {
       return;
     }
     if (!isSelectedRandomQuestions && selectedQuestionTicket === null) {
-      console.log('vova');
+      console.log('No questions found, No random found');
       navigate('/courses');
       return;
     }
-    const fetchQuestions = async () => {
+    const fetchQuestions = () => {
       resetQuestions();
       if (selectedQuestionTicket !== null) {
-        //useState для ответов функция принимает айди вопроса и айди ответа / useState для вопросов /
-        try {
-          const response = await axios.get(
-            GET_TICKET_QUESTIONS(selectedCourse.id, selectedQuestionTicket),
-            {
-              headers: {
-                Authorization: `Bearer ${secureLocalStorage.getItem('accessToken')}`
-              }
-            }
-          );
-          setQuestions(response.data);
-        } catch (error) {
-          console.error('Failed to fetch questions for the ticket:', error);
-        }
-      } else if (isSelectedRandomQuestions) {
-        try {
-          const response = await axios.get(GET_RANDOM_TICKET_QUESTIONS(selectedCourse.id), {
-            headers: {
-              Authorization: `Bearer ${secureLocalStorage.getItem('accessToken')}`
-            }
+        axiosInstance.get(GET_TICKET_QUESTIONS(selectedCourse.id, selectedQuestionTicket))
+          .then(response => {
+            setQuestions(response.data);
+          })
+          .catch(error => {
+            console.error('Failed to fetch questions for the ticket:', error);
           });
-          setQuestions(response.data);
-        } catch (error) {
-          console.error('Failed to fetch random questions:', error);
-        }
+      } else if (isSelectedRandomQuestions) {
+        axiosInstance.get(GET_RANDOM_TICKET_QUESTIONS(selectedCourse.id))
+          .then(response => {
+            setQuestions(response.data);
+          })
+          .catch(error => {
+            console.error('Failed to fetch random questions:', error);
+          });
       }
     };
 

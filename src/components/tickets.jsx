@@ -2,9 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Box, Typography, Grid, Button } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { useStore } from '../store/store.js';
-import axios from 'axios';
+import { axiosInstance } from './req/axiosInterceptor.js';
 import { GET_TICKET_QUESTIONS, GET_RANDOM_TICKET_QUESTIONS } from '../constants/ApiURL';
-import secureLocalStorage from 'react-secure-storage';
 
 export const TicketsPage = () => {
   const navigate = useNavigate();
@@ -16,9 +15,7 @@ export const TicketsPage = () => {
     setTicket,
     selectRandomQuestions,
     setQuestions,
-    resetQuestions,
-    isSelectedRandomQuestions,
-    selectedQuestionTicket
+    resetQuestions
   } = useStore((state) => ({
     selectedCourse: state.selectedCourse,
     backupLoaded: state.backupLoaded,
@@ -36,20 +33,18 @@ export const TicketsPage = () => {
     setTicketNumbers(Array.from({ length: selectedCourse.tickets }, (_, i) => i + 1));
   }, [backupLoaded, selectedCourse]);
 
-  const handleTicketSelection = async (ticketNumber) => {
+  const handleTicketSelection = (ticketNumber) => {
     resetQuestions();
     setTicket(ticketNumber);
-    try {
-      const response = await axios.get(GET_TICKET_QUESTIONS(selectedCourse.id, ticketNumber), {
-        headers: {
-          Authorization: `Bearer ${secureLocalStorage.getItem('accessToken')}`
-        }
+    axiosInstance
+      .get(GET_TICKET_QUESTIONS(selectedCourse.id, ticketNumber))
+      .then((response) => {
+        setQuestions(response.data);
+        navigate('/test');
+      })
+      .catch((error) => {
+        console.error('Failed to fetch questions for the ticket:', error);
       });
-      setQuestions(response.data);
-      navigate('/test');
-    } catch (error) {
-      console.error('Failed to fetch questions for the ticket:', error);
-    }
   };
 
   const handleRandomTicket = () => {
@@ -60,21 +55,19 @@ export const TicketsPage = () => {
     }
   };
 
-  const handleRandomQuestions = async () => {
+  const handleRandomQuestions = () => {
     resetQuestions();
     selectRandomQuestions(true);
-    setTicket(null); // Сбрасываем выбранный билет
-    try {
-      const response = await axios.get(GET_RANDOM_TICKET_QUESTIONS(selectedCourse.id), {
-        headers: {
-          Authorization: `Bearer ${secureLocalStorage.getItem('accessToken')}`
-        }
+    setTicket(null);
+    axiosInstance
+      .get(GET_RANDOM_TICKET_QUESTIONS(selectedCourse.id))
+      .then((response) => {
+        setQuestions(response.data);
+        navigate('/test');
+      })
+      .catch((error) => {
+        console.error('Failed to fetch random questions:', error);
       });
-      setQuestions(response.data);
-      navigate('/test');
-    } catch (error) {
-      console.error('Failed to fetch random questions:', error);
-    }
   };
 
   return (
@@ -100,8 +93,7 @@ export const TicketsPage = () => {
                 minHeight: '40px',
                 borderRadius: '8px',
                 textTransform: 'none'
-              }}
-            >
+              }}>
               {number}
             </Button>
           </Grid>
@@ -120,8 +112,7 @@ export const TicketsPage = () => {
               borderRadius: '16px',
               textTransform: 'none',
               mr: 2
-            }}
-          >
+            }}>
             Випадковий білет
           </Button>
         </Grid>
@@ -135,8 +126,7 @@ export const TicketsPage = () => {
               minHeight: '50px',
               borderRadius: '16px',
               textTransform: 'none'
-            }}
-          >
+            }}>
             Випадкові питання
           </Button>
         </Grid>
