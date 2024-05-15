@@ -16,24 +16,6 @@ import { axiosInstance } from '../components/Interceptor/axiosInterceptor.js';
 import { GET_TICKET_QUESTIONS, GET_RANDOM_TICKET_QUESTIONS } from '../constants/ApiURL.js';
 import { useNavigate } from 'react-router-dom';
 
-// Utility function to shuffle an array
-const shuffleArray = (array) => {
-  let currentIndex = array.length,
-    randomIndex;
-
-  // While there remain elements to shuffle.
-  while (currentIndex !== 0) {
-    // Pick a remaining element.
-    randomIndex = Math.floor(Math.random() * currentIndex);
-    currentIndex--;
-
-    // And swap it with the current element.
-    [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
-  }
-
-  return array;
-};
-
 export const FormedTest = () => {
   const [openDialog, setOpenDialog] = useState(false);
   const [resultsDialog, setResultsDialog] = useState(false);
@@ -59,10 +41,34 @@ export const FormedTest = () => {
 
   const navigate = useNavigate();
 
+  const shuffleQuestions = (questions) => {
+    const shuffleArray = (array) => {
+      let currentIndex = array.length,
+        randomIndex;
+
+      // While there remain elements to shuffle.
+      while (currentIndex !== 0) {
+        // Pick a remaining element.
+        randomIndex = Math.floor(Math.random() * currentIndex);
+        currentIndex--;
+
+        // And swap it with the current element.
+        [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
+      }
+
+      return array;
+    };
+
+    return questions.map((question) => ({
+      ...question,
+      answers: shuffleArray(question.answers)
+    }));
+  }
+
   useEffect(() => {
-    if (!backupLoaded || !selectedCourse) {
-      return;
-    }
+    if (!backupLoaded) return;
+    if (!selectedCourse) return;
+
     if (!isSelectedRandomQuestions && selectedQuestionTicket === null) {
       console.log('No questions found, No random found');
       navigate('/courses');
@@ -74,11 +80,7 @@ export const FormedTest = () => {
         axiosInstance
           .get(GET_TICKET_QUESTIONS(selectedCourse.id, selectedQuestionTicket))
           .then((response) => {
-            const shuffledQuestions = response.data.map((question) => ({
-              ...question,
-              answers: shuffleArray(question.answers)
-            }));
-            setQuestions(shuffledQuestions);
+            setQuestions(shuffleQuestions(response.data));
           })
           .catch((error) => {
             console.error('Failed to fetch questions for the ticket:', error);
@@ -87,11 +89,7 @@ export const FormedTest = () => {
         axiosInstance
           .get(GET_RANDOM_TICKET_QUESTIONS(selectedCourse.id))
           .then((response) => {
-            const shuffledQuestions = response.data.map((question) => ({
-              ...question,
-              answers: shuffleArray(question.answers)
-            }));
-            setQuestions(shuffledQuestions);
+            setQuestions(shuffleQuestions(response.data));
           })
           .catch((error) => {
             console.error('Failed to fetch random questions:', error);
@@ -161,7 +159,7 @@ export const FormedTest = () => {
           {selectedCourse?.name}
         </Typography>
         <Typography variant="h5" gutterBottom>
-          Білет № {selectedQuestionTicket ?? 'Випадкові питання'}
+          {`${selectedQuestionTicket ? `Білет №${selectedQuestionTicket}` : 'Випадкові питання'}`}
         </Typography>
       </Box>
 

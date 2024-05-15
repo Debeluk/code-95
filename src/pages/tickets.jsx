@@ -2,8 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { Box, Typography, Grid, Button } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { useStore } from '../store/store.js';
-import { axiosInstance } from '../components/Interceptor/axiosInterceptor.js';
-import { GET_TICKET_QUESTIONS, GET_RANDOM_TICKET_QUESTIONS } from '../constants/ApiURL.js';
 
 export const TicketsPage = () => {
   const navigate = useNavigate();
@@ -20,7 +18,6 @@ export const TicketsPage = () => {
     setTicket: state.setQuestionTicket,
     selectRandomQuestions: state.selectRandomQuestions,
   }));
-  const [questions, setQuestions] = useState([]);
 
   useEffect(() => {
     if (!backupLoaded || !selectedCourse) return;
@@ -29,17 +26,9 @@ export const TicketsPage = () => {
   }, [backupLoaded, selectedCourse]);
 
   const handleTicketSelection = (ticketNumber) => {
-    setQuestions([]);
     setTicket(ticketNumber);
-    axiosInstance
-      .get(GET_TICKET_QUESTIONS(selectedCourse.id, ticketNumber))
-      .then((response) => {
-        setQuestions(response.data);
-        navigate('/test');
-      })
-      .catch((error) => {
-        console.error('Failed to fetch questions for the ticket:', error);
-      });
+    selectRandomQuestions(null);
+    navigate('/test');
   };
 
   const handleRandomTicket = () => {
@@ -51,22 +40,13 @@ export const TicketsPage = () => {
   };
 
   const handleRandomQuestions = () => {
-    setQuestions([]);
     selectRandomQuestions(true);
-    setTicket(null); // Сбрасываем выбранный билет
-    axiosInstance
-      .get(GET_RANDOM_TICKET_QUESTIONS(selectedCourse.id))
-      .then((response) => {
-        setQuestions(response.data);
-        navigate('/test');
-      })
-      .catch((error) => {
-        console.error('Failed to fetch random questions:', error);
-      });
+    setTicket(null);
+    navigate('/test');
   };
 
   return (
-    <Box sx={{ pb: 50, mt: 4, mb: 6, ml: 32, mr: 32 }}>
+    <Box sx={{ pb: 50, mt: 4, mb: 6, ml: 32, mr: 32 }}> {/* rewrite sx using normal words */}
       <Box textAlign="center" mb={4}>
         <Typography variant="h4" gutterBottom>
           {courseName}
