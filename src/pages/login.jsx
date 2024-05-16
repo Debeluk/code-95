@@ -63,19 +63,15 @@ export const LoginPage = () => {
           justifyContent: 'center',
           alignItems: 'center',
           minHeight: '100vh',
-          mt: 4,
-          mb: 6,
-          ml: 32,
-          mr: 32
+          marginTop: 4,
+          marginBottom: 6,
+          marginLeft: 32,
+          marginRight: 32
         }}>
-        <Paper elevation={3} sx={{ p: 4 }}>
+        <Paper elevation={3} sx={{ padding: 4, width: '100%' }}>
           <Grid container spacing={4}>
             {/* Левая секция */}
-            <Grid
-              item
-              xs={12}
-              md={6}
-              sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+            <Grid item xs={6} sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
               <Box>
                 <Typography variant="h4" gutterBottom>
                   ADR Online
@@ -102,13 +98,13 @@ export const LoginPage = () => {
               </Box>
             </Grid>
             {/* Правая секция для входа */}
-            <Grid item xs={12} md={6}>
+            <Grid item xs={6}>
               <Box>
                 <Typography variant="h5" align="center" gutterBottom>
                   Увійти до особистого кабінету
                 </Typography>
                 <form onSubmit={handleLogin}>
-                  <Box mb={2}>
+                  <Box marginBottom={2}>
                     <TextField
                       id="username"
                       label="Номер телефону"
@@ -119,7 +115,7 @@ export const LoginPage = () => {
                       onChange={(e) => setUsername(e.target.value)}
                     />
                   </Box>
-                  <Box mb={2}>
+                  <Box marginBottom={2}>
                     <TextField
                       id="password"
                       label="Пароль"

@@ -25,11 +25,11 @@ export const UserInfo = () => {
   };
 
   return (
-    <Box sx={{ mt: 4, mb: 6, ml: 32, mr: 32 }}>
+    <Box sx={{ marginTop: 4, marginBottom: 6, marginLeft: 32, marginRight: 32 }}>
       {/* First Row */}
-      <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
+      <Box display="flex" justifyContent="space-between" alignItems="center" marginBottom={2}>
         <Typography variant="h5">Додати/Змінити користувача</Typography>
-        <IconButton color="error" sx={{ p: 0 }}>
+        <IconButton color="error" sx={{ padding: 0 }}>
           <Box
             sx={{
               width: '24px',
@@ -46,7 +46,7 @@ export const UserInfo = () => {
       </Box>
 
       {/* Second Row */}
-      <Grid container spacing={2} justifyContent="space-between" alignItems="center" mb={2}>
+      <Grid container spacing={2} justifyContent="space-between" alignItems="center" marginBottom={2}>
         <Grid item sx={gridItemStyle}>
           <Typography variant="subtitle1" gutterBottom>
             Ім'я користувача
@@ -68,7 +68,7 @@ export const UserInfo = () => {
       </Grid>
 
       {/* Third Row */}
-      <Grid container spacing={2} justifyContent="space-between" alignItems="center" mb={2}>
+      <Grid container spacing={2} justifyContent="space-between" alignItems="center" marginBottom={2}>
         <Grid item sx={gridItemStyle}>
           <Typography variant="subtitle1" gutterBottom>
             Логін

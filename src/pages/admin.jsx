@@ -12,7 +12,7 @@ const renderRow = ({ index, style }) => (
       borderBottom: '1px solid #ddd',
       display: 'flex',
       alignItems: 'center',
-      pl: 2,
+      paddingLeft: 2,
       height: '100%'
     }}
   >
@@ -22,13 +22,13 @@ const renderRow = ({ index, style }) => (
 
 export const Admin = () => {
   return (
-    <Box sx={{ mt: 4, mb: 6, ml: 32, mr: 32, display: 'flex', flexDirection: 'column' }}>
+    <Box sx={{ marginTop: 4, marginBottom: 6, marginLeft: 32, marginRight: 32, display: 'flex', flexDirection: 'column' }}>
       {/* First Section */}
       <Box
         display="flex"
         flexDirection="row"
         justifyContent="space-between"
-        sx={{ minHeight: '80px', mb: 4 }}
+        sx={{ minHeight: '80px', marginBottom: 4 }}
       >
         {/* Left Part */}
         <Box
@@ -75,7 +75,7 @@ export const Admin = () => {
         </Box>
       </Box>
 
-      <Divider sx={{ mb: 4 }} />
+      <Divider sx={{ marginBottom: 4 }} />
 
       {/* List using react-window */}
       <Box flex={1}>

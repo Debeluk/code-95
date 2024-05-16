@@ -61,17 +61,17 @@ export const Header = () => {
       <Toolbar disableGutters>
         <Box
           sx={{
-            mt: 2,
-            mb: 2,
-            ml: { xs: 2, md: 32 },
-            mr: { xs: 2, md: 32 },
+            marginTop: 2,
+            marginBottom: 2,
+            marginLeft: 32,
+            marginRight: 32,
             width: '100%',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between'
           }}
         >
-          <Typography sx={{ fontSize: { xs: '16px', md: '18px' } }}>ADR Online</Typography>
+          <Typography sx={{ fontSize: '18px' }}>ADR Online</Typography>
           <Button
             color="inherit"
             onClick={handleClick}
@@ -87,7 +87,7 @@ export const Header = () => {
             }}
           >
             <Box display="flex" alignItems="center">
-              <Typography variant="subtitle1" mr={1}>
+              <Typography variant="subtitle1" sx={{ marginRight: 1 }}>
                 {user.name ?? 'Name'}
               </Typography>
               <ExpandMoreIcon />

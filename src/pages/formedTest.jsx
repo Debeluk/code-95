@@ -153,8 +153,8 @@ export const FormedTest = () => {
   };
 
   return (
-    <Box sx={{ mt: 4, mb: 6, ml: 32, mr: 32 }}>
-      <Box display="flex" justifyContent="space-between" mb={1}>
+    <Box sx={{ marginTop: 4, marginBottom: 6, marginLeft: 32, marginRight: 32 }}>
+      <Box display="flex" justifyContent="space-between" marginBottom={1}>
         <Typography variant="h4" gutterBottom>
           {selectedCourse?.name}
         </Typography>
@@ -163,7 +163,7 @@ export const FormedTest = () => {
         </Typography>
       </Box>
 
-      <Grid container spacing={1} mb={2}>
+      <Grid container spacing={1} marginBottom={2}>
         {questions.map((_, index) => (
           <Grid item xs="auto" key={index}>
             <Button
@@ -199,12 +199,12 @@ export const FormedTest = () => {
           minHeight="200px"
           maxHeight="400px"
           marginBottom="20px"
-          p={4}
+          padding={4}
           sx={{ borderRadius: '8px', backgroundColor: '#f9f9f9', boxShadow: 2 }}>
           <Typography variant="h6" gutterBottom>
             {questions[currentQuestionIndex].question}
           </Typography>
-          <FormControl component="fieldset" sx={{ mt: 4 }}>
+          <FormControl component="fieldset" sx={{ marginTop: 4 }}>
             <Grid container spacing={2} justifyContent="center">
               {questions[currentQuestionIndex].answers.map((answer, idx) => (
                 <Grid item xs={12} sm={4} key={idx}>

@@ -46,8 +46,8 @@ export const TicketsPage = () => {
   };
 
   return (
-    <Box sx={{ pb: 50, mt: 4, mb: 6, ml: 32, mr: 32 }}> {/* rewrite sx using normal words */}
-      <Box textAlign="center" mb={4}>
+    <Box sx={{ paddingBottom: 50, marginTop: 4, marginBottom: 6, marginLeft: 32, marginRight: 32 }}>
+      <Box textAlign="center" marginBottom={4}>
         <Typography variant="h4" gutterBottom>
           {courseName}
         </Typography>
@@ -56,7 +56,7 @@ export const TicketsPage = () => {
         </Typography>
       </Box>
 
-      <Grid container spacing={2} justifyContent="center" mb={4}>
+      <Grid container spacing={2} justifyContent="center" marginBottom={4}>
         {ticketNumbers.map((number) => (
           <Grid item key={number}>
             <Button
@@ -75,7 +75,7 @@ export const TicketsPage = () => {
         ))}
       </Grid>
 
-      <Grid container justifyContent="center" mb={4}>
+      <Grid container justifyContent="center" marginBottom={4}>
         <Grid item>
           <Button
             variant="contained"
@@ -86,7 +86,7 @@ export const TicketsPage = () => {
               minHeight: '50px',
               borderRadius: '16px',
               textTransform: 'none',
-              mr: 2
+              marginRight: 2
             }}>
             Випадковий білет
           </Button>

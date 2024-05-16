@@ -1,11 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { Box, Typography, Grid, Paper } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import secureLocalStorage from 'react-secure-storage';
 import { useStore } from '../store/store.js';
-import axios from 'axios';
 import { GET_COURSE } from '../constants/ApiURL.js';
-import { ACCESS_TOKEN } from '../constants/authConstants.js';
 import { axiosInstance } from '../components/Interceptor/axiosInterceptor.js';
 
 export const Courses = () => {
@@ -33,7 +30,7 @@ export const Courses = () => {
           console.error(err);
         });
     }
-  }, [backupLoaded]);
+  }, [backupLoaded, courses.length, deselectCourse, setCourses]);
 
   const handleCardClick = (courseName) => {
     const course = courses.find((c) => c.name === courseName);
@@ -48,8 +45,8 @@ export const Courses = () => {
   };
 
   return (
-    <Box sx={{ minHeight: '100vh', py: 6, mt: 4, mb: 6, ml: 32, mr: 32 }}>
-      <Box textAlign="center" sx={{ mb: 6 }}>
+    <Box sx={{ minHeight: '100vh', paddingY: 6, marginTop: 4, marginBottom: 6, marginLeft: 32, marginRight: 32 }}>
+      <Box textAlign="center" sx={{ marginBottom: 6 }}>
         <Typography variant="h4" gutterBottom>
           Курси
         </Typography>
