@@ -71,7 +71,7 @@ export const Header = () => {
             justifyContent: 'space-between'
           }}
         >
-          <Typography sx={{ fontSize: '18px' }}>ADR Online</Typography>
+          <Typography sx={{ fontSize: '18px' }}>є ADR test</Typography>
           <Button
             color="inherit"
             onClick={handleClick}

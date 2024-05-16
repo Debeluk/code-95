@@ -63,7 +63,7 @@ export const FormedTest = () => {
       ...question,
       answers: shuffleArray(question.answers)
     }));
-  }
+  };
 
   useEffect(() => {
     if (!backupLoaded) return;
@@ -121,26 +121,27 @@ export const FormedTest = () => {
   };
 
   const handleAnswerSelect = (questionIndex, question, answer) => {
-    setAnsweredQuestions((prev) => ({
-      ...prev,
-      [questionIndex]: answer.isCorrect ? 'correct' : 'incorrect'
-    }));
+    const updatedAnswers = {
+      ...answeredQuestions,
+      [questionIndex]: answer.isCorrect ? 'correct' : 'incorrect',
+      [`selected-${questionIndex}`]: answer.id
+    };
+
+    if (!answer.isCorrect) {
+      question.answers.forEach((ans) => {
+        if (ans.isCorrect) {
+          updatedAnswers[`correct-${questionIndex}`] = ans.id;
+        }
+      });
+    }
+
+    setAnsweredQuestions(updatedAnswers);
 
     if (answer.isCorrect) {
       setCorrectAnswers((prev) => prev + 1);
     } else {
       setIncorrectAnswers((prev) => prev + 1);
     }
-
-    console.log({
-      questionId: question.id,
-      questionText: question.question,
-      selectedAnswerId: answer.id,
-      selectedAnswerText: answer.answer,
-      isCorrect: answer.isCorrect,
-      correctAnswers: answer.isCorrect ? correctAnswers + 1 : correctAnswers,
-      incorrectAnswers: !answer.isCorrect ? incorrectAnswers + 1 : incorrectAnswers
-    });
 
     // Automatically navigate to the next question after answering
     setTimeout(() => {
@@ -149,11 +150,21 @@ export const FormedTest = () => {
       } else {
         setResultsDialog(true);
       }
-    }, 250);
+    }, 400);
+  };
+
+  const getButtonColor = (questionIndex, answer) => {
+    if (!answeredQuestions[questionIndex]) return 'white';
+    if (answeredQuestions[questionIndex] === 'correct' && answer.isCorrect) return '#71B378';
+    if (answeredQuestions[questionIndex] === 'incorrect') {
+      if (answer.isCorrect) return '#71B378';
+      if (answer.id === answeredQuestions[`selected-${questionIndex}`]) return '#CC4E5C';
+    }
+    return 'white';
   };
 
   return (
-    <Box sx={{ marginTop: 4, marginBottom: 6, marginLeft: 32, marginRight: 32 }}>
+    <Box sx={{ marginTop: 4, marginBottom: 6, marginLeft: 20, marginRight: 20, fontSize: '0.875rem' }}>
       <Box display="flex" justifyContent="space-between" marginBottom={1}>
         <Typography variant="h4" gutterBottom>
           {selectedCourse?.name}
@@ -163,12 +174,11 @@ export const FormedTest = () => {
         </Typography>
       </Box>
 
-      <Grid container spacing={1} marginBottom={2}>
+      <Grid container spacing={1} marginBottom={4}>
         {questions.map((_, index) => (
           <Grid item xs="auto" key={index}>
             <Button
               variant="outlined"
-              color="primary"
               onClick={() => handleQuestionSelect(index)}
               sx={{
                 minWidth: '38px',
@@ -176,14 +186,25 @@ export const FormedTest = () => {
                 borderRadius: '8px',
                 textTransform: 'none',
                 padding: '0',
-                backgroundColor:
-                  answeredQuestions[index] === 'correct'
-                    ? 'green'
-                    : answeredQuestions[index] === 'incorrect'
-                      ? 'red'
-                      : currentQuestionIndex === index
-                        ? '#4caf50'
-                        : undefined
+                color: answeredQuestions[index] === 'correct'
+                  ? '#71B378'
+                  : answeredQuestions[index] === 'incorrect'
+                    ? '#CC4E5C'
+                    : currentQuestionIndex === index
+                      ? 'black'
+                      : '#ccc',
+                borderColor: answeredQuestions[index] === 'correct'
+                  ? '#71B378'
+                  : answeredQuestions[index] === 'incorrect'
+                    ? '#CC4E5C'
+                    : currentQuestionIndex === index
+                      ? 'black'
+                      : '#ccc',
+                backgroundColor: 'white',
+                '&:hover': {
+                  color: 'black',
+                  borderColor: 'black',
+                }
               }}>
               {index + 1}
             </Button>
@@ -192,46 +213,67 @@ export const FormedTest = () => {
       </Grid>
 
       {questions.length > 0 && (
-        <Box
-          display="flex"
-          flexDirection="column"
-          justifyContent="space-between"
-          minHeight="200px"
-          maxHeight="400px"
-          marginBottom="20px"
-          padding={4}
-          sx={{ borderRadius: '8px', backgroundColor: '#f9f9f9', boxShadow: 2 }}>
-          <Typography variant="h6" gutterBottom>
-            {questions[currentQuestionIndex].question}
-          </Typography>
-          <FormControl component="fieldset" sx={{ marginTop: 4 }}>
-            <Grid container spacing={2} justifyContent="center">
-              {questions[currentQuestionIndex].answers.map((answer, idx) => (
-                <Grid item xs={12} sm={4} key={idx}>
-                  <Button
-                    variant="contained"
-                    color="inherit"
-                    fullWidth
-                    sx={{
-                      textTransform: 'none',
-                      maxHeight: '42px',
-                      backgroundColor: 'lightblue'
-                    }}
-                    onClick={() =>
-                      handleAnswerSelect(
-                        currentQuestionIndex,
-                        questions[currentQuestionIndex],
-                        answer
-                      )
-                    }
-                    disabled={!!answeredQuestions[currentQuestionIndex]}>
-                    {answer.answer}
-                  </Button>
-                </Grid>
-              ))}
-            </Grid>
-          </FormControl>
-        </Box>
+        <Grid container spacing={2} sx={{ maxHeight: '600px', marginBottom: '20px', borderRadius: '12px', backgroundColor: 'transparent', boxShadow: 0 }}>
+          <Grid item md={4}>
+            <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center">
+              <Typography variant="h6" gutterBottom sx={{ lineHeight: 1.25 }}>
+                {questions[currentQuestionIndex].question}
+              </Typography>
+
+              {questions[currentQuestionIndex].image && (
+                <Box
+                  component="img"
+                  sx={{
+                    maxHeight: 295,
+                    maxWidth: 395,
+                    marginBottom: 3
+                  }}
+                  alt="Question Image"
+                  src={questions[currentQuestionIndex].image}
+                />
+              )}
+            </Box>
+          </Grid>
+          <Grid item md={8}>
+            <FormControl component="fieldset" sx={{ width: '100%' }}>
+              <Grid container spacing={2} direction="column" sx={{ height: '100%' }}>
+                {questions[currentQuestionIndex].answers.map((answer, idx) => (
+                  <Grid item key={idx} sx={{ width: '100%' }}>
+                    <Button
+                      color="inherit"
+                      fullWidth
+                      sx={{
+                        textTransform: 'none',
+                        height: '75px',
+                        fontSize: '1rem',
+                        backgroundColor: `${getButtonColor(currentQuestionIndex, answer)}80`, // 80 в конце добавляет прозрачность 0.5
+                        lineHeight: '1',
+                        borderTop: '2px solid #ccc',
+                        borderBottom: '2px solid #ccc',
+                        borderRadius: '0',
+                        boxShadow: 'none',
+                        '&:hover': {
+                          backgroundColor: '#f5f5f5',
+                          boxShadow: 'none',
+                        },
+                        margin: 0
+                      }}
+                      onClick={() =>
+                        handleAnswerSelect(
+                          currentQuestionIndex,
+                          questions[currentQuestionIndex],
+                          answer
+                        )
+                      }
+                      disabled={!!answeredQuestions[currentQuestionIndex]}>
+                      {answer.answer}
+                    </Button>
+                  </Grid>
+                ))}
+              </Grid>
+            </FormControl>
+          </Grid>
+        </Grid>
       )}
 
       <Box display="flex" justifyContent="flex-end">
