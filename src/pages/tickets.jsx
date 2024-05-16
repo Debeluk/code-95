@@ -2,21 +2,17 @@ import React, { useState, useEffect } from 'react';
 import { Box, Typography, Grid, Button } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { useStore } from '../store/store.js';
+import BackButton from '../components/buttons/backButton.jsx';
 
 export const TicketsPage = () => {
   const navigate = useNavigate();
   const [ticketNumbers, setTicketNumbers] = useState([]);
   const [courseName, setCourseName] = useState('');
-  const {
-    selectedCourse,
-    backupLoaded,
-    setTicket,
-    selectRandomQuestions,
-  } = useStore((state) => ({
+  const { selectedCourse, backupLoaded, setTicket, selectRandomQuestions } = useStore((state) => ({
     selectedCourse: state.selectedCourse,
     backupLoaded: state.backupLoaded,
     setTicket: state.setQuestionTicket,
-    selectRandomQuestions: state.selectRandomQuestions,
+    selectRandomQuestions: state.selectRandomQuestions
   }));
 
   useEffect(() => {
@@ -47,6 +43,16 @@ export const TicketsPage = () => {
 
   return (
     <Box sx={{ paddingBottom: 50, marginTop: 4, marginBottom: 6, marginLeft: 32, marginRight: 32 }}>
+      <Box
+        sx={{
+          marginBottom: 4,
+          display: 'flex',
+          justifyContent: 'flex-start',
+          backgroundColor: 'transparent'
+        }}>
+        <BackButton sx={{ marginRight: 2 }} /> {/* Кнопка "Назад" */}
+      </Box>
+
       <Box textAlign="center" marginBottom={4}>
         <Typography variant="h4" gutterBottom>
           {courseName}
