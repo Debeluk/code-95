@@ -54,7 +54,7 @@ export const TicketsPage = () => {
       </Box>
 
       <Box textAlign="center" marginBottom={4}>
-        <Typography variant="h4" gutterBottom>
+        <Typography variant="h5" gutterBottom>
           {courseName}
         </Typography>
         <Typography variant="h5" gutterBottom>
@@ -67,13 +67,20 @@ export const TicketsPage = () => {
           <Grid item key={number}>
             <Button
               variant="contained"
-              color="inherit"
               onClick={() => handleTicketSelection(number)}
               sx={{
                 minWidth: '40px',
                 minHeight: '40px',
+                width: '40px',
+                height: '40px',
                 borderRadius: '8px',
-                textTransform: 'none'
+                textTransform: 'none',
+                backgroundColor: 'white',
+                color: 'black',
+                boxShadow: '0px 2px 5px rgba(0, 0, 0, 0.1)',
+                '&:hover': {
+                  backgroundColor: '#f0f0f0'
+                }
               }}>
               {number}
             </Button>
@@ -85,13 +92,18 @@ export const TicketsPage = () => {
         <Grid item>
           <Button
             variant="contained"
-            color="inherit"
             onClick={handleRandomTicket}
             sx={{
               minWidth: '270px',
               minHeight: '50px',
               borderRadius: '16px',
               textTransform: 'none',
+              backgroundColor: 'white',
+              color: 'black',
+              boxShadow: '0px 2px 5px rgba(0, 0, 0, 0.1)',
+              '&:hover': {
+                backgroundColor: '#f0f0f0'
+              },
               marginRight: 2
             }}>
             Випадковий білет
@@ -100,13 +112,18 @@ export const TicketsPage = () => {
         <Grid item>
           <Button
             variant="contained"
-            color="inherit"
             onClick={handleRandomQuestions}
             sx={{
               minWidth: '270px',
               minHeight: '50px',
               borderRadius: '16px',
-              textTransform: 'none'
+              textTransform: 'none',
+              backgroundColor: 'white',
+              color: 'black',
+              boxShadow: '0px 2px 5px rgba(0, 0, 0, 0.1)',
+              '&:hover': {
+                backgroundColor: '#f0f0f0'
+              }
             }}>
             Випадкові питання
           </Button>

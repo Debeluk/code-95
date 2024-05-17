@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack'; // Импортируем иконку стрелки
+import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace'; // Импортируем иконку с длинной стрелкой
 
 const BackButton = ({ sx, ...props }) => {
   const navigate = useNavigate();
@@ -17,11 +17,13 @@ const BackButton = ({ sx, ...props }) => {
         textTransform: 'none',
         backgroundColor: 'transparent',
         color: 'lightgray',
+        display: 'flex',
+        alignItems: 'center',
         ...sx
       }}
       {...props}
     >
-      <ArrowBackIcon /> {/* Используем иконку стрелки */}
+      <KeyboardBackspaceIcon sx={{ fontSize: '2.5rem' }} /> {/* Увеличиваем размер иконки */}
     </Button>
   );
 };

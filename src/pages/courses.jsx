@@ -45,7 +45,15 @@ export const Courses = () => {
   };
 
   return (
-    <Box sx={{ minHeight: '100vh', paddingY: 6, marginTop: 4, marginBottom: 6, marginLeft: 32, marginRight: 32 }}>
+    <Box
+      sx={{
+        minHeight: '100vh',
+        paddingY: 6,
+        marginTop: 4,
+        marginBottom: 6,
+        marginLeft: 32,
+        marginRight: 32
+      }}>
       <Box textAlign="center" sx={{ marginBottom: 6 }}>
         <Typography variant="h4" gutterBottom>
           Курси
@@ -55,36 +63,24 @@ export const Courses = () => {
         {courses.map((course) => (
           <Grid item xs={12} sm={6} md={4} key={course.id}>
             <Paper
-              elevation={0}
+              elevation={3}
               sx={{
                 borderRadius: '16px',
                 backgroundColor: 'white',
                 display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'flex-end',
+                justifyContent: 'center',
+                alignItems: 'center',
                 height: 150,
                 padding: 2,
                 cursor: 'pointer',
-                border: '1px inset black',
-                borderTop: 'none',
-                boxShadow: '0px 0px 0px rgba(0,0,0,0)',
+                boxShadow: '0px 4px 12px rgba(0,0,0,0.1)',
+                transition: 'box-shadow 0.3s ease-in-out',
                 '&:hover': {
-                  boxShadow: '0px 4px 12px rgba(0,0,0,0.1), 0px 0px 0px rgba(0,0,0,0)'
+                  boxShadow: '0px 8px 24px rgba(0,0,0,0.2)'
                 }
               }}
-              onClick={() => handleCardClick(course.name)}
-            >
-              <Typography
-                variant="h6"
-                color="inherit"
-                align="center"
-                sx={{
-                  flexGrow: 1,
-                  display: 'flex',
-                  alignItems: 'flex-end',
-                  justifyContent: 'center'
-                }}
-              >
+              onClick={() => handleCardClick(course.name)}>
+              <Typography variant="h6" color="inherit" align="center">
                 {course.name}
               </Typography>
             </Paper>
