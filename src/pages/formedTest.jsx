@@ -15,10 +15,12 @@ import { useStore } from '../store/store.js';
 import { axiosInstance } from '../components/Interceptor/axiosInterceptor.js';
 import { GET_TICKET_QUESTIONS, GET_RANDOM_TICKET_QUESTIONS } from '../constants/ApiURL.js';
 import { useNavigate } from 'react-router-dom';
+import BackButton from '../components/buttons/backButton.jsx';
 
 export const FormedTest = () => {
   const [openDialog, setOpenDialog] = useState(false);
   const [resultsDialog, setResultsDialog] = useState(false);
+  const [showBackButton, setShowBackButton] = useState(false);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [questions, setQuestions] = useState([]);
   const [answeredQuestions, setAnsweredQuestions] = useState({});
@@ -163,8 +165,15 @@ export const FormedTest = () => {
     return 'white';
   };
 
+  const handleReviewQuestions = () => {
+    setResultsDialog(false);
+    setShowBackButton(true);
+  };
+
   return (
-    <Box sx={{ marginTop: 4, marginBottom: 6, marginLeft: 20, marginRight: 20, fontSize: '0.875rem' }}>
+    <Box
+      sx={{ marginTop: 4, marginBottom: 6, marginLeft: 20, marginRight: 20, fontSize: '0.875rem' }}>
+      {showBackButton && <BackButton />}
       <Box display="flex" justifyContent="space-between" marginBottom={1}>
         <Typography variant="h4" gutterBottom>
           {selectedCourse?.name}
@@ -186,24 +195,26 @@ export const FormedTest = () => {
                 borderRadius: '8px',
                 textTransform: 'none',
                 padding: '0',
-                color: answeredQuestions[index] === 'correct'
-                  ? '#71B378'
-                  : answeredQuestions[index] === 'incorrect'
-                    ? '#CC4E5C'
-                    : currentQuestionIndex === index
-                      ? 'black'
-                      : '#ccc',
-                borderColor: answeredQuestions[index] === 'correct'
-                  ? '#71B378'
-                  : answeredQuestions[index] === 'incorrect'
-                    ? '#CC4E5C'
-                    : currentQuestionIndex === index
-                      ? 'black'
-                      : '#ccc',
+                color:
+                  answeredQuestions[index] === 'correct'
+                    ? '#3FFF00'
+                    : answeredQuestions[index] === 'incorrect'
+                      ? 'red'
+                      : currentQuestionIndex === index
+                        ? 'black'
+                        : '#ccc',
+                borderColor:
+                  answeredQuestions[index] === 'correct'
+                    ? '#3FFF00'
+                    : answeredQuestions[index] === 'incorrect'
+                      ? 'red'
+                      : currentQuestionIndex === index
+                        ? 'black'
+                        : '#ccc',
                 backgroundColor: 'white',
                 '&:hover': {
                   color: 'black',
-                  borderColor: 'black',
+                  borderColor: 'black'
                 }
               }}>
               {index + 1}
@@ -213,7 +224,16 @@ export const FormedTest = () => {
       </Grid>
 
       {questions.length > 0 && (
-        <Grid container spacing={2} sx={{ maxHeight: '600px', marginBottom: '20px', borderRadius: '12px', backgroundColor: 'transparent', boxShadow: 0 }}>
+        <Grid
+          container
+          spacing={2}
+          sx={{
+            maxHeight: '600px',
+            marginBottom: '20px',
+            borderRadius: '12px',
+            backgroundColor: 'transparent',
+            boxShadow: 0
+          }}>
           <Grid item md={4}>
             <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center">
               <Typography variant="h6" gutterBottom sx={{ lineHeight: 1.25 }}>
@@ -254,7 +274,7 @@ export const FormedTest = () => {
                         boxShadow: 'none',
                         '&:hover': {
                           backgroundColor: '#f5f5f5',
-                          boxShadow: 'none',
+                          boxShadow: 'none'
                         },
                         margin: 0
                       }}
@@ -295,18 +315,27 @@ export const FormedTest = () => {
         open={openDialog}
         onClose={handleCloseDialog}
         aria-labelledby="confirm-dialog-title"
-        aria-describedby="confirm-dialog-description">
+        aria-describedby="confirm-dialog-description"
+        fullWidth
+        sx={{ maxWidth: '460px', margin: 'auto' }}>
         <DialogTitle id="confirm-dialog-title">Підтвердити завершення тесту</DialogTitle>
         <DialogContent>
           <DialogContentText id="confirm-dialog-description">
-            Ви впевнені, що хочете завершити тест?
+            Ви впевнені, що хочете завершити тест? Результати тесту не будуть збережені
           </DialogContentText>
         </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseDialog} color="primary">
+        <DialogActions sx={{ justifyContent: 'center' }}>
+          <Button
+            onClick={handleCloseDialog}
+            color="primary"
+            sx={{ minWidth: '170px', border: '1px solid lightblue', marginBottom: '8px' }}>
             Відміна
           </Button>
-          <Button onClick={handleEndTest} color="error" variant="contained">
+          <Button
+            onClick={handleEndTest}
+            color="error"
+            variant="contained"
+            sx={{ minWidth: '170px', marginBottom: '8px' }}>
             Завершити тест
           </Button>
         </DialogActions>
@@ -316,7 +345,9 @@ export const FormedTest = () => {
         open={resultsDialog}
         onClose={() => setResultsDialog(false)}
         aria-labelledby="results-dialog-title"
-        aria-describedby="results-dialog-description">
+        aria-describedby="results-dialog-description"
+        sx={{ maxWidth: '620px', margin: 'auto' }}
+        fullWidth>
         <DialogTitle id="results-dialog-title">Результати тесту</DialogTitle>
         <DialogContent>
           <DialogContentText id="results-dialog-description">
@@ -324,12 +355,24 @@ export const FormedTest = () => {
             <br />
             Неправильні відповіді: {incorrectAnswers}
             <br />
-            {incorrectAnswers >= 3 ? 'Тест не складений' : 'Тест складений'}
+            <Typography component="span" fontWeight="bold">
+              {incorrectAnswers >= 3 ? 'Тест не складений' : 'Тест складений'}
+            </Typography>
           </DialogContentText>
         </DialogContent>
-        <DialogActions>
-          <Button onClick={handleEndTest} color="primary" variant="contained">
-            Повернутися до вибору білетів
+        <DialogActions sx={{ justifyContent: 'center', gap: '50px' }}>
+          <Button
+            onClick={handleReviewQuestions}
+            color="primary"
+            sx={{ maxWidth: '220px', border: '1px solid lightblue', marginBottom: '8px' }}>
+            Переглянути запитання
+          </Button>
+          <Button
+            onClick={handleEndTest}
+            color="primary"
+            variant="contained"
+            sx={{ maxWidth: '240px', marginBottom: '8px' }}>
+            Повернутися до вибору
           </Button>
         </DialogActions>
       </Dialog>
