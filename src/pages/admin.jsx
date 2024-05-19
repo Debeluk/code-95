@@ -22,7 +22,16 @@ const renderRow = ({ index, style }) => (
 
 export const Admin = () => {
   return (
-    <Box sx={{ marginTop: 4, marginBottom: 6, marginLeft: 32, marginRight: 32, display: 'flex', flexDirection: 'column' }}>
+    <Box
+      sx={{
+        marginTop: 4,
+        marginBottom: 6,
+        marginLeft: 32,
+        marginRight: 32,
+        display: 'flex',
+        flexDirection: 'column'
+      }}
+    >
       {/* First Section */}
       <Box
         display="flex"

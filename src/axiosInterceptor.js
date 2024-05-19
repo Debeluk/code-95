@@ -3,7 +3,7 @@ import secureLocalStorage from 'react-secure-storage';
 import { REFRESH } from './constants/ApiURL.js';
 import { ACCESS_TOKEN, REFRESH_TOKEN } from './constants/authConstants.js';
 import { TOKEN_EXPIRED, UNAUTHORIZED_STATUS_CODE } from './constants/ErrorConstants.js';
-import {useStore} from "./store/store.js";
+import { useStore } from './store/store.js';
 
 export const axiosInstance = axios.create();
 
@@ -11,7 +11,7 @@ export const logout = () => {
   secureLocalStorage.removeItem(ACCESS_TOKEN);
   secureLocalStorage.removeItem(REFRESH_TOKEN);
   useStore.getState().resetStore();
-}
+};
 
 axiosInstance.interceptors.request.use(
   (config) => {

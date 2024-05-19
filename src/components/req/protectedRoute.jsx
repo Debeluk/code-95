@@ -1,7 +1,7 @@
-import React, {useEffect} from 'react';
-import {useNavigate} from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useStore } from '../../store/store.js';
-import {ADMIN_PATH, COURSES_PATH, LOGIN_PATH} from "../../constants/PathURL.js";
+import { ADMIN_PATH, COURSES_PATH, LOGIN_PATH } from '../../constants/PathURL.js';
 
 export const ProtectedRoute = ({ children, requiredRole }) => {
   console.log(useStore.getState());

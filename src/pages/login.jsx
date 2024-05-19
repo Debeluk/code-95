@@ -6,10 +6,7 @@ import { LOGIN } from '../constants/ApiURL.js';
 import secureLocalStorage from 'react-secure-storage';
 import { useStore } from '../store/store.js';
 import Loader from '../components/Loader/Loader.jsx';
-import {
-  BAD_REQUEST_STATUS_CODE,
-  SESSION_ALREADY_EXISTS
-} from '../constants/ErrorConstants.js';
+import { BAD_REQUEST_STATUS_CODE, SESSION_ALREADY_EXISTS } from '../constants/ErrorConstants.js';
 
 export const LoginPage = () => {
   const [username, setUsername] = useState('');
@@ -59,14 +56,16 @@ export const LoginPage = () => {
           marginBottom: 6,
           marginLeft: 32,
           marginRight: 32
-        }}>
+        }}
+      >
         <Paper elevation={3} sx={{ padding: 4, width: '100%' }}>
           <Grid container spacing={4}>
             {/* Левая секция */}
             <Grid
               item
               xs={6}
-              sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+              sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}
+            >
               <Box>
                 <Typography variant="h4" gutterBottom>
                   ADR Online

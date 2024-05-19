@@ -1,5 +1,5 @@
-import React, {useEffect, useRef} from 'react';
-import {BrowserRouter as Router, Routes, Route} from 'react-router-dom';
+import React, { useEffect, useRef } from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { LoginPage } from './pages/login.jsx';
 import { Header } from './pages/header.jsx';
 import { Footer } from './pages/footer.jsx';
@@ -12,16 +12,35 @@ import { ProtectedRoute } from './components/req/protectedRoute.jsx';
 import { loadState, saveState } from './store/persistence.js';
 import { Box } from '@mui/material';
 import Notiflix from 'notiflix';
-import {GET_CURRENT_USER, WEB_SOCKET_CONNECTION} from "./constants/ApiURL.js";
-import secureLocalStorage from "react-secure-storage";
-import {ACCESS_TOKEN, REFRESH_TOKEN} from "./constants/authConstants.js";
-import {ADMIN_PATH, COURSES_PATH, LOGIN_PATH, TEST_PATH, TICKETS_PATH, USER_INFO_PATH} from "./constants/PathURL.js";
-import {axiosInstance} from "./axiosInterceptor.js";
-import {useStore} from "./store/store.js";
+import { GET_CURRENT_USER, WEB_SOCKET_CONNECTION } from './constants/ApiURL.js';
+import secureLocalStorage from 'react-secure-storage';
+import { ACCESS_TOKEN, REFRESH_TOKEN } from './constants/authConstants.js';
+import {
+  ADMIN_PATH,
+  COURSES_PATH,
+  LOGIN_PATH,
+  TEST_PATH,
+  TICKETS_PATH,
+  USER_INFO_PATH
+} from './constants/PathURL.js';
+import { axiosInstance } from './axiosInterceptor.js';
+import { useStore } from './store/store.js';
 
 export const App = () => {
   const wsRef = useRef(null);
-  const { accessToken, refreshToken, sessionId, currentUser, websocketConnectionFailed, setWebsocketConnectionFailed, setCurrentUser, setAccessToken, setRefreshToken, setSessionId, backupLoaded } = useStore((state) => ({
+  const {
+    accessToken,
+    refreshToken,
+    sessionId,
+    currentUser,
+    websocketConnectionFailed,
+    setWebsocketConnectionFailed,
+    setCurrentUser,
+    setAccessToken,
+    setRefreshToken,
+    setSessionId,
+    backupLoaded
+  } = useStore((state) => ({
     accessToken: state.accessToken,
     refreshToken: state.refreshToken,
     sessionId: state.sessionId,
@@ -77,7 +96,6 @@ export const App = () => {
 
     ws.onopen = () => {
       console.log('WebSocket connected');
-
     };
 
     ws.onmessage = (event) => {
@@ -124,11 +142,14 @@ export const App = () => {
     <Box sx={{ minHeight: '100vh', backgroundColor: '#f7f7f7' }}>
       <Router>
         <Routes>
-          <Route path={LOGIN_PATH} element={
-            <ProtectedRoute>
-              <LoginPage />
-            </ProtectedRoute>
-          } />
+          <Route
+            path={LOGIN_PATH}
+            element={
+              <ProtectedRoute>
+                <LoginPage />
+              </ProtectedRoute>
+            }
+          />
           <Route
             path={COURSES_PATH}
             element={

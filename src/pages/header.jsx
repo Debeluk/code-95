@@ -16,7 +16,7 @@ import {
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { useStore } from '../store/store.js';
 import { useNavigate } from 'react-router-dom';
-import {logout} from "../axiosInterceptor.js";
+import { logout } from '../axiosInterceptor.js';
 
 export const Header = () => {
   const [anchorEl, setAnchorEl] = React.useState(null);
