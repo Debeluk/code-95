@@ -1,20 +1,21 @@
 import React, { useState } from 'react';
 import { Box, Typography, TextField, Button, Paper, Grid, List, ListItem } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
 import Notiflix from 'notiflix';
-import { axiosInstance } from '../components/Interceptor/axiosInterceptor.js';
-import { GET_CURRENT_USER, LOGIN } from '../constants/ApiURL.js';
+import { axiosInstance } from '../axiosInterceptor.js';
+import { LOGIN } from '../constants/ApiURL.js';
 import secureLocalStorage from 'react-secure-storage';
 import { useStore } from '../store/store.js';
 import Loader from '../components/Loader/Loader.jsx';
-import axios from 'axios';
+import { BAD_REQUEST_STATUS_CODE, SESSION_ALREADY_EXISTS } from '../constants/ErrorConstants.js';
 
 export const LoginPage = () => {
-  const navigate = useNavigate();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const setCurrentUser = useStore((state) => state.setCurrentUser);
+  const { setAccessToken, setRefreshToken } = useStore((state) => ({
+    setAccessToken: state.setAccessToken,
+    setRefreshToken: state.setRefreshToken
+  }));
 
   const handleLogin = (event) => {
     event.preventDefault();
@@ -25,31 +26,19 @@ export const LoginPage = () => {
         console.log('Login successful:', res.data);
         secureLocalStorage.setItem('accessToken', res.data.accessToken);
         secureLocalStorage.setItem('refreshToken', res.data.refreshToken);
-        axios
-          .get(GET_CURRENT_USER, {
-            headers: {
-              Authorization: `Bearer ${res.data.accessToken}`
-            }
-          })
-          .then((response) => {
-            setCurrentUser(response.data);
-            Notiflix.Notify.success('Login successful!');
-            if (response.data.userRole === 'ADMIN') {
-              navigate('/admin');
-            } else {
-              navigate('/courses');
-            }
-            setIsLoading(false);
-          })
-          .catch((err) => {
-            setIsLoading(false);
-            console.error('Error during login or fetching user details:', err.message);
-            Notiflix.Notify.failure('An error occurred during login. Please try again.');
-          });
+        setAccessToken(res.data.accessToken);
+        setRefreshToken(res.data.refreshToken);
       })
       .catch((err) => {
-        console.error('Error during login or fetching user details:', err.message);
-        Notiflix.Notify.failure('Login failed. Please check your credentials.');
+        if (
+          err?.response?.status === BAD_REQUEST_STATUS_CODE &&
+          err?.response?.data?.detail === SESSION_ALREADY_EXISTS
+        ) {
+          Notiflix.Notify.failure('Session already exists. Please logout from other device.');
+        } else {
+          console.error('Error during login or fetching user details:', err.message);
+          Notiflix.Notify.failure('Login failed. Please check your credentials.');
+        }
         setIsLoading(false);
       });
   };
@@ -67,11 +56,16 @@ export const LoginPage = () => {
           marginBottom: 6,
           marginLeft: 32,
           marginRight: 32
-        }}>
+        }}
+      >
         <Paper elevation={3} sx={{ padding: 4, width: '100%' }}>
           <Grid container spacing={4}>
             {/* Левая секция */}
-            <Grid item xs={6} sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+            <Grid
+              item
+              xs={6}
+              sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}
+            >
               <Box>
                 <Typography variant="h4" gutterBottom>
                   ADR Online

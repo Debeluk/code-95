@@ -3,7 +3,7 @@ import { Box, Typography, Grid, Paper } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { useStore } from '../store/store.js';
 import { GET_COURSE } from '../constants/ApiURL.js';
-import { axiosInstance } from '../components/Interceptor/axiosInterceptor.js';
+import { axiosInstance } from '../axiosInterceptor.js';
 
 export const Courses = () => {
   const navigate = useNavigate();
@@ -53,7 +53,8 @@ export const Courses = () => {
         marginBottom: 6,
         marginLeft: 32,
         marginRight: 32
-      }}>
+      }}
+    >
       <Box textAlign="center" sx={{ marginBottom: 6 }}>
         <Typography variant="h4" gutterBottom>
           Курси
@@ -79,7 +80,8 @@ export const Courses = () => {
                   boxShadow: '0px 8px 24px rgba(0,0,0,0.2)'
                 }
               }}
-              onClick={() => handleCardClick(course.name)}>
+              onClick={() => handleCardClick(course.name)}
+            >
               <Typography variant="h6" color="inherit" align="center">
                 {course.name}
               </Typography>

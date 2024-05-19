@@ -13,7 +13,7 @@ import {
   Paper
 } from '@mui/material';
 import { useStore } from '../store/store.js';
-import { axiosInstance } from '../components/Interceptor/axiosInterceptor.js';
+import { axiosInstance } from '../axiosInterceptor.js';
 import { GET_TICKET_QUESTIONS, GET_RANDOM_TICKET_QUESTIONS } from '../constants/ApiURL.js';
 import { useNavigate } from 'react-router-dom';
 import BackButton from '../components/buttons/backButton.jsx';
@@ -177,7 +177,8 @@ export const FormedTest = () => {
         minHeight: '100vh',
         backgroundColor: '#f5f5f5',
         paddingTop: 4
-      }}>
+      }}
+    >
       <Box sx={{ marginLeft: 20, marginRight: 20 }}>
         {showBackButton && (
           <Box sx={{ marginBottom: 2 }}>
@@ -191,7 +192,8 @@ export const FormedTest = () => {
             fontSize: '0.875rem',
             display: 'flex',
             justifyContent: 'center'
-          }}>
+          }}
+        >
           <Paper
             elevation={3}
             sx={{
@@ -199,7 +201,8 @@ export const FormedTest = () => {
               padding: 4,
               borderRadius: 2,
               boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)'
-            }}>
+            }}
+          >
             <Box display="flex" justifyContent="space-between" marginBottom={1}>
               <Typography variant="h6" gutterBottom>
                 {selectedCourse?.name}
@@ -242,7 +245,8 @@ export const FormedTest = () => {
                         color: 'black',
                         borderColor: 'black'
                       }
-                    }}>
+                    }}
+                  >
                     {index + 1}
                   </Button>
                 </Grid>
@@ -259,13 +263,15 @@ export const FormedTest = () => {
                   borderRadius: '12px',
                   backgroundColor: 'transparent',
                   boxShadow: 0
-                }}>
+                }}
+              >
                 <Grid item md={4}>
                   <Box
                     display="flex"
                     flexDirection="column"
                     justifyContent="center"
-                    alignItems="center">
+                    alignItems="center"
+                  >
                     <Typography variant="h6" gutterBottom sx={{ lineHeight: 1.25 }}>
                       {questions[currentQuestionIndex].question}
                     </Typography>
@@ -315,7 +321,8 @@ export const FormedTest = () => {
                                 answer
                               )
                             }
-                            disabled={!!answeredQuestions[currentQuestionIndex]}>
+                            disabled={!!answeredQuestions[currentQuestionIndex]}
+                          >
                             {answer.answer}
                           </Button>
                         </Grid>
@@ -336,7 +343,8 @@ export const FormedTest = () => {
                   textTransform: 'none',
                   minWidth: '120px',
                   minHeight: '40px'
-                }}>
+                }}
+              >
                 Завершити тест
               </Button>
             </Box>
@@ -347,7 +355,8 @@ export const FormedTest = () => {
               aria-labelledby="confirm-dialog-title"
               aria-describedby="confirm-dialog-description"
               fullWidth
-              sx={{ maxWidth: '460px', margin: 'auto' }}>
+              sx={{ maxWidth: '460px', margin: 'auto' }}
+            >
               <DialogTitle id="confirm-dialog-title">Підтвердити завершення тесту</DialogTitle>
               <DialogContent>
                 <DialogContentText id="confirm-dialog-description">
@@ -358,14 +367,16 @@ export const FormedTest = () => {
                 <Button
                   onClick={handleCloseDialog}
                   color="primary"
-                  sx={{ minWidth: '170px', border: '1px solid lightblue', marginBottom: '8px' }}>
+                  sx={{ minWidth: '170px', border: '1px solid lightblue', marginBottom: '8px' }}
+                >
                   Відміна
                 </Button>
                 <Button
                   onClick={handleEndTest}
                   color="error"
                   variant="contained"
-                  sx={{ minWidth: '170px', marginBottom: '8px' }}>
+                  sx={{ minWidth: '170px', marginBottom: '8px' }}
+                >
                   Завершити тест
                 </Button>
               </DialogActions>
@@ -377,7 +388,8 @@ export const FormedTest = () => {
               aria-labelledby="results-dialog-title"
               aria-describedby="results-dialog-description"
               sx={{ maxWidth: '620px', margin: 'auto' }}
-              fullWidth>
+              fullWidth
+            >
               <DialogTitle id="results-dialog-title">Результати тесту</DialogTitle>
               <DialogContent>
                 <DialogContentText id="results-dialog-description">
@@ -394,14 +406,16 @@ export const FormedTest = () => {
                 <Button
                   onClick={handleReviewQuestions}
                   color="primary"
-                  sx={{ maxWidth: '220px', border: '1px solid lightblue', marginBottom: '8px' }}>
+                  sx={{ maxWidth: '220px', border: '1px solid lightblue', marginBottom: '8px' }}
+                >
                   Переглянути запитання
                 </Button>
                 <Button
                   onClick={handleEndTest}
                   color="primary"
                   variant="contained"
-                  sx={{ maxWidth: '240px', marginBottom: '8px' }}>
+                  sx={{ maxWidth: '240px', marginBottom: '8px' }}
+                >
                   Повернутися до вибору
                 </Button>
               </DialogActions>

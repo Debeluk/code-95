@@ -49,7 +49,8 @@ export const TicketsPage = () => {
           display: 'flex',
           justifyContent: 'flex-start',
           backgroundColor: 'transparent'
-        }}>
+        }}
+      >
         <BackButton sx={{ marginRight: 2 }} /> {/* Кнопка "Назад" */}
       </Box>
 
@@ -81,7 +82,8 @@ export const TicketsPage = () => {
                 '&:hover': {
                   backgroundColor: '#f0f0f0'
                 }
-              }}>
+              }}
+            >
               {number}
             </Button>
           </Grid>
@@ -105,7 +107,8 @@ export const TicketsPage = () => {
                 backgroundColor: '#f0f0f0'
               },
               marginRight: 2
-            }}>
+            }}
+          >
             Випадковий білет
           </Button>
         </Grid>
@@ -124,7 +127,8 @@ export const TicketsPage = () => {
               '&:hover': {
                 backgroundColor: '#f0f0f0'
               }
-            }}>
+            }}
+          >
             Випадкові питання
           </Button>
         </Grid>

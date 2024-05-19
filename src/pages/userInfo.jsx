@@ -46,10 +46,16 @@ export const UserInfo = () => {
       </Box>
 
       {/* Second Row */}
-      <Grid container spacing={2} justifyContent="space-between" alignItems="center" marginBottom={2}>
+      <Grid
+        container
+        spacing={2}
+        justifyContent="space-between"
+        alignItems="center"
+        marginBottom={2}
+      >
         <Grid item sx={gridItemStyle}>
           <Typography variant="subtitle1" gutterBottom>
-            Ім'я користувача
+            {`Ім'я користувача`}
           </Typography>
           <TextField variant="outlined" fullWidth sx={textFieldStyle} />
         </Grid>
@@ -68,7 +74,13 @@ export const UserInfo = () => {
       </Grid>
 
       {/* Third Row */}
-      <Grid container spacing={2} justifyContent="space-between" alignItems="center" marginBottom={2}>
+      <Grid
+        container
+        spacing={2}
+        justifyContent="space-between"
+        alignItems="center"
+        marginBottom={2}
+      >
         <Grid item sx={gridItemStyle}>
           <Typography variant="subtitle1" gutterBottom>
             Логін
