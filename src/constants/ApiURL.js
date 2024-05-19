@@ -25,3 +25,6 @@ export const GET_TICKET_QUESTIONS = (course_id, ticket_id) =>
 export const GET_RANDOM_TICKET_QUESTIONS = (course_id) =>
   `${BACKEND_URL}${API}${V1}${COURSE}/${course_id}/random`; //GET 'TOTAL / 10' QUESTIONS BASED ON TICKET NUMBER OF COURSE
 export const GET_RANDOM = `${BACKEND_URL}${API}${V1}${COURSE}/{course_id}/random`; //GET 25 RANDOM QUESTIONS FROM ONE COURSE
+export const WEB_SOCKET = `${BACKEND_URL.replace('http', 'ws')}${API}${V1}${AUTH}/ws`;
+
+export const WEB_SOCKET_CONNECTION= (accessToken, refreshToken) => `${WEB_SOCKET}?token=${accessToken}&refresh_token=${refreshToken}`;

@@ -15,16 +15,15 @@ import {
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { useStore } from '../store/store.js';
-import secureLocalStorage from 'react-secure-storage';
 import { useNavigate } from 'react-router-dom';
+import {logout} from "../axiosInterceptor.js";
 
 export const Header = () => {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [openDialog, setOpenDialog] = React.useState(false);
   const open = Boolean(anchorEl);
-  const { user, setCurrentUser } = useStore((state) => ({
-    user: state.currentUser,
-    setCurrentUser: state.setCurrentUser
+  const { user } = useStore((state) => ({
+    user: state.currentUser
   }));
   const navigate = useNavigate();
 
@@ -36,13 +35,6 @@ export const Header = () => {
     setAnchorEl(null);
   };
 
-  const handleLogout = () => {
-    secureLocalStorage.removeItem('accessToken');
-    secureLocalStorage.removeItem('refreshToken');
-    setCurrentUser(null);
-    navigate('/');
-  };
-
   const handleOpenDialog = () => {
     setOpenDialog(true);
   };
@@ -52,7 +44,8 @@ export const Header = () => {
   };
 
   const handleConfirmLogout = () => {
-    handleLogout();
+    logout();
+    navigate('/');
     setOpenDialog(false);
   };
 

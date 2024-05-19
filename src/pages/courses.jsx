@@ -3,7 +3,7 @@ import { Box, Typography, Grid, Paper } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { useStore } from '../store/store.js';
 import { GET_COURSE } from '../constants/ApiURL.js';
-import { axiosInstance } from '../components/Interceptor/axiosInterceptor.js';
+import { axiosInstance } from '../axiosInterceptor.js';
 
 export const Courses = () => {
   const navigate = useNavigate();

@@ -13,7 +13,7 @@ import {
   Paper
 } from '@mui/material';
 import { useStore } from '../store/store.js';
-import { axiosInstance } from '../components/Interceptor/axiosInterceptor.js';
+import { axiosInstance } from '../axiosInterceptor.js';
 import { GET_TICKET_QUESTIONS, GET_RANDOM_TICKET_QUESTIONS } from '../constants/ApiURL.js';
 import { useNavigate } from 'react-router-dom';
 import BackButton from '../components/buttons/backButton.jsx';
