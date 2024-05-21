@@ -7,7 +7,6 @@ import { Courses } from './pages/courses.jsx';
 import { TicketsPage } from './pages/tickets.jsx';
 import { FormedTest } from './pages/formedTest.jsx';
 import { Admin } from './pages/admin.jsx';
-import { UserInfo } from './pages/userInfo.jsx';
 import { ProtectedRoute } from './components/req/protectedRoute.jsx';
 import { loadState, saveState } from './store/persistence.js';
 import { Box } from '@mui/material';
@@ -186,15 +185,6 @@ export const App = () => {
               <ProtectedRoute requiredRole="ADMIN">
                 <Header />
                 <Admin />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path={USER_INFO_PATH}
-            element={
-              <ProtectedRoute requiredRole="ADMIN">
-                <Header />
-                <UserInfo />
               </ProtectedRoute>
             }
           />
