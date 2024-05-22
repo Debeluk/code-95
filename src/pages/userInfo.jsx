@@ -28,6 +28,7 @@ export const UserInfoModal = ({ user, onClose, isEdit, refreshUsers }) => {
   const [login, setLogin] = useState('');
   const [password, setPassword] = useState('');
   const [expireDate, setExpireDate] = useState(dayjs().utc());
+  const [error, setError] = useState('');
 
   useEffect(() => {
     if (isEdit && user) {
@@ -39,11 +40,31 @@ export const UserInfoModal = ({ user, onClose, isEdit, refreshUsers }) => {
       setName('');
       setLogin('');
       setPassword('');
-      setExpireDate(dayjs().utc()); // Ensure UTC conversion
+      setExpireDate(dayjs().utc().add(1, 'day')); // Ensure UTC conversion and set default to tomorrow
     }
   }, [user, isEdit]);
 
   const handleSave = () => {
+    if (!name) {
+      setError("Ім'я не може бути порожнім.");
+      return;
+    }
+
+    if (login.length < 6) {
+      setError('Логін повинен містити мінімум 6 знаків.');
+      return;
+    }
+
+    if (password.length < 6) {
+      setError('Пароль повинен містити мінімум 6 знаків.');
+      return;
+    }
+
+    if (!isEdit && expireDate.isBefore(dayjs().utc().add(1, 'day'))) {
+      setError('Дата закінчення повинна бути як мінімум на день вперед.');
+      return;
+    }
+
     const requestData = {
       name,
       expire_at: expireDate.toISOString(), // Convert to ISO format
@@ -71,6 +92,10 @@ export const UserInfoModal = ({ user, onClose, isEdit, refreshUsers }) => {
 
   const handleDateChange = (newDate) => {
     setExpireDate(newDate.utc()); // Ensure UTC conversion
+  };
+
+  const addDays = (days) => {
+    setExpireDate(expireDate.add(days, 'day').utc());
   };
 
   return (
@@ -121,7 +146,7 @@ export const UserInfoModal = ({ user, onClose, isEdit, refreshUsers }) => {
           <TextField
             variant="outlined"
             fullWidth
-            InputProps={{ readOnly: true }}
+            InputProps={{ readOnly: true, style: { pointerEvents: 'none' } }}
             value={user?.id || ''}
             sx={textFieldStyle}
           />
@@ -153,7 +178,6 @@ export const UserInfoModal = ({ user, onClose, isEdit, refreshUsers }) => {
           </Typography>
           <TextField
             variant="outlined"
-            type="password"
             fullWidth
             sx={textFieldStyle}
             value={password}
@@ -168,18 +192,31 @@ export const UserInfoModal = ({ user, onClose, isEdit, refreshUsers }) => {
           <Typography variant="subtitle1" gutterBottom>
             Термін доступу
           </Typography>
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <DesktopDatePicker
-              inputFormat="DD/MM/YYYY"
-              value={expireDate}
-              onChange={handleDateChange}
-              slots={{
-                textField: (params) => (
-                  <TextField {...params} variant="outlined" fullWidth sx={textFieldStyle} />
-                )
-              }}
-            />
-          </LocalizationProvider>
+          <Box display="flex" alignItems="center">
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DesktopDatePicker
+                inputFormat="DD/MM/YYYY"
+                value={expireDate}
+                onChange={handleDateChange}
+                slots={{
+                  textField: (params) => (
+                    <TextField {...params} variant="outlined" fullWidth sx={textFieldStyle} />
+                  )
+                }}
+              />
+            </LocalizationProvider>
+            <Button onClick={() => addDays(14)} variant="outlined" sx={{ marginLeft: 1 }}>
+              +14
+            </Button>
+            <Button onClick={() => addDays(30)} variant="outlined" sx={{ marginLeft: 1 }}>
+              +30
+            </Button>
+          </Box>
+          {error && (
+            <Typography variant="caption" color="error">
+              {error}
+            </Typography>
+          )}
         </Grid>
         <Grid item sx={gridItemStyle}>
           <Box
