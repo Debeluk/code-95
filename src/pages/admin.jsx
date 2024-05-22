@@ -6,6 +6,10 @@ import {
   Button,
   Divider,
   Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
   List,
   ListItem,
   ListItemText,
@@ -14,10 +18,16 @@ import {
 import { FixedSizeList as FList } from 'react-window';
 import { useStore } from '../store/store.js';
 import { axiosInstance } from '../axiosInterceptor.js';
-import { CREATE_GET_USER, GET_COURSE, CREATE_COURSE, DELETE_COURSE } from '../constants/ApiURL.js';
+import {
+  CREATE_GET_USER,
+  GET_COURSE,
+  CREATE_COURSE,
+  DELETE_COURSE,
+  USER_USE
+} from '../constants/ApiURL.js';
 import { UserInfoModal } from './userInfo.jsx';
 
-const renderRow = ({ index, style, data, onEdit }) => {
+const renderRow = ({ index, style, data, onEdit, onDelete }) => {
   const item = data[index];
   const expireDate = new Date(item.expireAt).toLocaleDateString();
   return (
@@ -41,7 +51,7 @@ const renderRow = ({ index, style, data, onEdit }) => {
           onClick={() => onEdit(item, true)}>
           Edit
         </Button>
-        <Button variant="contained" size="small" color="error">
+        <Button variant="contained" size="small" color="error" onClick={() => onDelete(item)}>
           Delete
         </Button>
       </Box>
@@ -51,10 +61,15 @@ const renderRow = ({ index, style, data, onEdit }) => {
 
 export const Admin = () => {
   const [users, setUsers] = useState([]);
+  const [filteredUsers, setFilteredUsers] = useState([]);
+  const [filter, setFilter] = useState('');
   const [selectedUser, setSelectedUser] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
   const [isCourseModalOpen, setIsCourseModalOpen] = useState(false);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [userToDelete, setUserToDelete] = useState(null);
+
   const { sessionId, accessToken } = useStore((state) => ({
     sessionId: state.sessionId,
     accessToken: state.accessToken
@@ -71,6 +86,7 @@ export const Admin = () => {
         .get(CREATE_GET_USER)
         .then((response) => {
           setUsers(response.data);
+          setFilteredUsers(response.data);
         })
         .catch((error) => {
           console.error('Error fetching users:', error);
@@ -157,15 +173,45 @@ export const Admin = () => {
     }
   };
 
+  const handleDeleteUser = (user) => {
+    setUserToDelete(user);
+    setIsDeleteDialogOpen(true);
+  };
+
+  const confirmDeleteUser = () => {
+    axiosInstance
+      .delete(USER_USE.replace('{user_id}', userToDelete.id))
+      .then(() => {
+        refreshUsers();
+        setIsDeleteDialogOpen(false);
+        setUserToDelete(null);
+      })
+      .catch((error) => {
+        console.error('Error deleting user:', error);
+      });
+  };
+
   const refreshUsers = () => {
     axiosInstance
       .get(CREATE_GET_USER)
       .then((response) => {
         setUsers(response.data);
+        setFilteredUsers(response.data);
       })
       .catch((error) => {
         console.error('Error fetching users:', error);
       });
+  };
+
+  const handleCloseDeleteDialog = () => {
+    setIsDeleteDialogOpen(false);
+    setUserToDelete(null);
+  };
+
+  const handleFilterChange = (event) => {
+    const { value } = event.target;
+    setFilter(value);
+    setFilteredUsers(users.filter((user) => user.name.toLowerCase().includes(value.toLowerCase())));
   };
 
   return (
@@ -194,6 +240,8 @@ export const Admin = () => {
           <TextField
             variant="outlined"
             fullWidth
+            value={filter}
+            onChange={handleFilterChange}
             sx={{
               '& .MuiInputBase-root': {
                 height: '48px',
@@ -233,12 +281,20 @@ export const Admin = () => {
       <Box flex={1}>
         <FList
           height={500}
-          itemCount={users.length}
+          itemCount={filteredUsers.length}
           itemSize={50}
           width="100%"
-          itemData={users}
+          itemData={filteredUsers}
           itemKey={(index, data) => data[index].id}>
-          {({ index, style, data }) => renderRow({ index, style, data, onEdit: handleEdit })}
+          {({ index, style, data }) =>
+            renderRow({
+              index,
+              style,
+              data,
+              onEdit: handleEdit,
+              onDelete: handleDeleteUser
+            })
+          }
         </FList>
       </Box>
 
@@ -297,6 +353,24 @@ export const Admin = () => {
             </Button>
           </Box>
         </Box>
+      </Dialog>
+
+      {/* Delete User Confirmation Dialog */}
+      <Dialog open={isDeleteDialogOpen} onClose={handleCloseDeleteDialog}>
+        <DialogTitle>Подтверждение удаления</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Вы уверены, что хотите удалить пользователя {userToDelete?.name}?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseDeleteDialog} color="primary">
+            Отмена
+          </Button>
+          <Button onClick={confirmDeleteUser} color="error">
+            Удалить
+          </Button>
+        </DialogActions>
       </Dialog>
     </Box>
   );
