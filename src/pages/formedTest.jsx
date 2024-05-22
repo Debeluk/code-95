@@ -177,8 +177,7 @@ export const FormedTest = () => {
         minHeight: '100vh',
         backgroundColor: '#f5f5f5',
         paddingTop: 4
-      }}
-    >
+      }}>
       <Box sx={{ marginLeft: 20, marginRight: 20 }}>
         {showBackButton && (
           <Box sx={{ marginBottom: 2 }}>
@@ -192,8 +191,7 @@ export const FormedTest = () => {
             fontSize: '0.875rem',
             display: 'flex',
             justifyContent: 'center'
-          }}
-        >
+          }}>
           <Paper
             elevation={3}
             sx={{
@@ -201,8 +199,7 @@ export const FormedTest = () => {
               padding: 4,
               borderRadius: 2,
               boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)'
-            }}
-          >
+            }}>
             <Box display="flex" justifyContent="space-between" marginBottom={1}>
               <Typography variant="h6" gutterBottom>
                 {selectedCourse?.name}
@@ -245,8 +242,7 @@ export const FormedTest = () => {
                         color: 'black',
                         borderColor: 'black'
                       }
-                    }}
-                  >
+                    }}>
                     {index + 1}
                   </Button>
                 </Grid>
@@ -254,83 +250,87 @@ export const FormedTest = () => {
             </Grid>
 
             {questions.length > 0 && (
-              <Grid
-                container
-                spacing={2}
-                sx={{
-                  maxHeight: '600px',
-                  marginBottom: '20px',
-                  borderRadius: '12px',
-                  backgroundColor: 'transparent',
-                  boxShadow: 0
-                }}
-              >
-                <Grid item md={4}>
-                  <Box
-                    display="flex"
-                    flexDirection="column"
-                    justifyContent="center"
-                    alignItems="center"
-                  >
-                    <Typography variant="h6" gutterBottom sx={{ lineHeight: 1.25 }}>
-                      {questions[currentQuestionIndex].question}
-                    </Typography>
+              <>
+                <Grid
+                  container
+                  spacing={2}
+                  sx={{
+                    maxHeight: '600px',
+                    marginBottom: '20px',
+                    borderRadius: '12px',
+                    backgroundColor: 'transparent',
+                    boxShadow: 0
+                  }}>
+                  <Grid item md={4}>
+                    <Box
+                      display="flex"
+                      flexDirection="column"
+                      justifyContent="center"
+                      alignItems="center">
+                      <Typography variant="h6" gutterBottom sx={{ lineHeight: 1.25 }}>
+                        {questions[currentQuestionIndex].question}
+                      </Typography>
 
-                    {questions[currentQuestionIndex].image && (
-                      <Box
-                        component="img"
-                        sx={{
-                          maxHeight: 295,
-                          maxWidth: 395,
-                          marginBottom: 3
-                        }}
-                        alt="Question Image"
-                        src={questions[currentQuestionIndex].image}
-                      />
-                    )}
-                  </Box>
+                      {questions[currentQuestionIndex].image && (
+                        <Box
+                          component="img"
+                          sx={{
+                            maxHeight: 295,
+                            maxWidth: 395,
+                            marginBottom: 3
+                          }}
+                          alt="Question Image"
+                          src={questions[currentQuestionIndex].image}
+                        />
+                      )}
+                    </Box>
+                  </Grid>
+                  <Grid item md={8}>
+                    <FormControl component="fieldset" sx={{ width: '100%' }}>
+                      <Grid container spacing={2} direction="column" sx={{ height: '100%' }}>
+                        {questions[currentQuestionIndex].answers.map((answer, idx) => (
+                          <Grid item key={idx} sx={{ width: '100%' }}>
+                            <Button
+                              color="inherit"
+                              fullWidth
+                              sx={{
+                                textTransform: 'none',
+                                height: '75px',
+                                fontSize: '1rem',
+                                backgroundColor: `${getButtonColor(currentQuestionIndex, answer)}80`, // 80 в конце добавляет прозрачность 0.5
+                                lineHeight: '1',
+                                borderTop: '2px solid #ccc',
+                                borderBottom: '2px solid #ccc',
+                                borderRadius: '0',
+                                boxShadow: 'none',
+                                '&:hover': {
+                                  backgroundColor: '#f5f5f5',
+                                  boxShadow: 'none'
+                                },
+                                margin: 0
+                              }}
+                              onClick={() =>
+                                handleAnswerSelect(
+                                  currentQuestionIndex,
+                                  questions[currentQuestionIndex],
+                                  answer
+                                )
+                              }
+                              disabled={!!answeredQuestions[currentQuestionIndex]}>
+                              {answer.answer}
+                            </Button>
+                          </Grid>
+                        ))}
+                      </Grid>
+                    </FormControl>
+                  </Grid>
                 </Grid>
-                <Grid item md={8}>
-                  <FormControl component="fieldset" sx={{ width: '100%' }}>
-                    <Grid container spacing={2} direction="column" sx={{ height: '100%' }}>
-                      {questions[currentQuestionIndex].answers.map((answer, idx) => (
-                        <Grid item key={idx} sx={{ width: '100%' }}>
-                          <Button
-                            color="inherit"
-                            fullWidth
-                            sx={{
-                              textTransform: 'none',
-                              height: '75px',
-                              fontSize: '1rem',
-                              backgroundColor: `${getButtonColor(currentQuestionIndex, answer)}80`, // 80 в конце добавляет прозрачность 0.5
-                              lineHeight: '1',
-                              borderTop: '2px solid #ccc',
-                              borderBottom: '2px solid #ccc',
-                              borderRadius: '0',
-                              boxShadow: 'none',
-                              '&:hover': {
-                                backgroundColor: '#f5f5f5',
-                                boxShadow: 'none'
-                              },
-                              margin: 0
-                            }}
-                            onClick={() =>
-                              handleAnswerSelect(
-                                currentQuestionIndex,
-                                questions[currentQuestionIndex],
-                                answer
-                              )
-                            }
-                            disabled={!!answeredQuestions[currentQuestionIndex]}
-                          >
-                            {answer.answer}
-                          </Button>
-                        </Grid>
-                      ))}
-                    </Grid>
-                  </FormControl>
-                </Grid>
-              </Grid>
+                {answeredQuestions[currentQuestionIndex] && (
+                  <Typography variant="body2" sx={{ color: 'gray', marginTop: 2 }}>
+                    {questions[currentQuestionIndex].hint}
+                  </Typography>
+                )}
+              </>
             )}
 
             <Box display="flex" justifyContent="flex-end">
@@ -343,8 +343,7 @@ export const FormedTest = () => {
                   textTransform: 'none',
                   minWidth: '120px',
                   minHeight: '40px'
-                }}
-              >
+                }}>
                 Завершити тест
               </Button>
             </Box>
@@ -355,8 +354,7 @@ export const FormedTest = () => {
               aria-labelledby="confirm-dialog-title"
               aria-describedby="confirm-dialog-description"
               fullWidth
-              sx={{ maxWidth: '460px', margin: 'auto' }}
-            >
+              sx={{ maxWidth: '460px', margin: 'auto' }}>
               <DialogTitle id="confirm-dialog-title">Підтвердити завершення тесту</DialogTitle>
               <DialogContent>
                 <DialogContentText id="confirm-dialog-description">
@@ -367,16 +365,14 @@ export const FormedTest = () => {
                 <Button
                   onClick={handleCloseDialog}
                   color="primary"
-                  sx={{ minWidth: '170px', border: '1px solid lightblue', marginBottom: '8px' }}
-                >
+                  sx={{ minWidth: '170px', border: '1px solid lightblue', marginBottom: '8px' }}>
                   Відміна
                 </Button>
                 <Button
                   onClick={handleEndTest}
                   color="error"
                   variant="contained"
-                  sx={{ minWidth: '170px', marginBottom: '8px' }}
-                >
+                  sx={{ minWidth: '170px', marginBottom: '8px' }}>
                   Завершити тест
                 </Button>
               </DialogActions>
@@ -388,8 +384,7 @@ export const FormedTest = () => {
               aria-labelledby="results-dialog-title"
               aria-describedby="results-dialog-description"
               sx={{ maxWidth: '620px', margin: 'auto' }}
-              fullWidth
-            >
+              fullWidth>
               <DialogTitle id="results-dialog-title">Результати тесту</DialogTitle>
               <DialogContent>
                 <DialogContentText id="results-dialog-description">
@@ -406,16 +401,14 @@ export const FormedTest = () => {
                 <Button
                   onClick={handleReviewQuestions}
                   color="primary"
-                  sx={{ maxWidth: '220px', border: '1px solid lightblue', marginBottom: '8px' }}
-                >
+                  sx={{ maxWidth: '220px', border: '1px solid lightblue', marginBottom: '8px' }}>
                   Переглянути запитання
                 </Button>
                 <Button
                   onClick={handleEndTest}
                   color="primary"
                   variant="contained"
-                  sx={{ maxWidth: '240px', marginBottom: '8px' }}
-                >
+                  sx={{ maxWidth: '240px', marginBottom: '8px' }}>
                   Повернутися до вибору
                 </Button>
               </DialogActions>
