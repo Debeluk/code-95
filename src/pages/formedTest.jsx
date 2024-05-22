@@ -12,6 +12,8 @@ import {
   DialogTitle,
   Paper
 } from '@mui/material';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { useStore } from '../store/store.js';
 import { axiosInstance } from '../axiosInterceptor.js';
 import { GET_TICKET_QUESTIONS, GET_RANDOM_TICKET_QUESTIONS } from '../constants/ApiURL.js';
@@ -146,14 +148,12 @@ export const FormedTest = () => {
       setIncorrectAnswers((prev) => prev + 1);
     }
 
-    // Automatically navigate to the next question after answering
-    setTimeout(() => {
-      if (questionIndex < questions.length - 1) {
-        setCurrentQuestionIndex(questionIndex + 1);
-      } else {
-        setResultsDialog(true);
-      }
-    }, 400);
+    if (
+      Object.keys(updatedAnswers).filter((key) => key.includes('selected-')).length ===
+      questions.length
+    ) {
+      setResultsDialog(true);
+    }
   };
 
   const getButtonColor = (questionIndex, answer) => {
@@ -169,6 +169,18 @@ export const FormedTest = () => {
   const handleReviewQuestions = () => {
     setResultsDialog(false);
     setShowBackButton(true);
+  };
+
+  const handleNextQuestion = () => {
+    if (currentQuestionIndex < questions.length - 1) {
+      setCurrentQuestionIndex(currentQuestionIndex + 1);
+    }
+  };
+
+  const handlePreviousQuestion = () => {
+    if (currentQuestionIndex > 0) {
+      setCurrentQuestionIndex(currentQuestionIndex - 1);
+    }
   };
 
   return (
@@ -330,10 +342,36 @@ export const FormedTest = () => {
                     {questions[currentQuestionIndex].hint}
                   </Typography>
                 )}
+                <Box display="flex" justifyContent="space-between" marginTop={2}>
+                  <Button
+                    variant="contained"
+                    onClick={handlePreviousQuestion}
+                    disabled={currentQuestionIndex === 0}
+                    sx={{
+                      borderRadius: '16px',
+                      textTransform: 'none',
+                      minWidth: '120px',
+                      minHeight: '40px'
+                    }}>
+                    <ArrowBackIcon />
+                  </Button>
+                  <Button
+                    variant="contained"
+                    onClick={handleNextQuestion}
+                    disabled={currentQuestionIndex === questions.length - 1}
+                    sx={{
+                      borderRadius: '16px',
+                      textTransform: 'none',
+                      minWidth: '120px',
+                      minHeight: '40px'
+                    }}>
+                    <ArrowForwardIcon />
+                  </Button>
+                </Box>
               </>
             )}
 
-            <Box display="flex" justifyContent="flex-end">
+            <Box display="flex" justifyContent="flex-end" marginTop={4}>
               <Button
                 variant="contained"
                 color="error"
