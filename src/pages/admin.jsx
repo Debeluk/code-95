@@ -16,6 +16,8 @@ import {
   ListItemSecondaryAction
 } from '@mui/material';
 import { FixedSizeList as FList } from 'react-window';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
 import { useStore } from '../store/store.js';
 import { axiosInstance } from '../axiosInterceptor.js';
 import {
@@ -45,14 +47,33 @@ const renderRow = ({ index, style, data, onEdit, onDelete }) => {
       <Box sx={{ width: '30%', textAlign: 'center' }}>{expireDate}</Box>
       <Box sx={{ width: '20%', textAlign: 'center' }}>
         <Button
-          variant="contained"
+          variant="outlined"
           size="small"
-          sx={{ marginRight: 1 }}
+          sx={{
+            marginRight: 1,
+            borderRadius: '4px',
+            minWidth: '40px',
+            minHeight: '40px',
+            borderColor: 'black',
+            color: 'black',
+            backgroundColor: 'white'
+          }}
           onClick={() => onEdit(item, true)}>
-          Edit
+          <EditIcon />
         </Button>
-        <Button variant="contained" size="small" color="error" onClick={() => onDelete(item)}>
-          Delete
+        <Button
+          variant="outlined"
+          size="small"
+          sx={{
+            borderRadius: '4px',
+            minWidth: '40px',
+            minHeight: '40px',
+            borderColor: 'black',
+            color: 'black',
+            backgroundColor: 'white'
+          }}
+          onClick={() => onDelete(item)}>
+          <DeleteIcon />
         </Button>
       </Box>
     </Box>
