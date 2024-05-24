@@ -13,7 +13,8 @@ import {
   List,
   ListItem,
   ListItemText,
-  ListItemSecondaryAction
+  ListItemSecondaryAction,
+  CircularProgress
 } from '@mui/material';
 import { FixedSizeList as FList } from 'react-window';
 import EditIcon from '@mui/icons-material/Edit';
@@ -404,7 +405,15 @@ export const Admin = () => {
             </Typography>
           </Box>
           {isLoadingCourses ? (
-            <Loader />
+            <Box
+              sx={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                height: '100px'
+              }}>
+              <CircularProgress color="primary" />
+            </Box>
           ) : (
             <List>
               {Array.isArray(courses) &&

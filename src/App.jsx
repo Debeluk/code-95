@@ -175,7 +175,6 @@ export const App = () => {
               <ProtectedRoute requiredRole="USER">
                 <Header />
                 <FormedTest />
-                <Footer />
               </ProtectedRoute>
             }
           />

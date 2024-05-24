@@ -42,15 +42,22 @@ export const TicketsPage = () => {
   };
 
   return (
-    <Box sx={{ paddingBottom: 50, marginTop: 4, marginBottom: 6, marginLeft: 32, marginRight: 32 }}>
+    <Box
+      sx={{
+        height: '70vh', // Установлено 70vh для основного Box элемента
+        paddingBottom: 50,
+        marginTop: 4,
+        marginBottom: 6,
+        marginLeft: 32,
+        marginRight: 32
+      }}>
       <Box
         sx={{
           marginBottom: 4,
           display: 'flex',
           justifyContent: 'flex-start',
           backgroundColor: 'transparent'
-        }}
-      >
+        }}>
         <BackButton sx={{ marginRight: 2 }} /> {/* Кнопка "Назад" */}
       </Box>
 
@@ -82,8 +89,7 @@ export const TicketsPage = () => {
                 '&:hover': {
                   backgroundColor: '#f0f0f0'
                 }
-              }}
-            >
+              }}>
               {number}
             </Button>
           </Grid>
@@ -107,8 +113,7 @@ export const TicketsPage = () => {
                 backgroundColor: '#f0f0f0'
               },
               marginRight: 2
-            }}
-          >
+            }}>
             Випадковий білет
           </Button>
         </Grid>
@@ -127,8 +132,7 @@ export const TicketsPage = () => {
               '&:hover': {
                 backgroundColor: '#f0f0f0'
               }
-            }}
-          >
+            }}>
             Випадкові питання
           </Button>
         </Grid>

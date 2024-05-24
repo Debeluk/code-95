@@ -52,21 +52,22 @@ export const LoginPage = () => {
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
-          minHeight: '100vh',
-          marginTop: 4,
-          marginBottom: 6,
-          marginLeft: 32,
-          marginRight: 32,
-          position: 'relative'
+          minHeight: '100vh'
         }}>
-        <Paper elevation={3} sx={{ padding: 4, width: '100%', position: 'relative', zIndex: 1 }}>
-          <Grid container spacing={4}>
-            {/* Левая секция */}
+        <Paper elevation={3} sx={{ width: '100%', maxWidth: '900px', borderRadius: '16px' }}>
+          <Grid container spacing={0}>
+            {/* Left Section */}
             <Grid
               item
-              xs={6}
-              sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-              <Box>
+              xs={12}
+              md={6}
+              sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+                padding: 0
+              }}>
+              <Box sx={{ padding: 2 }}>
                 <Typography variant="h4" gutterBottom>
                   ADR Online
                 </Typography>
@@ -75,33 +76,52 @@ export const LoginPage = () => {
                   небезпечних вантажів:
                 </Typography>
                 <List>
-                  <ListItem>Базового курсу</ListItem>
-                  <ListItem>Спеціалізованого курсу підготовки з перевезення в цистернах</ListItem>
+                  <ListItem>• Базового курсу</ListItem>
+                  <ListItem>• Спеціалізованого курсу підготовки з перевезення в цистернах</ListItem>
                   <ListItem>
-                    Спеціалізованого курсу підготовки з перевезення вибухових речовин та виробів
+                    • Спеціалізованого курсу підготовки з перевезення вибухових речовин та виробів
                     класу 1
                   </ListItem>
                   <ListItem>
-                    Спеціалізованого курсу підготовки з перевезення радіоактивних матеріалів класу 7
+                    • Спеціалізованого курсу підготовки з перевезення радіоактивних матеріалів класу
+                    7
                   </ListItem>
-                  <ListItem>Курсу перепідготовки водіїв</ListItem>
+                  <ListItem>• Курсу перепідготовки водіїв</ListItem>
                   <ListItem>
-                    Курсу підготовки уповноважених з питань безпеки перевезень небезпечних вантажів
+                    • Курсу підготовки уповноважених з питань безпеки перевезень небезпечних
+                    вантажів
                   </ListItem>
                 </List>
               </Box>
             </Grid>
-            {/* Правая секция для входа */}
-            <Grid item xs={6}>
-              <Box>
+
+            {/* Right Section for Login */}
+            <Grid
+              item
+              xs={12}
+              md={6}
+              sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+                boxShadow: '-12px 0px 24px rgba(0, 0, 0, 0.25)',
+                borderLeft: '1px solid rgba(0, 0, 0, 0.12)',
+                zIndex: 2,
+                position: 'relative',
+                padding: 0,
+                backgroundColor: 'white',
+                borderTopRightRadius: '16px',
+                borderBottomRightRadius: '16px'
+              }}>
+              <Box sx={{ padding: 3 }}>
                 <Typography variant="h5" align="center" gutterBottom>
                   Увійти до особистого кабінету
                 </Typography>
                 <form onSubmit={handleLogin}>
-                  <Box marginBottom={2}>
+                  <Box marginBottom={3}>
                     <TextField
                       id="username"
-                      label="Номер телефону"
+                      label="Логін"
                       variant="outlined"
                       fullWidth
                       type="text"
@@ -110,7 +130,7 @@ export const LoginPage = () => {
                       disabled={isLoading} // Disable input while loading
                     />
                   </Box>
-                  <Box marginBottom={2}>
+                  <Box marginBottom={3}>
                     <TextField
                       id="password"
                       label="Пароль"
