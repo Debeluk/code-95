@@ -13,6 +13,17 @@ import { Loader } from '../components/Loader/Loader.jsx';
 dayjs.extend(utc);
 
 const textFieldStyle = {
+  '& .MuiOutlinedInput-root': {
+    '& fieldset': {
+      borderColor: 'black'
+    },
+    '&:hover fieldset': {
+      borderColor: 'black'
+    },
+    '&.Mui-focused fieldset': {
+      borderColor: 'black'
+    }
+  },
   '& .MuiInputBase-input': {
     height: '48px',
     boxSizing: 'border-box'
@@ -27,7 +38,18 @@ const buttonStyle = {
   height: '40px',
   textTransform: 'none',
   fontSize: '14px',
-  marginLeft: '8px'
+  marginLeft: '8px',
+  borderColor: 'black',
+  color: 'black',
+  backgroundColor: 'white',
+  '&:hover': {
+    backgroundColor: 'white',
+    borderColor: 'black'
+  },
+  '&:active': {
+    backgroundColor: 'white',
+    borderColor: 'black'
+  }
 };
 
 const datePickerContainerStyle = {
@@ -219,8 +241,16 @@ export const UserInfoModal = ({ user, onClose, isEdit, refreshUsers }) => {
         <Grid item>
           <Button
             variant="contained"
-            color="primary"
-            sx={{ ...buttonStyle, minWidth: '140px' }}
+            sx={{
+              ...buttonStyle,
+              minWidth: '140px',
+              backgroundColor: 'orange',
+              color: 'white',
+              borderColor: 'orange',
+              '&:hover': {
+                backgroundColor: 'orange'
+              }
+            }}
             onClick={handleSave}>
             Зберегти
           </Button>

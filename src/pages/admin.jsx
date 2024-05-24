@@ -61,7 +61,16 @@ const renderRow = ({ index, style, data, onEdit, onDelete }) => {
             color: 'black',
             backgroundColor: 'white',
             display: 'flex',
-            alignItems: 'center'
+            alignItems: 'center',
+            '&:hover': {
+              transform: 'scale(1.02)',
+              backgroundColor: 'white',
+              borderColor: 'black'
+            },
+            '&:active': {
+              backgroundColor: 'white',
+              borderColor: 'black'
+            }
           }}
           onClick={() => onEdit(item, true)}>
           <EditIcon fontSize="small" />
@@ -77,7 +86,16 @@ const renderRow = ({ index, style, data, onEdit, onDelete }) => {
             color: 'black',
             backgroundColor: 'white',
             display: 'flex',
-            alignItems: 'center'
+            alignItems: 'center',
+            '&:hover': {
+              transform: 'scale(1.02)',
+              backgroundColor: 'white',
+              borderColor: 'black'
+            },
+            '&:active': {
+              backgroundColor: 'white',
+              borderColor: 'black'
+            }
           }}
           onClick={() => onDelete(item)}>
           <DeleteIcon fontSize="small" />
@@ -277,7 +295,10 @@ export const Admin = () => {
         marginLeft: 32,
         marginRight: 32,
         display: 'flex',
-        flexDirection: 'column'
+        flexDirection: 'column',
+        backgroundColor: 'white',
+        borderRadius: 4,
+        padding: 4
       }}>
       {/* First Section */}
       <Box
@@ -298,6 +319,17 @@ export const Admin = () => {
             value={filter}
             onChange={handleFilterChange}
             sx={{
+              '& .MuiOutlinedInput-root': {
+                '& fieldset': {
+                  borderColor: 'black'
+                },
+                '&:hover fieldset': {
+                  borderColor: 'black'
+                },
+                '&.Mui-focused fieldset': {
+                  borderColor: 'black'
+                }
+              },
               '& .MuiInputBase-root': {
                 height: '42px',
                 fontSize: '16px',
@@ -314,7 +346,7 @@ export const Admin = () => {
           justifyContent="flex-end"
           sx={{ width: '256px' }}>
           <Button
-            variant="contained"
+            variant="outlined"
             color="primary"
             sx={{
               textTransform: 'none',
@@ -322,7 +354,19 @@ export const Admin = () => {
               height: '42px',
               fontSize: '1rem',
               padding: '10px 20px',
-              borderRadius: '8px'
+              borderRadius: '8px',
+              borderColor: 'black',
+              color: 'black',
+              backgroundColor: 'white',
+              '&:hover': {
+                transform: 'scale(1.02)',
+                backgroundColor: 'white',
+                borderColor: 'black'
+              },
+              '&:active': {
+                backgroundColor: 'white',
+                borderColor: 'black'
+              }
             }}
             onClick={() => handleEdit(null, false)}>
             Додати
@@ -333,7 +377,13 @@ export const Admin = () => {
       <Divider sx={{ marginBottom: 4 }} />
 
       {/* List using react-window */}
-      <Box flex={1}>
+      <Box
+        flex={1}
+        sx={{
+          border: '1px solid black',
+          borderRadius: 2,
+          padding: 2
+        }}>
         {isLoadingUsers ? (
           <Loader />
         ) : (
@@ -359,10 +409,26 @@ export const Admin = () => {
 
       <Box sx={{ marginTop: 4 }}>
         <Button
-          variant="contained"
+          variant="outlined"
           color="primary"
           onClick={handleOpenCourseModal}
-          sx={{ textTransform: 'none', minWidth: '200px', height: '48px' }}>
+          sx={{
+            textTransform: 'none',
+            minWidth: '200px',
+            height: '48px',
+            borderColor: 'black',
+            color: 'black',
+            backgroundColor: 'white',
+            '&:hover': {
+              transform: 'scale(1.02)',
+              backgroundColor: 'white',
+              borderColor: 'black'
+            },
+            '&:active': {
+              backgroundColor: 'white',
+              borderColor: 'black'
+            }
+          }}>
           Додати курс
         </Button>
       </Box>
@@ -422,11 +488,29 @@ export const Admin = () => {
                     <ListItemText primary={course.name} />
                     <ListItemSecondaryAction>
                       <Button
-                        variant="contained"
-                        color="error"
-                        onClick={() => handleDeleteCourse(course.id)}
-                        sx={{ marginLeft: 2, display: 'flex', alignItems: 'center' }}>
-                        Видалити
+                        variant="outlined"
+                        size="small"
+                        sx={{
+                          borderRadius: '4px',
+                          minWidth: '30px',
+                          minHeight: '30px',
+                          borderColor: 'black',
+                          color: 'black',
+                          backgroundColor: 'white',
+                          display: 'flex',
+                          alignItems: 'center',
+                          '&:hover': {
+                            transform: 'scale(1.02)',
+                            backgroundColor: 'white',
+                            borderColor: 'black'
+                          },
+                          '&:active': {
+                            backgroundColor: 'white',
+                            borderColor: 'black'
+                          }
+                        }}
+                        onClick={() => handleDeleteCourse(course.id)}>
+                        <DeleteIcon fontSize="small" />
                       </Button>
                     </ListItemSecondaryAction>
                   </ListItem>
@@ -435,9 +519,25 @@ export const Admin = () => {
           )}
           <Box sx={{ marginTop: 4, display: 'flex', justifyContent: 'center' }}>
             <Button
-              variant="contained"
+              variant="outlined"
               component="label"
-              sx={{ textTransform: 'none', minWidth: '200px', height: '48px' }}>
+              sx={{
+                textTransform: 'none',
+                minWidth: '200px',
+                height: '48px',
+                borderColor: 'black',
+                color: 'black',
+                backgroundColor: 'white',
+                '&:hover': {
+                  transform: 'scale(1.02)',
+                  backgroundColor: 'white',
+                  borderColor: 'black'
+                },
+                '&:active': {
+                  backgroundColor: 'white',
+                  borderColor: 'black'
+                }
+              }}>
               Завантажити курс
               <input type="file" hidden onChange={handleFileUpload} />
             </Button>
@@ -460,9 +560,28 @@ export const Admin = () => {
           </Button>
           <Button
             onClick={confirmDeleteUser}
-            color="error"
-            sx={{ display: 'flex', alignItems: 'center' }}>
-            Видалити
+            variant="outlined"
+            size="small"
+            sx={{
+              borderRadius: '4px',
+              minWidth: '30px',
+              minHeight: '30px',
+              borderColor: 'black',
+              color: 'black',
+              backgroundColor: 'white',
+              display: 'flex',
+              alignItems: 'center',
+              '&:hover': {
+                transform: 'scale(1.02)',
+                backgroundColor: 'white',
+                borderColor: 'black'
+              },
+              '&:active': {
+                backgroundColor: 'white',
+                borderColor: 'black'
+              }
+            }}>
+            <DeleteIcon fontSize="small" />
           </Button>
         </DialogActions>
       </Dialog>

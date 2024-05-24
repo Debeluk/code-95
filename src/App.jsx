@@ -138,7 +138,7 @@ export const App = () => {
   };
 
   return (
-    <Box sx={{ minHeight: '100vh', backgroundColor: '#f7f7f7' }}>
+    <Box sx={{ minHeight: '100vh', backgroundColor: 'transparent' }}>
       <Router>
         <Routes>
           <Route
