@@ -5,7 +5,7 @@ import { axiosInstance } from '../axiosInterceptor.js';
 import { LOGIN } from '../constants/ApiURL.js';
 import secureLocalStorage from 'react-secure-storage';
 import { useStore } from '../store/store.js';
-import Loader from '../components/Loader/Loader.jsx';
+import { Loader } from '../components/Loader/Loader.jsx';
 import { BAD_REQUEST_STATUS_CODE, SESSION_ALREADY_EXISTS } from '../constants/ErrorConstants.js';
 
 export const LoginPage = () => {
@@ -28,6 +28,7 @@ export const LoginPage = () => {
         secureLocalStorage.setItem('refreshToken', res.data.refreshToken);
         setAccessToken(res.data.accessToken);
         setRefreshToken(res.data.refreshToken);
+        setIsLoading(false); // Ensure loading state is reset after success
       })
       .catch((err) => {
         if (
@@ -55,17 +56,16 @@ export const LoginPage = () => {
           marginTop: 4,
           marginBottom: 6,
           marginLeft: 32,
-          marginRight: 32
-        }}
-      >
-        <Paper elevation={3} sx={{ padding: 4, width: '100%' }}>
+          marginRight: 32,
+          position: 'relative'
+        }}>
+        <Paper elevation={3} sx={{ padding: 4, width: '100%', position: 'relative', zIndex: 1 }}>
           <Grid container spacing={4}>
             {/* Левая секция */}
             <Grid
               item
               xs={6}
-              sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}
-            >
+              sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
               <Box>
                 <Typography variant="h4" gutterBottom>
                   ADR Online
@@ -107,6 +107,7 @@ export const LoginPage = () => {
                       type="text"
                       value={username}
                       onChange={(e) => setUsername(e.target.value)}
+                      disabled={isLoading} // Disable input while loading
                     />
                   </Box>
                   <Box marginBottom={2}>
@@ -118,10 +119,21 @@ export const LoginPage = () => {
                       type="password"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
+                      disabled={isLoading} // Disable input while loading
                     />
                   </Box>
-                  <Button variant="contained" color="primary" fullWidth type="submit">
-                    Увійти
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    fullWidth
+                    type="submit"
+                    disabled={isLoading} // Disable button while loading
+                    sx={{
+                      backgroundColor: isLoading ? 'rgba(0, 0, 0, 0.12)' : 'primary.main',
+                      color: isLoading ? 'rgba(0, 0, 0, 0.26)' : 'white',
+                      cursor: isLoading ? 'not-allowed' : 'pointer'
+                    }}>
+                    {isLoading ? 'Вхід...' : 'Увійти'}
                   </Button>
                 </form>
               </Box>

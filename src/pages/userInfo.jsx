@@ -25,20 +25,21 @@ const gridItemStyle = {
 
 export const UserInfoModal = ({ user, onClose, isEdit, refreshUsers }) => {
   const [name, setName] = useState('');
-  const [login, setLogin] = useState('');
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [expireDate, setExpireDate] = useState(dayjs().utc());
   const [error, setError] = useState('');
 
   useEffect(() => {
     if (isEdit && user) {
+      console.log('User data:', user); // Консоль лог данных о пользователе
       setName(user.name);
-      setLogin(user.credentials?.username || '');
+      setUsername(user.username || ''); // Предзаполнение логина при редактировании
       setPassword('');
       setExpireDate(dayjs.utc(user.expireAt)); // Ensure UTC conversion
     } else {
       setName('');
-      setLogin('');
+      setUsername('');
       setPassword('');
       setExpireDate(dayjs().utc().add(1, 'day')); // Ensure UTC conversion and set default to tomorrow
     }
@@ -50,7 +51,7 @@ export const UserInfoModal = ({ user, onClose, isEdit, refreshUsers }) => {
       return;
     }
 
-    if (login.length < 6) {
+    if (username.length < 6) {
       setError('Логін повинен містити мінімум 6 знаків.');
       return;
     }
@@ -68,10 +69,8 @@ export const UserInfoModal = ({ user, onClose, isEdit, refreshUsers }) => {
     const requestData = {
       name,
       expire_at: expireDate.toISOString(), // Convert to ISO format
-      credentials: {
-        username: login,
-        password: password
-      }
+      username: username,
+      password: password
     };
 
     const requestPromise =
@@ -168,8 +167,8 @@ export const UserInfoModal = ({ user, onClose, isEdit, refreshUsers }) => {
             variant="outlined"
             fullWidth
             sx={textFieldStyle}
-            value={login}
-            onChange={(e) => setLogin(e.target.value)}
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
           />
         </Grid>
         <Grid item sx={gridItemStyle}>

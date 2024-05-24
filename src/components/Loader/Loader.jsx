@@ -12,7 +12,7 @@ const LoaderWrapper = styled('div')(({ theme }) => ({
   }
 }));
 
-const Loader = ({ isLoading }) => {
+export const Loader = ({ isLoading }) => {
   return (
     isLoading && (
       <LoaderWrapper>
@@ -21,5 +21,3 @@ const Loader = ({ isLoading }) => {
     )
   );
 };
-
-export default Loader;
