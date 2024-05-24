@@ -75,8 +75,9 @@ export const Header = () => {
               padding: '8px 16px',
               textTransform: 'none',
               '&:hover': {
-                backgroundColor: 'black'
-              }
+                backgroundColor: 'orange',
+                transform: 'scale(1.02)'
+              },
             }}>
             <Box display="flex" alignItems="center">
               <Typography variant="subtitle1" sx={{ marginRight: 1 }}>

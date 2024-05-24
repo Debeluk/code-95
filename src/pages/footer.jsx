@@ -17,7 +17,8 @@ export const Footer = () => {
       <Typography variant="body1">Phone: +1 234 567 890</Typography>
       <Button
         variant="contained"
-        color="primary"
+        color="inherit"
+        backgroundColor="white"
         onClick={() => {
           console.log('Feedback button clicked');
         }}

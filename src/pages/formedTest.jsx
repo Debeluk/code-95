@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, forwardRef } from 'react';
 import {
   Box,
   Typography,
@@ -12,6 +12,7 @@ import {
   DialogTitle,
   Paper,
   CircularProgress,
+  Slide,
   Collapse
 } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
@@ -21,6 +22,11 @@ import { axiosInstance } from '../axiosInterceptor.js';
 import { GET_TICKET_QUESTIONS, GET_RANDOM_TICKET_QUESTIONS } from '../constants/ApiURL.js';
 import { useNavigate } from 'react-router-dom';
 import BackButton from '../components/buttons/backButton.jsx';
+
+// Transition component for dialog
+const Transition = forwardRef((props, ref) => {
+  return <Slide direction="down" ref={ref} {...props} />;
+});
 
 export const FormedTest = () => {
   const [openDialog, setOpenDialog] = useState(false);
@@ -261,7 +267,7 @@ export const FormedTest = () => {
                           padding: '0',
                           color:
                             answeredQuestions[index] === 'correct'
-                              ? '#3FFF00'
+                              ? 'green'
                               : answeredQuestions[index] === 'incorrect'
                                 ? 'red'
                                 : currentQuestionIndex === index
@@ -269,7 +275,7 @@ export const FormedTest = () => {
                                   : '#ccc',
                           borderColor:
                             answeredQuestions[index] === 'correct'
-                              ? '#3FFF00'
+                              ? 'green'
                               : answeredQuestions[index] === 'incorrect'
                                 ? 'red'
                                 : currentQuestionIndex === index
@@ -455,6 +461,8 @@ export const FormedTest = () => {
 
             <Dialog
               open={openDialog}
+              TransitionComponent={Transition}
+              keepMounted
               onClose={handleCloseDialog}
               aria-labelledby="confirm-dialog-title"
               aria-describedby="confirm-dialog-description"
@@ -485,6 +493,8 @@ export const FormedTest = () => {
 
             <Dialog
               open={resultsDialog}
+              TransitionComponent={Transition}
+              keepMounted
               onClose={() => setResultsDialog(false)}
               aria-labelledby="results-dialog-title"
               aria-describedby="results-dialog-description"

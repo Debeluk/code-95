@@ -44,7 +44,7 @@ export const TicketsPage = () => {
   return (
     <Box
       sx={{
-        height: '70vh', // Установлено 70vh для основного Box элемента
+        height: '70vh',
         paddingBottom: 50,
         marginTop: 4,
         marginBottom: 6,
@@ -58,7 +58,7 @@ export const TicketsPage = () => {
           justifyContent: 'flex-start',
           backgroundColor: 'transparent'
         }}>
-        <BackButton sx={{ marginRight: 2 }} /> {/* Кнопка "Назад" */}
+        <BackButton sx={{ marginRight: 2 }} />
       </Box>
 
       <Box textAlign="center" marginBottom={4}>
@@ -86,8 +86,12 @@ export const TicketsPage = () => {
                 backgroundColor: 'white',
                 color: 'black',
                 boxShadow: '0px 2px 5px rgba(0, 0, 0, 0.1)',
+                transition: 'border-color 0.3s',
                 '&:hover': {
-                  backgroundColor: '#f0f0f0'
+                  backgroundColor: 'white',
+                  borderColor: 'black',
+                  borderWidth: '2px',
+                  borderStyle: 'solid'
                 }
               }}>
               {number}
@@ -109,8 +113,12 @@ export const TicketsPage = () => {
               backgroundColor: 'white',
               color: 'black',
               boxShadow: '0px 2px 5px rgba(0, 0, 0, 0.1)',
+              transition: 'border-color 0.3s',
               '&:hover': {
-                backgroundColor: '#f0f0f0'
+                backgroundColor: 'white',
+                borderColor: 'black',
+                borderWidth: '2px',
+                borderStyle: 'solid'
               },
               marginRight: 2
             }}>
@@ -129,8 +137,12 @@ export const TicketsPage = () => {
               backgroundColor: 'white',
               color: 'black',
               boxShadow: '0px 2px 5px rgba(0, 0, 0, 0.1)',
+              transition: 'border-color 0.3s',
               '&:hover': {
-                backgroundColor: '#f0f0f0'
+                backgroundColor: 'white',
+                borderColor: 'black',
+                borderWidth: '2px',
+                borderStyle: 'solid'
               }
             }}>
             Випадкові питання

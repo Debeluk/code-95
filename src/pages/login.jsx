@@ -5,7 +5,6 @@ import { axiosInstance } from '../axiosInterceptor.js';
 import { LOGIN } from '../constants/ApiURL.js';
 import secureLocalStorage from 'react-secure-storage';
 import { useStore } from '../store/store.js';
-import { Loader } from '../components/Loader/Loader.jsx';
 import { BAD_REQUEST_STATUS_CODE, SESSION_ALREADY_EXISTS } from '../constants/ErrorConstants.js';
 
 export const LoginPage = () => {
@@ -35,10 +34,10 @@ export const LoginPage = () => {
           err?.response?.status === BAD_REQUEST_STATUS_CODE &&
           err?.response?.data?.detail === SESSION_ALREADY_EXISTS
         ) {
-          Notiflix.Notify.failure('Session already exists. Please logout from other device.');
+          Notiflix.Notify.warning('Цей аккаунт вже викорстовується. Будь ласка вийдіть з іншого пристрою.');
         } else {
           console.error('Error during login or fetching user details:', err.message);
-          Notiflix.Notify.failure('Login failed. Please check your credentials.');
+          Notiflix.Notify.failure('Помилка у введених даних, будь ласка перевірте пароль.');
         }
         setIsLoading(false);
       });
@@ -46,7 +45,6 @@ export const LoginPage = () => {
 
   return (
     <>
-      <Loader isLoading={isLoading} />
       <Box
         sx={{
           display: 'flex',
@@ -114,7 +112,7 @@ export const LoginPage = () => {
                 borderBottomRightRadius: '16px'
               }}>
               <Box sx={{ padding: 3 }}>
-                <Typography variant="h5" align="center" gutterBottom>
+                <Typography variant="h5" align="center" gutterBottom sx={{ marginBottom: '6px' }}>
                   Увійти до особистого кабінету
                 </Typography>
                 <form onSubmit={handleLogin}>
@@ -128,6 +126,20 @@ export const LoginPage = () => {
                       value={username}
                       onChange={(e) => setUsername(e.target.value)}
                       disabled={isLoading} // Disable input while loading
+                      InputProps={{
+                        sx: {
+                          '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                            borderColor: 'black'
+                          }
+                        }
+                      }}
+                      InputLabelProps={{
+                        sx: {
+                          '&.Mui-focused': {
+                            color: 'black'
+                          }
+                        }
+                      }}
                     />
                   </Box>
                   <Box marginBottom={3}>
@@ -136,10 +148,24 @@ export const LoginPage = () => {
                       label="Пароль"
                       variant="outlined"
                       fullWidth
-                      type="password"
+                      type="text"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
-                      disabled={isLoading} // Disable input while loading
+                      disabled={isLoading}
+                      InputProps={{
+                        sx: {
+                          '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                            borderColor: 'black'
+                          }
+                        }
+                      }}
+                      InputLabelProps={{
+                        sx: {
+                          '&.Mui-focused': {
+                            color: 'black'
+                          }
+                        }
+                      }}
                     />
                   </Box>
                   <Button
@@ -149,11 +175,23 @@ export const LoginPage = () => {
                     type="submit"
                     disabled={isLoading} // Disable button while loading
                     sx={{
-                      backgroundColor: isLoading ? 'rgba(0, 0, 0, 0.12)' : 'primary.main',
-                      color: isLoading ? 'rgba(0, 0, 0, 0.26)' : 'white',
-                      cursor: isLoading ? 'not-allowed' : 'pointer'
+                      backgroundColor: isLoading ? 'rgba(0, 0, 0, 0.12)' : 'orange',
+                      color: 'white',
+                      cursor: isLoading ? 'not-allowed' : 'pointer',
+                      height: '40px',
+                      '&:hover': {
+                        backgroundColor: 'orange',
+                        transform: 'scale(1.02)'
+                      },
+                      '&:active': {
+                        backgroundColor: 'orange'
+                      },
+                      '&.Mui-disabled': {
+                        backgroundColor: 'orange',
+                        color: 'white'
+                      }
                     }}>
-                    {isLoading ? 'Вхід...' : 'Увійти'}
+                    {isLoading ? <LoadingDots /> : 'Увійти'}
                   </Button>
                 </form>
               </Box>
@@ -162,5 +200,51 @@ export const LoginPage = () => {
         </Paper>
       </Box>
     </>
+  );
+};
+
+const LoadingDots = () => {
+  return (
+    <Box
+      sx={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        '& div': {
+          width: '8px',
+          height: '8px',
+          backgroundColor: 'white',
+          borderRadius: '50%',
+          margin: '0 2px',
+          animation: 'loading 0.8s infinite',
+          '&:nth-of-type(1)': {
+            animationDelay: '0s'
+          },
+          '&:nth-of-type(2)': {
+            animationDelay: '0.2s'
+          },
+          '&:nth-of-type(3)': {
+            animationDelay: '0.4s'
+          }
+        },
+        '@keyframes loading': {
+          '0%': {
+            opacity: 1,
+            transform: 'translateX(0)'
+          },
+          '50%': {
+            opacity: 0,
+            transform: 'translateX(-16px)'
+          },
+          '100%': {
+            opacity: 1,
+            transform: 'translateX(0)'
+          }
+        }
+      }}>
+      <div></div>
+      <div></div>
+      <div></div>
+    </Box>
   );
 };
