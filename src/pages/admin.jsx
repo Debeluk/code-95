@@ -363,13 +363,32 @@ export const Admin = () => {
       </Box>
 
       {/* User Info Modal */}
-      <Dialog open={isModalOpen} onClose={handleCloseModal} fullWidth maxWidth="md">
-        <UserInfoModal
-          user={selectedUser}
-          onClose={handleCloseModal}
-          isEdit={isEdit}
-          refreshUsers={refreshUsers}
-        />
+      <Dialog
+        open={isModalOpen}
+        onClose={handleCloseModal}
+        fullWidth
+        maxWidth={false}
+        sx={{
+          '& .MuiDialog-paper': {
+            width: '100%',
+            maxWidth: '412px', // Fixed width for the modal
+            margin: 'auto' // Center the modal horizontally
+          }
+        }}>
+        <DialogContent
+          sx={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            padding: '12px',
+          }}>
+          <UserInfoModal
+            user={selectedUser}
+            onClose={handleCloseModal}
+            isEdit={isEdit}
+            refreshUsers={refreshUsers}
+          />
+        </DialogContent>
       </Dialog>
 
       {/* Courses Modal */}

@@ -12,15 +12,33 @@ import { CREATE_GET_USER, USER_USE } from '../constants/ApiURL.js';
 dayjs.extend(utc);
 
 const textFieldStyle = {
-  '& .MuiInputBase-root': {
+  '& .MuiInputBase-input': {
     height: '48px',
-    fontSize: '16px',
-    maxWidth: '400px'
+    boxSizing: 'border-box'
   }
 };
 
 const gridItemStyle = {
-  width: '400px'
+  width: '100%'
+};
+
+const buttonStyle = {
+  height: '40px',
+  textTransform: 'none',
+  fontSize: '14px',
+  marginLeft: '8px'
+};
+
+const datePickerContainerStyle = {
+  display: 'flex',
+  alignItems: 'center',
+  width: '100%',
+  padding: '0px'
+};
+
+const closeButtonStyle = {
+  color: 'black',
+  backgroundColor: 'transparent'
 };
 
 export const UserInfoModal = ({ user, onClose, isEdit, refreshUsers }) => {
@@ -32,16 +50,15 @@ export const UserInfoModal = ({ user, onClose, isEdit, refreshUsers }) => {
 
   useEffect(() => {
     if (isEdit && user) {
-      console.log('User data:', user); // Консоль лог данных о пользователе
       setName(user.name);
-      setUsername(user.username || ''); // Предзаполнение логина при редактировании
+      setUsername(user.username || '');
       setPassword('');
-      setExpireDate(dayjs.utc(user.expireAt)); // Ensure UTC conversion
+      setExpireDate(dayjs.utc(user.expireAt));
     } else {
       setName('');
       setUsername('');
       setPassword('');
-      setExpireDate(dayjs().utc().add(1, 'day')); // Ensure UTC conversion and set default to tomorrow
+      setExpireDate(dayjs().utc().add(1, 'day'));
     }
   }, [user, isEdit]);
 
@@ -68,9 +85,11 @@ export const UserInfoModal = ({ user, onClose, isEdit, refreshUsers }) => {
 
     const requestData = {
       name,
-      expire_at: expireDate.toISOString(), // Convert to ISO format
-      username: username,
-      password: password
+      expire_at: expireDate.toISOString(),
+      credentials: {
+        username: username,
+        password: password
+      }
     };
 
     const requestPromise =
@@ -80,17 +99,17 @@ export const UserInfoModal = ({ user, onClose, isEdit, refreshUsers }) => {
 
     requestPromise
       .then((response) => {
-        console.log('User saved:', response.data);
         refreshUsers();
         onClose();
       })
       .catch((error) => {
+        setError('Помилка при збереженні користувача.');
         console.error('Error saving user:', error);
       });
   };
 
   const handleDateChange = (newDate) => {
-    setExpireDate(newDate.utc()); // Ensure UTC conversion
+    setExpireDate(newDate.utc());
   };
 
   const addDays = (days) => {
@@ -98,34 +117,19 @@ export const UserInfoModal = ({ user, onClose, isEdit, refreshUsers }) => {
   };
 
   return (
-    <Box sx={{ padding: 2 }}>
+    <Box sx={{ padding: 1, maxWidth: '412px', margin: '0 auto' }}>
       {/* First Row */}
       <Box display="flex" justifyContent="space-between" alignItems="center" marginBottom={2}>
-        <Typography variant="h5">
+        <Typography variant="h6">
           {isEdit ? 'Змінити користувача' : 'Додати користувача'}
         </Typography>
-        <IconButton color="error" sx={{ padding: 0 }} onClick={onClose}>
-          <Box
-            sx={{
-              width: '24px',
-              height: '24px',
-              backgroundColor: 'grey',
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center'
-            }}>
-            <CloseIcon sx={{ color: 'white', fontSize: '18px' }} />
-          </Box>
+        <IconButton onClick={onClose} sx={closeButtonStyle}>
+          <CloseIcon sx={{ color: 'black', fontSize: '18px' }} />
         </IconButton>
       </Box>
 
       {/* Second Row */}
-      <Grid
-        container
-        spacing={2}
-        justifyContent="space-between"
-        alignItems="center"
-        marginBottom={2}>
+      <Grid container spacing={2} alignItems="center" marginBottom={2}>
         <Grid item sx={gridItemStyle}>
           <Typography variant="subtitle1" gutterBottom>
             {`Ім'я користувача`}
@@ -138,27 +142,10 @@ export const UserInfoModal = ({ user, onClose, isEdit, refreshUsers }) => {
             onChange={(e) => setName(e.target.value)}
           />
         </Grid>
-        <Grid item sx={gridItemStyle}>
-          <Typography variant="subtitle1" gutterBottom>
-            ID
-          </Typography>
-          <TextField
-            variant="outlined"
-            fullWidth
-            InputProps={{ readOnly: true, style: { pointerEvents: 'none' } }}
-            value={user?.id || ''}
-            sx={textFieldStyle}
-          />
-        </Grid>
       </Grid>
 
       {/* Third Row */}
-      <Grid
-        container
-        spacing={2}
-        justifyContent="space-between"
-        alignItems="center"
-        marginBottom={2}>
+      <Grid container spacing={1} alignItems="center" marginBottom={2}>
         <Grid item sx={gridItemStyle}>
           <Typography variant="subtitle1" gutterBottom>
             Логін
@@ -171,7 +158,7 @@ export const UserInfoModal = ({ user, onClose, isEdit, refreshUsers }) => {
             onChange={(e) => setUsername(e.target.value)}
           />
         </Grid>
-        <Grid item sx={gridItemStyle}>
+        <Grid item sx={gridItemStyle} marginTop={1}>
           <Typography variant="subtitle1" gutterBottom>
             Пароль
           </Typography>
@@ -186,12 +173,12 @@ export const UserInfoModal = ({ user, onClose, isEdit, refreshUsers }) => {
       </Grid>
 
       {/* Fourth Row */}
-      <Grid container spacing={2} justifyContent="space-between" alignItems="end">
+      <Grid container spacing={2} alignItems="center">
         <Grid item sx={gridItemStyle}>
           <Typography variant="subtitle1" gutterBottom>
             Термін доступу
           </Typography>
-          <Box display="flex" alignItems="center">
+          <Box sx={datePickerContainerStyle}>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DesktopDatePicker
                 inputFormat="DD/MM/YYYY"
@@ -204,10 +191,10 @@ export const UserInfoModal = ({ user, onClose, isEdit, refreshUsers }) => {
                 }}
               />
             </LocalizationProvider>
-            <Button onClick={() => addDays(14)} variant="outlined" sx={{ marginLeft: 1 }}>
+            <Button onClick={() => addDays(14)} variant="outlined" sx={buttonStyle}>
               +14
             </Button>
-            <Button onClick={() => addDays(30)} variant="outlined" sx={{ marginLeft: 1 }}>
+            <Button onClick={() => addDays(30)} variant="outlined" sx={buttonStyle}>
               +30
             </Button>
           </Box>
@@ -217,21 +204,18 @@ export const UserInfoModal = ({ user, onClose, isEdit, refreshUsers }) => {
             </Typography>
           )}
         </Grid>
-        <Grid item sx={gridItemStyle}>
-          <Box
-            display="flex"
-            flexDirection="column"
-            justifyContent="flex-end"
-            alignItems="flex-end"
-            height="100%">
-            <Button
-              variant="contained"
-              color="primary"
-              sx={{ textTransform: 'none', minWidth: '120px', height: '56px' }}
-              onClick={handleSave}>
-              Зберегти
-            </Button>
-          </Box>
+      </Grid>
+
+      {/* Fifth Row */}
+      <Grid container spacing={2} justifyContent="flex-end" alignItems="end" marginTop={2}>
+        <Grid item>
+          <Button
+            variant="contained"
+            color="primary"
+            sx={{ ...buttonStyle, minWidth: '140px' }}
+            onClick={handleSave}>
+            Зберегти
+          </Button>
         </Grid>
       </Grid>
     </Box>
