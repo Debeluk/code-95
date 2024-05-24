@@ -58,7 +58,9 @@ const renderRow = ({ index, style, data, onEdit, onDelete }) => {
             minHeight: '30px',
             borderColor: 'black',
             color: 'black',
-            backgroundColor: 'white'
+            backgroundColor: 'white',
+            display: 'flex',
+            alignItems: 'center'
           }}
           onClick={() => onEdit(item, true)}>
           <EditIcon fontSize="small" />
@@ -72,7 +74,9 @@ const renderRow = ({ index, style, data, onEdit, onDelete }) => {
             minHeight: '30px',
             borderColor: 'black',
             color: 'black',
-            backgroundColor: 'white'
+            backgroundColor: 'white',
+            display: 'flex',
+            alignItems: 'center'
           }}
           onClick={() => onDelete(item)}>
           <DeleteIcon fontSize="small" />
@@ -380,7 +384,7 @@ export const Admin = () => {
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',
-            padding: '12px',
+            padding: '12px'
           }}>
           <UserInfoModal
             user={selectedUser}
@@ -412,8 +416,8 @@ export const Admin = () => {
                         variant="contained"
                         color="error"
                         onClick={() => handleDeleteCourse(course.id)}
-                        sx={{ marginLeft: 2 }}>
-                        Удалить
+                        sx={{ marginLeft: 2, display: 'flex', alignItems: 'center' }}>
+                        Видалити
                       </Button>
                     </ListItemSecondaryAction>
                   </ListItem>
@@ -425,7 +429,7 @@ export const Admin = () => {
               variant="contained"
               component="label"
               sx={{ textTransform: 'none', minWidth: '200px', height: '48px' }}>
-              Загрузить курс
+              Завантажити курс
               <input type="file" hidden onChange={handleFileUpload} />
             </Button>
           </Box>
@@ -434,8 +438,9 @@ export const Admin = () => {
 
       {/* Delete User Confirmation Dialog */}
       <Dialog open={isDeleteDialogOpen} onClose={handleCloseDeleteDialog}>
-        <DialogTitle>Підтвердиит видалення</DialogTitle>
+        <DialogTitle>Підтвердити видалення</DialogTitle>
         <DialogContent>
+          {isLoadingUsers && <Loader />}
           <DialogContentText>
             Ви впевнені, що хочете видалити користувача {userToDelete?.name}?
           </DialogContentText>
@@ -444,7 +449,10 @@ export const Admin = () => {
           <Button onClick={handleCloseDeleteDialog} color="primary">
             Скасування
           </Button>
-          <Button onClick={confirmDeleteUser} color="error">
+          <Button
+            onClick={confirmDeleteUser}
+            color="error"
+            sx={{ display: 'flex', alignItems: 'center' }}>
             Видалити
           </Button>
         </DialogActions>

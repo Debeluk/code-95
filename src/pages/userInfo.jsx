@@ -8,6 +8,7 @@ import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import { axiosInstance } from '../axiosInterceptor.js';
 import { CREATE_GET_USER, USER_USE } from '../constants/ApiURL.js';
+import { Loader } from '../components/Loader/Loader.jsx';
 
 dayjs.extend(utc);
 
@@ -47,6 +48,7 @@ export const UserInfoModal = ({ user, onClose, isEdit, refreshUsers }) => {
   const [password, setPassword] = useState('');
   const [expireDate, setExpireDate] = useState(dayjs().utc());
   const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     if (isEdit && user) {
@@ -83,6 +85,8 @@ export const UserInfoModal = ({ user, onClose, isEdit, refreshUsers }) => {
       return;
     }
 
+    setIsLoading(true);
+
     const requestData = {
       name,
       expire_at: expireDate.toISOString(),
@@ -105,6 +109,9 @@ export const UserInfoModal = ({ user, onClose, isEdit, refreshUsers }) => {
       .catch((error) => {
         setError('Помилка при збереженні користувача.');
         console.error('Error saving user:', error);
+      })
+      .finally(() => {
+        setIsLoading(false);
       });
   };
 
@@ -117,7 +124,8 @@ export const UserInfoModal = ({ user, onClose, isEdit, refreshUsers }) => {
   };
 
   return (
-    <Box sx={{ padding: 1, maxWidth: '412px', margin: '0 auto' }}>
+    <Box sx={{ padding: 1, maxWidth: '412px', margin: '0 auto', position: 'relative' }}>
+      {isLoading && <Loader />}
       {/* First Row */}
       <Box display="flex" justifyContent="space-between" alignItems="center" marginBottom={2}>
         <Typography variant="h6">
