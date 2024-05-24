@@ -11,7 +11,8 @@ import {
   DialogContentText,
   DialogTitle,
   Paper,
-  CircularProgress
+  CircularProgress,
+  Collapse
 } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
@@ -275,6 +276,7 @@ export const FormedTest = () => {
                                   ? 'black'
                                   : '#ccc',
                           backgroundColor: 'white',
+                          transition: 'all 0.3s ease',
                           '&:hover': {
                             color: 'black',
                             borderColor: 'black'
@@ -312,9 +314,8 @@ export const FormedTest = () => {
                             <Box
                               component="img"
                               sx={{
-                                maxHeight: 295,
-                                maxWidth: 395,
-                                marginBottom: 3
+                                maxHeight: 400,
+                                maxWidth: 400
                               }}
                               alt="Question Image"
                               src={questions[currentQuestionIndex].image}
@@ -340,6 +341,7 @@ export const FormedTest = () => {
                                     borderBottom: '2px solid #ccc',
                                     borderRadius: '0',
                                     boxShadow: 'none',
+                                    transition: 'all 0.3s ease',
                                     '&:hover': {
                                       backgroundColor: '#f5f5f5',
                                       boxShadow: 'none'
@@ -362,11 +364,21 @@ export const FormedTest = () => {
                         </FormControl>
                       </Grid>
                     </Grid>
-                    {answeredQuestions[currentQuestionIndex] && (
-                      <Typography variant="body2" sx={{ color: 'gray', marginTop: 2 }}>
+                    <Collapse in={!!answeredQuestions[currentQuestionIndex]}>
+                      <Typography
+                        variant="body2"
+                        sx={{
+                          color: 'black',
+                          marginTop: 2,
+                          boxShadow: '0px 6px 12px rgba(0, 0, 0, 0.15)',
+                          padding: 2,
+                          borderRadius: '8px',
+                          backgroundColor: 'white',
+                          transition: 'max-height 0.5s ease'
+                        }}>
                         {questions[currentQuestionIndex].hint}
                       </Typography>
-                    )}
+                    </Collapse>
                     <Box display="flex" justifyContent="space-between" marginTop={2}>
                       <Button
                         variant="contained"
@@ -381,6 +393,11 @@ export const FormedTest = () => {
                           backgroundColor: 'white',
                           borderColor: 'black',
                           border: '1px solid black',
+                          transition: 'all 0.3s ease',
+                          '&.Mui-disabled': {
+                            color: 'black', // Цвет текста, когда кнопка неактивна
+                            borderColor: 'black'
+                          },
                           '&:hover': {
                             color: 'white',
                             backgroundColor: 'black',
@@ -402,6 +419,11 @@ export const FormedTest = () => {
                           backgroundColor: 'white',
                           borderColor: 'black',
                           border: '1px solid black',
+                          transition: 'all 0.3s ease',
+                          '&.Mui-disabled': {
+                            color: 'black', // Цвет текста, когда кнопка неактивна
+                            borderColor: 'black'
+                          },
                           '&:hover': {
                             color: 'white',
                             backgroundColor: 'black',
@@ -414,7 +436,7 @@ export const FormedTest = () => {
                   </>
                 )}
 
-                <Box display="flex" justifyContent="flex-end" marginTop={4}>
+                <Box display="flex" justifyContent="center" marginTop={4}>
                   <Button
                     variant="contained"
                     color="error"
@@ -449,7 +471,7 @@ export const FormedTest = () => {
                   onClick={handleCloseDialog}
                   color="primary"
                   sx={{ minWidth: '170px', border: '1px solid lightblue', marginBottom: '8px' }}>
-                  Відміна
+                  Скасувати
                 </Button>
                 <Button
                   onClick={handleEndTest}
@@ -475,7 +497,7 @@ export const FormedTest = () => {
                   <br />
                   Неправильні відповіді: {incorrectAnswers}
                   <br />
-                  <Typography component="span" fontWeight="bold">
+                  <Typography component="span" fontWeight="bold" fontSize={20} color="black">
                     {incorrectAnswers >= 3 ? 'Тест не складений' : 'Тест складений'}
                   </Typography>
                 </DialogContentText>

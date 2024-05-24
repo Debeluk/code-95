@@ -1,13 +1,20 @@
 import React from 'react';
 import { Button } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace'; // Импортируем иконку с длинной стрелкой
 
 const BackButton = ({ sx, ...props }) => {
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleBack = () => {
-    navigate(-1); // Вернуться на одну страницу назад
+    if (location.pathname === '/test') {
+      navigate('/tickets');
+    } else if (location.pathname === '/tickets') {
+      navigate('/courses');
+    } else {
+      navigate(-1); // Вернуться на одну страницу назад для всех других путей
+    }
   };
 
   return (
@@ -21,8 +28,7 @@ const BackButton = ({ sx, ...props }) => {
         alignItems: 'center',
         ...sx
       }}
-      {...props}
-    >
+      {...props}>
       <KeyboardBackspaceIcon sx={{ fontSize: '2.5rem' }} /> {/* Увеличиваем размер иконки */}
     </Button>
   );
