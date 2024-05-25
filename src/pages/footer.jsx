@@ -11,7 +11,7 @@ export const Footer = () => {
         padding: 2,
         bgcolor: 'orange',
         boxShadow: 1,
-        height: '58px',
+        height: '58px'
       }}
     >
       <Typography variant="body1">Phone: +1 234 567 890</Typography>

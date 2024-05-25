@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import { Box, Typography, TextField, Button, Paper, Grid, List, ListItem } from '@mui/material';
+import { Box, Typography, Button, Paper, Grid, List, ListItem } from '@mui/material';
 import Notiflix from 'notiflix';
 import { axiosInstance } from '../axiosInterceptor.js';
 import { LOGIN } from '../constants/ApiURL.js';
 import secureLocalStorage from 'react-secure-storage';
 import { useStore } from '../store/store.js';
 import { BAD_REQUEST_STATUS_CODE, SESSION_ALREADY_EXISTS } from '../constants/ErrorConstants.js';
+import InputField from '../components/InputField/InputField.jsx';
 
 export const LoginPage = () => {
   const [username, setUsername] = useState('');
@@ -69,7 +70,8 @@ export const LoginPage = () => {
           justifyContent: 'center',
           alignItems: 'center',
           minHeight: '100vh'
-        }}>
+        }}
+      >
         <Paper elevation={3} sx={{ width: '100%', maxWidth: '900px', borderRadius: '16px' }}>
           <Grid container spacing={0}>
             {/* Left Section */}
@@ -82,7 +84,8 @@ export const LoginPage = () => {
                 flexDirection: 'column',
                 justifyContent: 'center',
                 padding: 0
-              }}>
+              }}
+            >
               <Box sx={{ padding: 2 }}>
                 <Typography variant="h4" gutterBottom>
                   ADR Online
@@ -128,66 +131,32 @@ export const LoginPage = () => {
                 backgroundColor: 'white',
                 borderTopRightRadius: '16px',
                 borderBottomRightRadius: '16px'
-              }}>
+              }}
+            >
               <Box sx={{ padding: 3 }}>
                 <Typography variant="h5" align="center" gutterBottom sx={{ marginBottom: '6px' }}>
                   Увійти до особистого кабінету
                 </Typography>
                 <form onSubmit={handleLogin}>
-                  <Box marginBottom={3}>
-                    <TextField
-                      id="username"
-                      label="Логін"
-                      variant="outlined"
-                      fullWidth
-                      type="text"
+                  <Box marginBottom={3} marginTop={3}>
+                    <InputField
+                      label={'Логін'}
                       value={username}
-                      onChange={(e) => setUsername(e.target.value)}
+                      handleValueChange={(value) => setUsername(value)}
                       error={!!usernameError}
-                      helperText={usernameError}
-                      disabled={isLoading} // Disable input while loading
-                      InputProps={{
-                        sx: {
-                          '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                            borderColor: 'black'
-                          }
-                        }
-                      }}
-                      InputLabelProps={{
-                        sx: {
-                          '&.Mui-focused': {
-                            color: 'black'
-                          }
-                        }
-                      }}
+                      disabled={isLoading}
+                      errorMessage={usernameError}
                     />
                   </Box>
                   <Box marginBottom={3}>
-                    <TextField
-                      id="password"
-                      label="Пароль"
-                      variant="outlined"
-                      fullWidth
-                      type="password"
+                    <InputField
+                      label={'Пароль'}
                       value={password}
-                      onChange={(e) => setPassword(e.target.value)}
+                      handleValueChange={(value) => setPassword(value)}
+                      password
                       error={!!passwordError}
-                      helperText={passwordError}
                       disabled={isLoading}
-                      InputProps={{
-                        sx: {
-                          '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                            borderColor: 'black'
-                          }
-                        }
-                      }}
-                      InputLabelProps={{
-                        sx: {
-                          '&.Mui-focused': {
-                            color: 'black'
-                          }
-                        }
-                      }}
+                      errorMessage={passwordError}
                     />
                   </Box>
                   <Button
@@ -212,7 +181,8 @@ export const LoginPage = () => {
                         backgroundColor: 'orange',
                         color: 'white'
                       }
-                    }}>
+                    }}
+                  >
                     {isLoading ? <LoadingDots /> : 'Увійти'}
                   </Button>
                 </form>
@@ -263,7 +233,8 @@ const LoadingDots = () => {
             transform: 'translateX(0)'
           }
         }
-      }}>
+      }}
+    >
       <div></div>
       <div></div>
     </Box>

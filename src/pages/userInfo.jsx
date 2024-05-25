@@ -124,7 +124,7 @@ export const UserInfoModal = ({ user, onClose, isEdit, refreshUsers }) => {
         : axiosInstance.post(CREATE_GET_USER, requestData);
 
     requestPromise
-      .then((response) => {
+      .then(() => {
         refreshUsers();
         onClose();
       })
@@ -251,7 +251,8 @@ export const UserInfoModal = ({ user, onClose, isEdit, refreshUsers }) => {
                 backgroundColor: 'orange'
               }
             }}
-            onClick={handleSave}>
+            onClick={handleSave}
+          >
             Зберегти
           </Button>
         </Grid>

@@ -50,14 +50,16 @@ export const TicketsPage = () => {
         marginBottom: 6,
         marginLeft: 32,
         marginRight: 32
-      }}>
+      }}
+    >
       <Box
         sx={{
           marginBottom: 4,
           display: 'flex',
           justifyContent: 'flex-start',
           backgroundColor: 'transparent'
-        }}>
+        }}
+      >
         <BackButton sx={{ marginRight: 2 }} />
       </Box>
 
@@ -93,7 +95,8 @@ export const TicketsPage = () => {
                   borderWidth: '2px',
                   borderStyle: 'solid'
                 }
-              }}>
+              }}
+            >
               {number}
             </Button>
           </Grid>
@@ -121,7 +124,8 @@ export const TicketsPage = () => {
                 borderStyle: 'solid'
               },
               marginRight: 2
-            }}>
+            }}
+          >
             Випадковий білет
           </Button>
         </Grid>
@@ -144,7 +148,8 @@ export const TicketsPage = () => {
                 borderWidth: '2px',
                 borderStyle: 'solid'
               }
-            }}>
+            }}
+          >
             Випадкові питання
           </Button>
         </Grid>

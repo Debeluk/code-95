@@ -53,7 +53,8 @@ export const Courses = () => {
         marginBottom: 6,
         marginLeft: 32,
         marginRight: 32
-      }}>
+      }}
+    >
       <Box textAlign="center" sx={{ marginBottom: 6 }}>
         <Typography variant="h4" gutterBottom>
           Курси
@@ -82,7 +83,8 @@ export const Courses = () => {
                   border: '1px solid black'
                 }
               }}
-              onClick={() => handleCardClick(course.name)}>
+              onClick={() => handleCardClick(course.name)}
+            >
               <Typography variant="h6" color="inherit" align="center">
                 {course.name}
               </Typography>

@@ -36,7 +36,8 @@ const BackButton = ({ sx, ...props }) => {
         },
         ...sx
       }}
-      {...props}>
+      {...props}
+    >
       <KeyboardBackspaceIcon sx={{ fontSize: '2.5rem' }} />
     </Button>
   );
