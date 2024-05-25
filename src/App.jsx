@@ -19,14 +19,15 @@ import {
   COURSES_PATH,
   LOGIN_PATH,
   TEST_PATH,
-  TICKETS_PATH,
-  USER_INFO_PATH
+  TICKETS_PATH
 } from './constants/PathURL.js';
 import { axiosInstance } from './axiosInterceptor.js';
 import { useStore } from './store/store.js';
+import { useAutoAnimate } from '@formkit/auto-animate/react';
 
 export const App = () => {
   const wsRef = useRef(null);
+  const [block] = useAutoAnimate();
   const {
     accessToken,
     refreshToken,
@@ -122,6 +123,10 @@ export const App = () => {
             setSessionId(null);
             setWebsocketConnectionFailed(true);
         }
+      } else if (event.code === 1006) {
+        Notiflix.Notify.failure('Something went wrong, please try again later');
+        setSessionId(null);
+        setWebsocketConnectionFailed(true);
       } else {
         console.error('WebSocket closed with code: ', event.code);
         setSessionId(null);
@@ -138,7 +143,7 @@ export const App = () => {
   };
 
   return (
-    <Box sx={{ minHeight: '100vh', backgroundColor: 'transparent' }}>
+    <Box sx={{ minHeight: '100vh', backgroundColor: 'transparent' }} ref={block}>
       <Router>
         <Routes>
           <Route
