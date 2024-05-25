@@ -10,6 +10,8 @@ import { BAD_REQUEST_STATUS_CODE, SESSION_ALREADY_EXISTS } from '../constants/Er
 export const LoginPage = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [usernameError, setUsernameError] = useState('');
+  const [passwordError, setPasswordError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const { setAccessToken, setRefreshToken } = useStore((state) => ({
     setAccessToken: state.setAccessToken,
@@ -18,6 +20,20 @@ export const LoginPage = () => {
 
   const handleLogin = (event) => {
     event.preventDefault();
+    if (username.length < 6) {
+      setUsernameError('Логін повинен містити мінімум 6 знаків.');
+      return;
+    } else {
+      setUsernameError('');
+    }
+
+    if (password.length < 6) {
+      setPasswordError('Пароль повинен містити мінімум 6 знаків.');
+      return;
+    } else {
+      setPasswordError('');
+    }
+
     setIsLoading(true);
     axiosInstance
       .post(LOGIN, { username, password })
@@ -34,7 +50,9 @@ export const LoginPage = () => {
           err?.response?.status === BAD_REQUEST_STATUS_CODE &&
           err?.response?.data?.detail === SESSION_ALREADY_EXISTS
         ) {
-          Notiflix.Notify.warning('Цей аккаунт вже викорстовується. Будь ласка вийдіть з іншого пристрою.');
+          Notiflix.Notify.warning(
+            'Цей аккаунт вже викорстовується. Будь ласка вийдіть з іншого пристрою.'
+          );
         } else {
           console.error('Error during login or fetching user details:', err.message);
           Notiflix.Notify.failure('Помилка у введених даних, будь ласка перевірте пароль.');
@@ -125,6 +143,8 @@ export const LoginPage = () => {
                       type="text"
                       value={username}
                       onChange={(e) => setUsername(e.target.value)}
+                      error={!!usernameError}
+                      helperText={usernameError}
                       disabled={isLoading} // Disable input while loading
                       InputProps={{
                         sx: {
@@ -148,9 +168,11 @@ export const LoginPage = () => {
                       label="Пароль"
                       variant="outlined"
                       fullWidth
-                      type="text"
+                      type="password"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
+                      error={!!passwordError}
+                      helperText={passwordError}
                       disabled={isLoading}
                       InputProps={{
                         sx: {
@@ -242,7 +264,6 @@ const LoadingDots = () => {
           }
         }
       }}>
-      <div></div>
       <div></div>
       <div></div>
     </Box>

@@ -9,7 +9,11 @@ html, body, #root {
     width: 100%;
     /*background-image: url('assets/picFURA.png');*/
     background-color: #F5F5F5;
-    background-repeat: repeat; /* Повторяет изображение по горизонтали и вертикали */
-    background-size: auto; /* Автоматический размер фона */
-    background-position: top left; /* Позиция изображения в верхнем левом углу */
+    background-repeat: repeat;
+    background-size: auto;
+    background-position: top left;
+}
+
+.css-1wtg167-MuiGrid-root {
+    margin-left: 0 !important;
 }

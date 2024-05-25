@@ -59,9 +59,9 @@ export const Courses = () => {
           Курси
         </Typography>
       </Box>
-      <Grid container spacing={4} justifyContent="center" alignItems="center">
+      <Grid container spacing={4} justifyContent="center" alignItems="stretch">
         {courses.map((course) => (
-          <Grid item xs={12} sm={6} md={4} key={course.id}>
+          <Grid item xs={12} sm={6} md={4} key={course.id} sx={{ padding: '16px' }}>
             <Paper
               elevation={3}
               sx={{
@@ -70,8 +70,8 @@ export const Courses = () => {
                 display: 'flex',
                 justifyContent: 'center',
                 alignItems: 'center',
-                height: 150,
-                width: 280,
+                height: '150px',
+                width: '100%',
                 padding: 2,
                 cursor: 'pointer',
                 boxShadow: '0px 4px 12px rgba(0,0,0,0.1)',

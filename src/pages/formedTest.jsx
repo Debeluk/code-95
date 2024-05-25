@@ -32,6 +32,7 @@ export const FormedTest = () => {
   const [openDialog, setOpenDialog] = useState(false);
   const [resultsDialog, setResultsDialog] = useState(false);
   const [showBackButton, setShowBackButton] = useState(false);
+  const [showEndTestButton, setShowEndTestButton] = useState(true);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [questions, setQuestions] = useState([]);
   const [answeredQuestions, setAnsweredQuestions] = useState({});
@@ -185,6 +186,7 @@ export const FormedTest = () => {
   const handleReviewQuestions = () => {
     setResultsDialog(false);
     setShowBackButton(true);
+    setShowEndTestButton(false); // Hide "Завершити тест" button
   };
 
   const handleNextQuestion = () => {
@@ -253,7 +255,7 @@ export const FormedTest = () => {
                   </Typography>
                 </Box>
 
-                <Grid container spacing={1} marginBottom={4}>
+                <Grid container spacing={1} marginBottom={4} className="question-grid">
                   {questions.map((_, index) => (
                     <Grid item xs="auto" key={index}>
                       <Button
@@ -285,7 +287,8 @@ export const FormedTest = () => {
                           transition: 'all 0.3s ease',
                           '&:hover': {
                             color: 'black',
-                            borderColor: 'black'
+                            borderColor: 'black',
+                            backgroundColor: 'white' // Устанавливаем белый цвет фона при наведении
                           }
                         }}>
                         {index + 1}
@@ -341,13 +344,16 @@ export const FormedTest = () => {
                                     textTransform: 'none',
                                     height: '75px',
                                     fontSize: '1rem',
-                                    backgroundColor: `${getButtonColor(currentQuestionIndex, answer)}80`, // 80 в конце добавляет прозрачность 0.5
+                                    backgroundColor: `${getButtonColor(currentQuestionIndex, answer)}99`,
                                     lineHeight: '1',
                                     borderTop: '2px solid #ccc',
                                     borderBottom: '2px solid #ccc',
                                     borderRadius: '0',
                                     boxShadow: 'none',
                                     transition: 'all 0.3s ease',
+                                    pointerEvents: answeredQuestions[currentQuestionIndex]
+                                      ? 'none'
+                                      : 'auto',
                                     '&:hover': {
                                       backgroundColor: '#f5f5f5',
                                       boxShadow: 'none'
@@ -360,8 +366,7 @@ export const FormedTest = () => {
                                       questions[currentQuestionIndex],
                                       answer
                                     )
-                                  }
-                                  disabled={!!answeredQuestions[currentQuestionIndex]}>
+                                  }>
                                   {answer.answer}
                                 </Button>
                               </Grid>
@@ -380,7 +385,8 @@ export const FormedTest = () => {
                           padding: 2,
                           borderRadius: '8px',
                           backgroundColor: 'white',
-                          transition: 'max-height 0.5s ease'
+                          transition: 'max-height 0.5s ease',
+                          border: '1px solid black' // Черный бордер для области подсказки
                         }}>
                         {questions[currentQuestionIndex].hint}
                       </Typography>
@@ -400,8 +406,10 @@ export const FormedTest = () => {
                           borderColor: 'black',
                           border: '1px solid black',
                           transition: 'all 0.3s ease',
+                          pointerEvents: currentQuestionIndex === 0 ? 'none' : 'auto',
                           '&.Mui-disabled': {
-                            color: 'black', // Цвет текста, когда кнопка неактивна
+                            opacity: 1,
+                            color: 'black',
                             borderColor: 'black'
                           },
                           '&:hover': {
@@ -426,8 +434,11 @@ export const FormedTest = () => {
                           borderColor: 'black',
                           border: '1px solid black',
                           transition: 'all 0.3s ease',
+                          pointerEvents:
+                            currentQuestionIndex === questions.length - 1 ? 'none' : 'auto',
                           '&.Mui-disabled': {
-                            color: 'black', // Цвет текста, когда кнопка неактивна
+                            opacity: 1,
+                            color: 'black',
                             borderColor: 'black'
                           },
                           '&:hover': {
@@ -442,20 +453,22 @@ export const FormedTest = () => {
                   </>
                 )}
 
-                <Box display="flex" justifyContent="center" marginTop={4}>
-                  <Button
-                    variant="contained"
-                    color="error"
-                    onClick={handleOpenDialog}
-                    sx={{
-                      borderRadius: '16px',
-                      textTransform: 'none',
-                      minWidth: '120px',
-                      minHeight: '40px'
-                    }}>
-                    Завершити тест
-                  </Button>
-                </Box>
+                {showEndTestButton && (
+                  <Box display="flex" justifyContent="center" marginTop={4}>
+                    <Button
+                      variant="contained"
+                      color="error"
+                      onClick={handleOpenDialog}
+                      sx={{
+                        borderRadius: '16px',
+                        textTransform: 'none',
+                        minWidth: '120px',
+                        minHeight: '40px'
+                      }}>
+                      Завершити тест
+                    </Button>
+                  </Box>
+                )}
               </>
             )}
 
