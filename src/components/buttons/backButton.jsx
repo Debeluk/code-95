@@ -1,29 +1,43 @@
 import React from 'react';
 import { Button } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
-import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace'; // Импортируем иконку с длинной стрелкой
+import { useNavigate, useLocation } from 'react-router-dom';
+import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
 
 const BackButton = ({ sx, ...props }) => {
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleBack = () => {
-    navigate(-1); // Вернуться на одну страницу назад
+    if (location.pathname === '/test') {
+      navigate('/tickets');
+    } else if (location.pathname === '/tickets') {
+      navigate('/courses');
+    } else {
+      navigate(-1);
+    }
   };
 
   return (
     <Button
       onClick={handleBack}
+      disableRipple
       sx={{
         textTransform: 'none',
         backgroundColor: 'transparent',
         color: 'lightgray',
         display: 'flex',
         alignItems: 'center',
+        '&:hover': {
+          backgroundColor: 'transparent',
+          color: 'black'
+        },
+        '&:focus': {
+          backgroundColor: 'transparent'
+        },
         ...sx
       }}
-      {...props}
-    >
-      <KeyboardBackspaceIcon sx={{ fontSize: '2.5rem' }} /> {/* Увеличиваем размер иконки */}
+      {...props}>
+      <KeyboardBackspaceIcon sx={{ fontSize: '2.5rem' }} />
     </Button>
   );
 };

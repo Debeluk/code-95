@@ -13,7 +13,8 @@ import {
   List,
   ListItem,
   ListItemText,
-  ListItemSecondaryAction
+  ListItemSecondaryAction,
+  CircularProgress
 } from '@mui/material';
 import { FixedSizeList as FList } from 'react-window';
 import EditIcon from '@mui/icons-material/Edit';
@@ -28,6 +29,7 @@ import {
   USER_USE
 } from '../constants/ApiURL.js';
 import { UserInfoModal } from './userInfo.jsx';
+import { Loader } from '../components/Loader/Loader.jsx';
 
 const renderRow = ({ index, style, data, onEdit, onDelete }) => {
   const item = data[index];
@@ -40,40 +42,63 @@ const renderRow = ({ index, style, data, onEdit, onDelete }) => {
         alignItems: 'center',
         boxSizing: 'border-box',
         borderBottom: '1px solid #ddd',
-        padding: 2
+        padding: 2,
+        justifyContent: 'space-between'
       }}>
-      <Box sx={{ width: '10%', textAlign: 'center' }}>{item.id}</Box>
-      <Box sx={{ width: '30%', textAlign: 'center' }}>{item.name}</Box>
-      <Box sx={{ width: '30%', textAlign: 'center' }}>{expireDate}</Box>
-      <Box sx={{ width: '20%', textAlign: 'center' }}>
+      <Box sx={{ flex: 1, textAlign: 'center' }}>{item.id}</Box>
+      <Box sx={{ flex: 3, textAlign: 'center' }}>{item.name}</Box>
+      <Box sx={{ flex: 3, textAlign: 'center' }}>{expireDate}</Box>
+      <Box sx={{ flex: 2, textAlign: 'center', display: 'flex', justifyContent: 'center' }}>
         <Button
           variant="outlined"
           size="small"
           sx={{
             marginRight: 1,
             borderRadius: '4px',
-            minWidth: '40px',
-            minHeight: '40px',
+            minWidth: '30px',
+            minHeight: '30px',
             borderColor: 'black',
             color: 'black',
-            backgroundColor: 'white'
+            backgroundColor: 'white',
+            display: 'flex',
+            alignItems: 'center',
+            '&:hover': {
+              transform: 'scale(1.02)',
+              backgroundColor: 'white',
+              borderColor: 'black'
+            },
+            '&:active': {
+              backgroundColor: 'white',
+              borderColor: 'black'
+            }
           }}
           onClick={() => onEdit(item, true)}>
-          <EditIcon />
+          <EditIcon fontSize="small" />
         </Button>
         <Button
           variant="outlined"
           size="small"
           sx={{
             borderRadius: '4px',
-            minWidth: '40px',
-            minHeight: '40px',
+            minWidth: '30px',
+            minHeight: '30px',
             borderColor: 'black',
             color: 'black',
-            backgroundColor: 'white'
+            backgroundColor: 'white',
+            display: 'flex',
+            alignItems: 'center',
+            '&:hover': {
+              transform: 'scale(1.02)',
+              backgroundColor: 'white',
+              borderColor: 'black'
+            },
+            '&:active': {
+              backgroundColor: 'white',
+              borderColor: 'black'
+            }
           }}
           onClick={() => onDelete(item)}>
-          <DeleteIcon />
+          <DeleteIcon fontSize="small" />
         </Button>
       </Box>
     </Box>
@@ -90,6 +115,8 @@ export const Admin = () => {
   const [isCourseModalOpen, setIsCourseModalOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [userToDelete, setUserToDelete] = useState(null);
+  const [isLoadingUsers, setIsLoadingUsers] = useState(false);
+  const [isLoadingCourses, setIsLoadingCourses] = useState(false);
 
   const { sessionId, accessToken } = useStore((state) => ({
     sessionId: state.sessionId,
@@ -103,20 +130,26 @@ export const Admin = () => {
 
   useEffect(() => {
     if (sessionId && accessToken) {
+      setIsLoadingUsers(true);
       axiosInstance
         .get(CREATE_GET_USER)
         .then((response) => {
+          console.log('Users data:', response.data); // Log the data to check the structure
           setUsers(response.data);
           setFilteredUsers(response.data);
         })
         .catch((error) => {
           console.error('Error fetching users:', error);
+        })
+        .finally(() => {
+          setIsLoadingUsers(false);
         });
     }
   }, [sessionId, accessToken]);
 
   useEffect(() => {
     if (courses.length === 0) {
+      setIsLoadingCourses(true);
       axiosInstance
         .get(GET_COURSE)
         .then((res) => {
@@ -124,6 +157,9 @@ export const Admin = () => {
         })
         .catch((err) => {
           console.error(err);
+        })
+        .finally(() => {
+          setIsLoadingCourses(false);
         });
     }
   }, [courses.length, setCourses]);
@@ -149,6 +185,7 @@ export const Admin = () => {
   };
 
   const handleDeleteCourse = (courseId) => {
+    setIsLoadingCourses(true);
     axiosInstance
       .delete(DELETE_COURSE.replace('{course_id}', courseId))
       .then(() => {
@@ -163,12 +200,16 @@ export const Admin = () => {
       })
       .catch((error) => {
         console.error('Error deleting course:', error);
+      })
+      .finally(() => {
+        setIsLoadingCourses(false);
       });
   };
 
   const handleFileUpload = (event) => {
     const file = event.target.files[0];
     if (file) {
+      setIsLoadingCourses(true);
       const formData = new FormData();
       formData.append('file', file);
 
@@ -190,6 +231,9 @@ export const Admin = () => {
         })
         .catch((error) => {
           console.error('Error uploading course:', error);
+        })
+        .finally(() => {
+          setIsLoadingCourses(false);
         });
     }
   };
@@ -200,6 +244,7 @@ export const Admin = () => {
   };
 
   const confirmDeleteUser = () => {
+    setIsLoadingUsers(true);
     axiosInstance
       .delete(USER_USE.replace('{user_id}', userToDelete.id))
       .then(() => {
@@ -209,10 +254,14 @@ export const Admin = () => {
       })
       .catch((error) => {
         console.error('Error deleting user:', error);
+      })
+      .finally(() => {
+        setIsLoadingUsers(false);
       });
   };
 
   const refreshUsers = () => {
+    setIsLoadingUsers(true);
     axiosInstance
       .get(CREATE_GET_USER)
       .then((response) => {
@@ -221,6 +270,9 @@ export const Admin = () => {
       })
       .catch((error) => {
         console.error('Error fetching users:', error);
+      })
+      .finally(() => {
+        setIsLoadingUsers(false);
       });
   };
 
@@ -243,7 +295,10 @@ export const Admin = () => {
         marginLeft: 32,
         marginRight: 32,
         display: 'flex',
-        flexDirection: 'column'
+        flexDirection: 'column',
+        backgroundColor: 'white',
+        borderRadius: 4,
+        padding: 4
       }}>
       {/* First Section */}
       <Box
@@ -264,8 +319,19 @@ export const Admin = () => {
             value={filter}
             onChange={handleFilterChange}
             sx={{
+              '& .MuiOutlinedInput-root': {
+                '& fieldset': {
+                  borderColor: 'black'
+                },
+                '&:hover fieldset': {
+                  borderColor: 'black'
+                },
+                '&.Mui-focused fieldset': {
+                  borderColor: 'black'
+                }
+              },
               '& .MuiInputBase-root': {
-                height: '48px',
+                height: '42px',
                 fontSize: '16px',
                 width: '256px'
               }
@@ -280,15 +346,27 @@ export const Admin = () => {
           justifyContent="flex-end"
           sx={{ width: '256px' }}>
           <Button
-            variant="contained"
+            variant="outlined"
             color="primary"
             sx={{
               textTransform: 'none',
               width: '100%',
-              height: '48px',
+              height: '42px',
               fontSize: '1rem',
               padding: '10px 20px',
-              borderRadius: '8px'
+              borderRadius: '8px',
+              borderColor: 'black',
+              color: 'black',
+              backgroundColor: 'white',
+              '&:hover': {
+                transform: 'scale(1.02)',
+                backgroundColor: 'white',
+                borderColor: 'black'
+              },
+              '&:active': {
+                backgroundColor: 'white',
+                borderColor: 'black'
+              }
             }}
             onClick={() => handleEdit(null, false)}>
             Додати
@@ -299,44 +377,89 @@ export const Admin = () => {
       <Divider sx={{ marginBottom: 4 }} />
 
       {/* List using react-window */}
-      <Box flex={1}>
-        <FList
-          height={500}
-          itemCount={filteredUsers.length}
-          itemSize={50}
-          width="100%"
-          itemData={filteredUsers}
-          itemKey={(index, data) => data[index].id}>
-          {({ index, style, data }) =>
-            renderRow({
-              index,
-              style,
-              data,
-              onEdit: handleEdit,
-              onDelete: handleDeleteUser
-            })
-          }
-        </FList>
+      <Box
+        flex={1}
+        sx={{
+          border: '1px solid black',
+          borderRadius: 2,
+          padding: 2
+        }}>
+        {isLoadingUsers ? (
+          <Loader />
+        ) : (
+          <FList
+            height={360}
+            itemCount={filteredUsers.length}
+            itemSize={50}
+            width="100%"
+            itemData={filteredUsers}
+            itemKey={(index, data) => data[index].id}>
+            {({ index, style, data }) =>
+              renderRow({
+                index,
+                style,
+                data,
+                onEdit: handleEdit,
+                onDelete: handleDeleteUser
+              })
+            }
+          </FList>
+        )}
       </Box>
 
       <Box sx={{ marginTop: 4 }}>
         <Button
-          variant="contained"
+          variant="outlined"
           color="primary"
           onClick={handleOpenCourseModal}
-          sx={{ textTransform: 'none', minWidth: '200px', height: '48px' }}>
-          Добавить курс
+          sx={{
+            textTransform: 'none',
+            minWidth: '200px',
+            height: '48px',
+            borderColor: 'black',
+            color: 'black',
+            backgroundColor: 'white',
+            '&:hover': {
+              transform: 'scale(1.02)',
+              backgroundColor: 'white',
+              borderColor: 'black'
+            },
+            '&:active': {
+              backgroundColor: 'white',
+              borderColor: 'black'
+            }
+          }}>
+          Додати курс
         </Button>
       </Box>
 
       {/* User Info Modal */}
-      <Dialog open={isModalOpen} onClose={handleCloseModal} fullWidth maxWidth="md">
-        <UserInfoModal
-          user={selectedUser}
-          onClose={handleCloseModal}
-          isEdit={isEdit}
-          refreshUsers={refreshUsers}
-        />
+      <Dialog
+        open={isModalOpen}
+        onClose={handleCloseModal}
+        fullWidth
+        maxWidth={false}
+        sx={{
+          '& .MuiDialog-paper': {
+            width: '100%',
+            maxWidth: '412px', // Fixed width for the modal
+            margin: 'auto' // Center the modal horizontally
+          }
+        }}>
+        <DialogContent
+          sx={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            padding: '12px'
+          }}>
+          <UserInfoModal
+            user={selectedUser}
+            onClose={handleCloseModal}
+            isEdit={isEdit}
+            refreshUsers={refreshUsers}
+          />
+        </DialogContent>
       </Dialog>
 
       {/* Courses Modal */}
@@ -347,29 +470,75 @@ export const Admin = () => {
               Курси
             </Typography>
           </Box>
-          <List>
-            {Array.isArray(courses) &&
-              courses.map((course) => (
-                <ListItem key={course.id} sx={{ borderBottom: '1px solid #ddd' }}>
-                  <ListItemText primary={course.name} />
-                  <ListItemSecondaryAction>
-                    <Button
-                      variant="contained"
-                      color="error"
-                      onClick={() => handleDeleteCourse(course.id)}
-                      sx={{ marginLeft: 2 }}>
-                      Удалить
-                    </Button>
-                  </ListItemSecondaryAction>
-                </ListItem>
-              ))}
-          </List>
+          {isLoadingCourses ? (
+            <Box
+              sx={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                height: '100px'
+              }}>
+              <CircularProgress color="primary" />
+            </Box>
+          ) : (
+            <List>
+              {Array.isArray(courses) &&
+                courses.map((course) => (
+                  <ListItem key={course.id} sx={{ borderBottom: '1px solid #ddd' }}>
+                    <ListItemText primary={course.name} />
+                    <ListItemSecondaryAction>
+                      <Button
+                        variant="outlined"
+                        size="small"
+                        sx={{
+                          borderRadius: '4px',
+                          minWidth: '30px',
+                          minHeight: '30px',
+                          borderColor: 'black',
+                          color: 'black',
+                          backgroundColor: 'white',
+                          display: 'flex',
+                          alignItems: 'center',
+                          '&:hover': {
+                            transform: 'scale(1.02)',
+                            backgroundColor: 'white',
+                            borderColor: 'black'
+                          },
+                          '&:active': {
+                            backgroundColor: 'white',
+                            borderColor: 'black'
+                          }
+                        }}
+                        onClick={() => handleDeleteCourse(course.id)}>
+                        <DeleteIcon fontSize="small" />
+                      </Button>
+                    </ListItemSecondaryAction>
+                  </ListItem>
+                ))}
+            </List>
+          )}
           <Box sx={{ marginTop: 4, display: 'flex', justifyContent: 'center' }}>
             <Button
-              variant="contained"
+              variant="outlined"
               component="label"
-              sx={{ textTransform: 'none', minWidth: '200px', height: '48px' }}>
-              Загрузить курс
+              sx={{
+                textTransform: 'none',
+                minWidth: '200px',
+                height: '48px',
+                borderColor: 'black',
+                color: 'black',
+                backgroundColor: 'white',
+                '&:hover': {
+                  transform: 'scale(1.02)',
+                  backgroundColor: 'white',
+                  borderColor: 'black'
+                },
+                '&:active': {
+                  backgroundColor: 'white',
+                  borderColor: 'black'
+                }
+              }}>
+              Завантажити курс
               <input type="file" hidden onChange={handleFileUpload} />
             </Button>
           </Box>
@@ -378,18 +547,41 @@ export const Admin = () => {
 
       {/* Delete User Confirmation Dialog */}
       <Dialog open={isDeleteDialogOpen} onClose={handleCloseDeleteDialog}>
-        <DialogTitle>Подтверждение удаления</DialogTitle>
+        <DialogTitle>Підтвердити видалення</DialogTitle>
         <DialogContent>
+          {isLoadingUsers && <Loader />}
           <DialogContentText>
-            Вы уверены, что хотите удалить пользователя {userToDelete?.name}?
+            Ви впевнені, що хочете видалити користувача {userToDelete?.name}?
           </DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCloseDeleteDialog} color="primary">
-            Отмена
+            Скасування
           </Button>
-          <Button onClick={confirmDeleteUser} color="error">
-            Удалить
+          <Button
+            onClick={confirmDeleteUser}
+            variant="outlined"
+            size="small"
+            sx={{
+              borderRadius: '4px',
+              minWidth: '30px',
+              minHeight: '30px',
+              borderColor: 'black',
+              color: 'black',
+              backgroundColor: 'white',
+              display: 'flex',
+              alignItems: 'center',
+              '&:hover': {
+                transform: 'scale(1.02)',
+                backgroundColor: 'white',
+                borderColor: 'black'
+              },
+              '&:active': {
+                backgroundColor: 'white',
+                borderColor: 'black'
+              }
+            }}>
+            <DeleteIcon fontSize="small" />
           </Button>
         </DialogActions>
       </Dialog>

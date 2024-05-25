@@ -11,7 +11,8 @@ import {
   DialogActions,
   DialogContent,
   DialogContentText,
-  DialogTitle
+  DialogTitle,
+  Collapse
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { useStore } from '../store/store.js';
@@ -62,9 +63,8 @@ export const Header = () => {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between'
-          }}
-        >
-          <Typography sx={{ fontSize: '18px' }}>є ADR test</Typography>
+          }}>
+          <Typography sx={{ fontSize: '18px', fontWeight: 'bold' }}>ADR test</Typography>
           <Button
             color="inherit"
             onClick={handleClick}
@@ -75,10 +75,10 @@ export const Header = () => {
               padding: '8px 16px',
               textTransform: 'none',
               '&:hover': {
-                backgroundColor: 'black'
+                backgroundColor: 'orange',
+                transform: 'scale(1.02)'
               }
-            }}
-          >
+            }}>
             <Box display="flex" alignItems="center">
               <Typography variant="subtitle1" sx={{ marginRight: 1 }}>
                 {user.name ?? 'Name'}
@@ -105,34 +105,47 @@ export const Header = () => {
           style: {
             maxHeight: 180,
             width: '200px',
-            marginTop: '20px'
+            marginTop: '20px',
+            backgroundColor: 'white'
           }
-        }}
-      >
-        <MenuItem disabled sx={{ padding: '0px' }}>
-          <Box
+        }}>
+        <Collapse in={open}>
+          <MenuItem disabled sx={{ padding: '0px', backgroundColor: 'white', color: 'black' }}>
+            <Box
+              sx={{
+                width: '100%',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                padding: '8px',
+                backgroundColor: 'white',
+                color: 'black'
+              }}>
+              Доступ до: {new Date(user.expireAt).toLocaleDateString('uk-UA') ?? 'дата не вказана'}
+            </Box>
+          </MenuItem>
+          <MenuItem
+            onClick={handleOpenDialog}
             sx={{
-              width: '100%',
-              display: 'flex',
               justifyContent: 'center',
-              alignItems: 'center',
-              padding: '8px'
-            }}
-          >
-            Доступ до: {new Date(user.expireAt).toLocaleDateString('uk-UA') ?? 'дата не вказана'}
-          </Box>
-        </MenuItem>
-        <MenuItem onClick={handleOpenDialog} sx={{ justifyContent: 'center' }}>
-          Вийти
-        </MenuItem>
+              backgroundColor: 'white',
+              color: 'black',
+              '&:hover': {
+                backgroundColor: 'white',
+                color: 'black',
+                transform: 'scale(1.02)'
+              }
+            }}>
+            Вийти
+          </MenuItem>
+        </Collapse>
       </Menu>
 
       <Dialog
         open={openDialog}
         onClose={handleCloseDialog}
         aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
+        aria-describedby="alert-dialog-description">
         <DialogTitle id="alert-dialog-title">{'Підтвердіть вихід'}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
@@ -140,10 +153,10 @@ export const Header = () => {
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCloseDialog} color="primary">
+          <Button onClick={handleCloseDialog} sx={{ color: 'black' }}>
             Скасувати
           </Button>
-          <Button onClick={handleConfirmLogout} color="primary" autoFocus>
+          <Button onClick={handleConfirmLogout} sx={{ color: 'black' }} autoFocus>
             Вийти
           </Button>
         </DialogActions>

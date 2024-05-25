@@ -47,14 +47,13 @@ export const Courses = () => {
   return (
     <Box
       sx={{
-        minHeight: '100vh',
-        paddingY: 6,
+        minHeight: '70vh',
+        paddingY: 2,
         marginTop: 4,
         marginBottom: 6,
         marginLeft: 32,
         marginRight: 32
-      }}
-    >
+      }}>
       <Box textAlign="center" sx={{ marginBottom: 6 }}>
         <Typography variant="h4" gutterBottom>
           Курси
@@ -72,16 +71,18 @@ export const Courses = () => {
                 justifyContent: 'center',
                 alignItems: 'center',
                 height: 150,
+                width: 280,
                 padding: 2,
                 cursor: 'pointer',
                 boxShadow: '0px 4px 12px rgba(0,0,0,0.1)',
-                transition: 'box-shadow 0.3s ease-in-out',
+                transition: 'box-shadow 0.3s ease-in-out, border 0.3s ease-in-out',
+                border: '1px solid transparent',
                 '&:hover': {
-                  boxShadow: '0px 8px 24px rgba(0,0,0,0.2)'
+                  boxShadow: '0px 4px 12px rgba(0,0,0,0.1)',
+                  border: '1px solid black'
                 }
               }}
-              onClick={() => handleCardClick(course.name)}
-            >
+              onClick={() => handleCardClick(course.name)}>
               <Typography variant="h6" color="inherit" align="center">
                 {course.name}
               </Typography>

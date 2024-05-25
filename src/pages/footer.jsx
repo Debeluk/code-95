@@ -10,15 +10,16 @@ export const Footer = () => {
         alignItems: 'center',
         padding: 2,
         bgcolor: 'orange',
-        boxShadow: 1
+        boxShadow: 1,
+        height: '58px',
       }}
     >
       <Typography variant="body1">Phone: +1 234 567 890</Typography>
       <Button
         variant="contained"
-        color="primary"
+        color="inherit"
+        backgroundColor="white"
         onClick={() => {
-          // Handle the feedback action here
           console.log('Feedback button clicked');
         }}
       >
