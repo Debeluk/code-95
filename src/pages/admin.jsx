@@ -478,7 +478,7 @@ export const Admin = () => {
                 alignItems: 'center',
                 height: '100px'
               }}>
-              <CircularProgress color="primary" />
+              <CircularProgress sx={{ color: '#000000' }} />
             </Box>
           ) : (
             <List>
