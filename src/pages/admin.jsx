@@ -38,25 +38,50 @@ const renderRow = ({ index, style, data, onEdit, onDelete }) => {
     <Box
       style={style}
       sx={{
-        display: 'flex',
+        display: 'grid',
+        gridTemplateColumns: '100px 300px 200px 150px',
         alignItems: 'center',
         boxSizing: 'border-box',
         borderBottom: '1px solid #ddd',
         padding: 2,
-        justifyContent: 'space-between'
+        gap: '4px'
       }}>
-      <Box sx={{ flex: 1, textAlign: 'center' }}>{item.id}</Box>
-      <Box sx={{ flex: 3, textAlign: 'center' }}>{item.name}</Box>
-      <Box sx={{ flex: 3, textAlign: 'center' }}>{expireDate}</Box>
-      <Box sx={{ flex: 2, textAlign: 'center', display: 'flex', justifyContent: 'center' }}>
+      <Box
+        sx={{
+          textAlign: 'center',
+          whiteSpace: 'nowrap',
+          overflow: 'hidden',
+          textOverflow: 'ellipsis'
+        }}>
+        {item.id}
+      </Box>
+      <Box
+        sx={{
+          textAlign: 'center',
+          whiteSpace: 'nowrap',
+          overflow: 'hidden',
+          textOverflow: 'ellipsis'
+        }}>
+        {item.name}
+      </Box>
+      <Box
+        sx={{
+          textAlign: 'center',
+          whiteSpace: 'nowrap',
+          overflow: 'hidden',
+          textOverflow: 'ellipsis'
+        }}>
+        {expireDate}
+      </Box>
+      <Box sx={{ textAlign: 'center', display: 'flex', justifyContent: 'center' }}>
         <Button
           variant="outlined"
           size="small"
           sx={{
             marginRight: 1,
             borderRadius: '4px',
-            minWidth: '30px',
-            minHeight: '30px',
+            minWidth: { xs: '24px', md: '30px' },
+            minHeight: { xs: '24px', md: '30px' },
             borderColor: 'black',
             color: 'black',
             backgroundColor: 'white',
@@ -80,8 +105,8 @@ const renderRow = ({ index, style, data, onEdit, onDelete }) => {
           size="small"
           sx={{
             borderRadius: '4px',
-            minWidth: '30px',
-            minHeight: '30px',
+            minWidth: { xs: '24px', md: '30px' },
+            minHeight: { xs: '24px', md: '30px' },
             borderColor: 'black',
             color: 'black',
             backgroundColor: 'white',
@@ -290,28 +315,27 @@ export const Admin = () => {
   return (
     <Box
       sx={{
-        marginTop: 4,
+        minHeight: '70vh',
+        paddingBottom: 10,
+        marginTop: 1,
         marginBottom: 6,
-        marginLeft: 32,
-        marginRight: 32,
+        marginLeft: 'auto',
+        marginRight: 'auto',
         display: 'flex',
         flexDirection: 'column',
-        backgroundColor: 'white',
-        borderRadius: 4,
-        padding: 4
+        maxWidth: '1120px',
+        padding: '0 8px'
       }}>
-      {/* First Section */}
       <Box
         display="flex"
         flexDirection="row"
         justifyContent="space-between"
-        sx={{ minHeight: '80px', marginBottom: 4 }}>
-        {/* Left Part */}
+        sx={{ minHeight: '80px', marginBottom: 4, flexWrap: 'wrap' }}>
         <Box
           display="flex"
           flexDirection="column"
           justifyContent="flex-end"
-          sx={{ width: '70%', gap: '4px' }}>
+          sx={{ width: { xs: '100%', md: '70%' }, gap: '4px', padding: '0 8px' }}>
           <Typography sx={{ fontSize: '18px' }}>Фільтр</Typography>
           <TextField
             variant="outlined"
@@ -332,19 +356,20 @@ export const Admin = () => {
               },
               '& .MuiInputBase-root': {
                 height: '42px',
-                fontSize: '16px',
-                width: '256px'
+                fontSize: '16px'
               }
             }}
           />
         </Box>
-
-        {/* Add Button */}
         <Box
           display="flex"
           flexDirection="column"
           justifyContent="flex-end"
-          sx={{ width: '256px' }}>
+          sx={{
+            width: { xs: '100%', md: '256px' },
+            marginTop: { xs: 2, md: 0 },
+            padding: '0 8px'
+          }}>
           <Button
             variant="outlined"
             color="primary"
@@ -376,13 +401,14 @@ export const Admin = () => {
 
       <Divider sx={{ marginBottom: 4 }} />
 
-      {/* List using react-window */}
       <Box
         flex={1}
         sx={{
           border: '1px solid black',
           borderRadius: 2,
-          padding: 2
+          padding: 2,
+          overflowX: 'auto',
+          overflowY: 'auto'
         }}>
         {isLoadingUsers ? (
           <Loader />
@@ -407,7 +433,7 @@ export const Admin = () => {
         )}
       </Box>
 
-      <Box sx={{ marginTop: 4 }}>
+      <Box sx={{ marginTop: 4, padding: '0 8px' }}>
         <Button
           variant="outlined"
           color="primary"
@@ -419,6 +445,7 @@ export const Admin = () => {
             borderColor: 'black',
             color: 'black',
             backgroundColor: 'white',
+            marginBottom: '8px',
             '&:hover': {
               transform: 'scale(1.02)',
               backgroundColor: 'white',
@@ -433,7 +460,6 @@ export const Admin = () => {
         </Button>
       </Box>
 
-      {/* User Info Modal */}
       <Dialog
         open={isModalOpen}
         onClose={handleCloseModal}
@@ -462,7 +488,6 @@ export const Admin = () => {
         </DialogContent>
       </Dialog>
 
-      {/* Courses Modal */}
       <Dialog open={isCourseModalOpen} onClose={handleCloseCourseModal} fullWidth maxWidth="md">
         <Box sx={{ padding: 4 }}>
           <Box textAlign="center" sx={{ marginBottom: 6 }}>
@@ -492,8 +517,8 @@ export const Admin = () => {
                         size="small"
                         sx={{
                           borderRadius: '4px',
-                          minWidth: '30px',
-                          minHeight: '30px',
+                          minWidth: { xs: '24px', md: '30px' },
+                          minHeight: { xs: '24px', md: '30px' },
                           borderColor: 'black',
                           color: 'black',
                           backgroundColor: 'white',
@@ -545,7 +570,6 @@ export const Admin = () => {
         </Box>
       </Dialog>
 
-      {/* Delete User Confirmation Dialog */}
       <Dialog
         open={isDeleteDialogOpen}
         onClose={handleCloseDeleteDialog}

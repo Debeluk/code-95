@@ -21,3 +21,9 @@ body,
 .css-1wtg167-MuiGrid-root {
     margin-left: 0 !important;
 }
+
+.css-sp2ku9-MuiGrid-root>.MuiGrid-item {
+    padding-left: 0 !important;
+    padding-top: 0 !important;
+}
+

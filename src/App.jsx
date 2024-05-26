@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { LoginPage } from './pages/login.jsx';
 import { Header } from './pages/header.jsx';
-import { Footer } from './pages/footer.jsx';
+// import { Footer } from './pages/footer.jsx';
 import { Courses } from './pages/courses.jsx';
 import { TicketsPage } from './pages/tickets.jsx';
 import { FormedTest } from './pages/formedTest.jsx';
@@ -179,7 +179,7 @@ export const App = () => {
               <ProtectedRoute requiredRole="USER">
                 <Header />
                 <Courses />
-                <Footer />
+                {/*<Footer />*/}
               </ProtectedRoute>
             }
           />
@@ -189,7 +189,7 @@ export const App = () => {
               <ProtectedRoute requiredRole="USER">
                 <Header />
                 <TicketsPage />
-                <Footer />
+                {/*<Footer />*/}
               </ProtectedRoute>
             }
           />

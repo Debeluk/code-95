@@ -51,10 +51,9 @@ export const Courses = () => {
         paddingY: 2,
         marginTop: 4,
         marginBottom: 6,
-        marginLeft: 32,
-        marginRight: 32
-      }}
-    >
+        marginLeft: { xs: 2, sm: 4, md: 8, lg: 16, xl: 32 },
+        marginRight: { xs: 2, sm: 4, md: 8, lg: 16, xl: 32 }
+      }}>
       <Box textAlign="center" sx={{ marginBottom: 6 }}>
         <Typography variant="h4" gutterBottom>
           Курси
@@ -71,7 +70,7 @@ export const Courses = () => {
                 display: 'flex',
                 justifyContent: 'center',
                 alignItems: 'center',
-                height: '150px',
+                height: { xs: '120px', md: '160px', lg: '180px' },
                 width: '100%',
                 padding: 2,
                 cursor: 'pointer',
@@ -83,9 +82,14 @@ export const Courses = () => {
                   border: '1px solid black'
                 }
               }}
-              onClick={() => handleCardClick(course.name)}
-            >
-              <Typography variant="h6" color="inherit" align="center">
+              onClick={() => handleCardClick(course.name)}>
+              <Typography
+                color="inherit"
+                align="center"
+                sx={{
+                  lineHeight: 1.2,
+                  fontSize: { xs: '1rem', md: '1.25rem', lg: '1.5rem' }
+                }}>
                 {course.name}
               </Typography>
             </Paper>

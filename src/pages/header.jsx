@@ -57,8 +57,7 @@ export const Header = () => {
           sx={{
             marginTop: 2,
             marginBottom: 2,
-            marginLeft: 32,
-            marginRight: 32,
+            marginX: { xs: 2, sm: 4, md: 8, lg: 32 },
             width: '100%',
             display: 'flex',
             alignItems: 'center',
@@ -72,7 +71,7 @@ export const Header = () => {
               backgroundColor: 'orange',
               color: 'white',
               borderRadius: '24px',
-              padding: '8px 16px',
+              padding: { xs: '4px 8px', sm: '8px 16px' },
               textTransform: 'none',
               '&:hover': {
                 backgroundColor: 'orange',

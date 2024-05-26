@@ -44,26 +44,25 @@ export const TicketsPage = () => {
   return (
     <Box
       sx={{
-        height: '70vh',
-        paddingBottom: 50,
+        minHeight: '70vh',
+        paddingBottom: 10,
         marginTop: 4,
         marginBottom: 6,
-        marginLeft: 32,
-        marginRight: 32
-      }}
-    >
+        marginLeft: 'auto',
+        marginRight: 'auto'
+      }}>
       <Box
         sx={{
           marginBottom: 4,
           display: 'flex',
           justifyContent: 'flex-start',
-          backgroundColor: 'transparent'
-        }}
-      >
+          backgroundColor: 'transparent',
+          paddingLeft: { xs: 0, md: '256px' }
+        }}>
         <BackButton sx={{ marginRight: 2 }} />
       </Box>
 
-      <Box textAlign="center" marginBottom={4}>
+      <Box textAlign="center" marginBottom={4} sx={{ paddingLeft: "32px", paddingRight: "32px" }}>
         <Typography variant="h5" gutterBottom>
           {courseName}
         </Typography>
@@ -72,9 +71,15 @@ export const TicketsPage = () => {
         </Typography>
       </Box>
 
-      <Grid container spacing={2} justifyContent="center" marginBottom={4}>
+      <Grid
+        container
+        gap={2}
+        justifyContent="center"
+        alignItems="center"
+        marginBottom={4}
+        sx={{ maxWidth: { xs: '290px', md: '620px' }, margin: '0 auto 16px', padding: 0 }}>
         {ticketNumbers.map((number) => (
-          <Grid item key={number}>
+          <Grid item key={number} sx={{ width: 'auto', padding: 0 }}>
             <Button
               variant="contained"
               onClick={() => handleTicketSelection(number)}
@@ -95,16 +100,22 @@ export const TicketsPage = () => {
                   borderWidth: '2px',
                   borderStyle: 'solid'
                 }
-              }}
-            >
+              }}>
               {number}
             </Button>
           </Grid>
         ))}
       </Grid>
 
-      <Grid container justifyContent="center" marginBottom={4}>
-        <Grid item>
+      <Grid
+        container
+        justifyContent="center"
+        alignItems="center"
+        marginBottom={4}
+        spacing={2}
+        direction={{ xs: 'column', md: 'row' }}
+        sx={{ padding: 0 }}>
+        <Grid item sx={{ width: 'auto', padding: 0 }}>
           <Button
             variant="contained"
             onClick={handleRandomTicket}
@@ -122,14 +133,12 @@ export const TicketsPage = () => {
                 borderColor: 'black',
                 borderWidth: '2px',
                 borderStyle: 'solid'
-              },
-              marginRight: 2
-            }}
-          >
+              }
+            }}>
             Випадковий білет
           </Button>
         </Grid>
-        <Grid item>
+        <Grid item sx={{ width: 'auto', padding: 0 }}>
           <Button
             variant="contained"
             onClick={handleRandomQuestions}
@@ -148,8 +157,7 @@ export const TicketsPage = () => {
                 borderWidth: '2px',
                 borderStyle: 'solid'
               }
-            }}
-          >
+            }}>
             Випадкові питання
           </Button>
         </Grid>
