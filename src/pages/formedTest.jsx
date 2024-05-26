@@ -205,8 +205,7 @@ export const FormedTest = () => {
         display: 'flex',
         justifyContent: 'center'
       }}
-      ref={block}
-    >
+      ref={block}>
       <Box sx={{ marginLeft: 20, marginRight: 20 }}>
         {showBackButton && (
           <Box sx={{ marginBottom: 2 }}>
@@ -222,8 +221,7 @@ export const FormedTest = () => {
             justifyContent: 'center',
             width: '1220px'
           }}
-          ref={block}
-        >
+          ref={block}>
           <Paper
             elevation={3}
             sx={{
@@ -233,8 +231,7 @@ export const FormedTest = () => {
               borderRadius: 2,
               boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)'
             }}
-            ref={block}
-          >
+            ref={block}>
             {loadingQuestions ? (
               <Box
                 sx={{
@@ -242,8 +239,7 @@ export const FormedTest = () => {
                   justifyContent: 'center',
                   alignItems: 'center',
                   minHeight: '50vh'
-                }}
-              >
+                }}>
                 <CircularProgress sx={{ color: '#000000' }} />
               </Box>
             ) : (
@@ -292,8 +288,7 @@ export const FormedTest = () => {
                             borderColor: 'black',
                             backgroundColor: 'white' // Устанавливаем белый цвет фона при наведении
                           }
-                        }}
-                      >
+                        }}>
                         {index + 1}
                       </Button>
                     </Grid>
@@ -311,16 +306,14 @@ export const FormedTest = () => {
                         borderRadius: '12px',
                         backgroundColor: 'transparent',
                         boxShadow: 0
-                      }}
-                    >
+                      }}>
                       <Grid item md={4}>
                         <Box
                           display="flex"
                           flexDirection="column"
                           justifyContent="center"
                           alignItems="center"
-                          ref={block}
-                        >
+                          ref={block}>
                           <Typography variant="h6" gutterBottom sx={{ lineHeight: 1.25 }}>
                             {questions[currentQuestionIndex].question}
                           </Typography>
@@ -372,8 +365,7 @@ export const FormedTest = () => {
                                       questions[currentQuestionIndex],
                                       answer
                                     )
-                                  }
-                                >
+                                  }>
                                   {answer.answer}
                                 </Button>
                               </Grid>
@@ -394,8 +386,7 @@ export const FormedTest = () => {
                           backgroundColor: 'white',
                           transition: 'max-height 0.5s ease',
                           border: '1px solid black' // Черный бордер для области подсказки
-                        }}
-                      >
+                        }}>
                         {questions[currentQuestionIndex].hint}
                       </Typography>
                     )}
@@ -425,8 +416,7 @@ export const FormedTest = () => {
                             backgroundColor: 'black',
                             borderColor: 'black'
                           }
-                        }}
-                      >
+                        }}>
                         <ArrowBackIcon />
                       </Button>
                       <Button
@@ -455,8 +445,7 @@ export const FormedTest = () => {
                             backgroundColor: 'black',
                             borderColor: 'black'
                           }
-                        }}
-                      >
+                        }}>
                         <ArrowForwardIcon />
                       </Button>
                     </Box>
@@ -474,8 +463,7 @@ export const FormedTest = () => {
                         textTransform: 'none',
                         minWidth: '120px',
                         minHeight: '40px'
-                      }}
-                    >
+                      }}>
                       Завершити тест
                     </Button>
                   </Box>
@@ -490,29 +478,57 @@ export const FormedTest = () => {
               aria-labelledby="confirm-dialog-title"
               aria-describedby="confirm-dialog-description"
               fullWidth
-              sx={{ maxWidth: '460px', margin: 'auto' }}
-              ref={block}
-            >
+              sx={{
+                maxWidth: '460px',
+                margin: 'auto',
+                '& .MuiDialog-paper': {
+                  borderRadius: '16px'
+                }
+              }}
+              ref={block}>
               <DialogTitle id="confirm-dialog-title">Підтвердити завершення тесту</DialogTitle>
               <DialogContent>
                 <DialogContentText id="confirm-dialog-description">
                   Ви впевнені, що хочете завершити тест? Результати тесту не будуть збережені
                 </DialogContentText>
               </DialogContent>
-              <DialogActions sx={{ justifyContent: 'center' }}>
+              <DialogActions sx={{ justifyContent: 'center', gap: '6px' }}>
                 <Button
                   onClick={handleCloseDialog}
-                  color="primary"
-                  sx={{ minWidth: '170px', border: '1px solid lightblue', marginBottom: '8px' }}
-                >
+                  sx={{
+                    minWidth: '170px',
+                    border: '1px solid black',
+                    marginBottom: '8px',
+                    color: 'black',
+                    backgroundColor: 'white',
+                    borderRadius: '8px',
+                    '&:hover': {
+                      backgroundColor: 'white'
+                    },
+                    '&:focus': {
+                      backgroundColor: 'white'
+                    }
+                  }}>
                   Скасувати
                 </Button>
                 <Button
                   onClick={handleEndTest}
                   color="error"
                   variant="contained"
-                  sx={{ minWidth: '170px', marginBottom: '8px' }}
-                >
+                  sx={{
+                    minWidth: '170px',
+                    marginBottom: '8px',
+                    color: '#d32f2f',
+                    backgroundColor: 'white',
+                    border: '1px solid #d32f2f',
+                    borderRadius: '8px',
+                    '&:hover': {
+                      backgroundColor: 'white'
+                    },
+                    '&:focus': {
+                      backgroundColor: 'white'
+                    }
+                  }}>
                   Завершити тест
                 </Button>
               </DialogActions>
@@ -525,9 +541,14 @@ export const FormedTest = () => {
               onClose={() => setResultsDialog(false)}
               aria-labelledby="results-dialog-title"
               aria-describedby="results-dialog-description"
-              sx={{ maxWidth: '620px', margin: 'auto' }}
-              fullWidth
-            >
+              sx={{
+                maxWidth: '590px',
+                margin: 'auto',
+                '& .MuiDialog-paper': {
+                  borderRadius: '16px' // Закругленные края диалогового окна
+                }
+              }}
+              fullWidth>
               <DialogTitle id="results-dialog-title">Результати тесту</DialogTitle>
               <DialogContent>
                 <DialogContentText id="results-dialog-description">
@@ -540,20 +561,43 @@ export const FormedTest = () => {
                   </Typography>
                 </DialogContentText>
               </DialogContent>
-              <DialogActions sx={{ justifyContent: 'center', gap: '50px' }}>
+              <DialogActions sx={{ justifyContent: 'center', gap: '20px' }}>
                 <Button
                   onClick={handleReviewQuestions}
-                  color="primary"
-                  sx={{ maxWidth: '220px', border: '1px solid lightblue', marginBottom: '8px' }}
-                >
+                  sx={{
+                    maxWidth: '220px',
+                    border: '1px solid black',
+                    marginBottom: '8px',
+                    borderRadius: '8px',
+                    color: 'black',
+                    backgroundColor: 'white',
+                    '&:hover': {
+                      backgroundColor: 'white'
+                    },
+                    '&:focus': {
+                      backgroundColor: 'white'
+                    }
+                  }}>
                   Переглянути запитання
                 </Button>
                 <Button
                   onClick={handleEndTest}
                   color="primary"
                   variant="contained"
-                  sx={{ maxWidth: '240px', marginBottom: '8px' }}
-                >
+                  sx={{
+                    maxWidth: '240px',
+                    marginBottom: '8px',
+                    borderRadius: '8px',
+                    color: 'blue',
+                    backgroundColor: 'white',
+                    border: '1px solid blue',
+                    '&:hover': {
+                      backgroundColor: 'white'
+                    },
+                    '&:focus': {
+                      backgroundColor: 'white'
+                    }
+                  }}>
                   Повернутися до вибору
                 </Button>
               </DialogActions>

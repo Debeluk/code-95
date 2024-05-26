@@ -63,8 +63,7 @@ export const Header = () => {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between'
-          }}
-        >
+          }}>
           <Typography sx={{ fontSize: '18px', fontWeight: 'bold' }}>ADR test</Typography>
           <Button
             color="inherit"
@@ -79,8 +78,7 @@ export const Header = () => {
                 backgroundColor: 'orange',
                 transform: 'scale(1.02)'
               }
-            }}
-          >
+            }}>
             <Box display="flex" alignItems="center">
               <Typography variant="subtitle1" sx={{ marginRight: 1 }}>
                 {user.name ?? 'Name'}
@@ -110,8 +108,7 @@ export const Header = () => {
             marginTop: '20px',
             backgroundColor: 'white'
           }
-        }}
-      >
+        }}>
         <Collapse in={open}>
           <MenuItem disabled sx={{ padding: '0px', backgroundColor: 'white', color: 'black' }}>
             <Box
@@ -123,8 +120,7 @@ export const Header = () => {
                 padding: '8px',
                 backgroundColor: 'white',
                 color: 'black'
-              }}
-            >
+              }}>
               Доступ до: {new Date(user.expireAt).toLocaleDateString('uk-UA') ?? 'дата не вказана'}
             </Box>
           </MenuItem>
@@ -139,9 +135,19 @@ export const Header = () => {
                 color: 'black',
                 transform: 'scale(1.02)'
               }
-            }}
-          >
-            Вийти
+            }}>
+            <Box
+              sx={{
+                backgroundColor: 'white',
+                padding: '8px 24px',
+                borderRadius: '24px',
+                '&:hover': {
+                  backgroundColor: 'orange',
+                  color: 'white'
+                }
+              }}>
+              Вийти
+            </Box>
           </MenuItem>
         </Collapse>
       </Menu>
@@ -151,18 +157,48 @@ export const Header = () => {
         onClose={handleCloseDialog}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
-      >
+        sx={{
+          '& .MuiDialog-paper': {
+            borderRadius: '16px'
+          }
+        }}>
         <DialogTitle id="alert-dialog-title">{'Підтвердіть вихід'}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
             Ви впевнені, що хочете вийти?
           </DialogContentText>
         </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseDialog} sx={{ color: 'black' }}>
+        <DialogActions sx={{ display: 'flex', justifyContent: 'center', gap: '8px' }}>
+          <Button
+            onClick={handleCloseDialog}
+            sx={{
+              color: 'black',
+              backgroundColor: 'white',
+              border: '1px solid black',
+              borderRadius: '8px',
+              minWidth: '110px',
+              minHeight: '36px',
+              '&:hover': {
+                backgroundColor: 'white'
+              }
+            }}>
             Скасувати
           </Button>
-          <Button onClick={handleConfirmLogout} sx={{ color: 'black' }} autoFocus>
+          <Button
+            onClick={handleConfirmLogout}
+            sx={{
+              color: 'black',
+              backgroundColor: 'white',
+              border: '1px solid black',
+              borderRadius: '8px',
+              minWidth: '110px',
+              minHeight: '36px',
+              '&:hover': {
+                backgroundColor: 'white',
+                color: 'black'
+              }
+            }}
+            autoFocus>
             Вийти
           </Button>
         </DialogActions>

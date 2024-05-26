@@ -44,7 +44,7 @@ export const LoginPage = () => {
         secureLocalStorage.setItem('refreshToken', res.data.refreshToken);
         setAccessToken(res.data.accessToken);
         setRefreshToken(res.data.refreshToken);
-        setIsLoading(false); // Ensure loading state is reset after success
+        setIsLoading(false);
       })
       .catch((err) => {
         if (
@@ -70,8 +70,7 @@ export const LoginPage = () => {
           justifyContent: 'center',
           alignItems: 'center',
           minHeight: '100vh'
-        }}
-      >
+        }}>
         <Paper elevation={3} sx={{ width: '100%', maxWidth: '900px', borderRadius: '16px' }}>
           <Grid container spacing={0}>
             {/* Left Section */}
@@ -84,8 +83,7 @@ export const LoginPage = () => {
                 flexDirection: 'column',
                 justifyContent: 'center',
                 padding: 0
-              }}
-            >
+              }}>
               <Box sx={{ padding: 2 }}>
                 <Typography variant="h4" gutterBottom>
                   ADR Online
@@ -131,8 +129,7 @@ export const LoginPage = () => {
                 backgroundColor: 'white',
                 borderTopRightRadius: '16px',
                 borderBottomRightRadius: '16px'
-              }}
-            >
+              }}>
               <Box sx={{ padding: 3 }}>
                 <Typography variant="h5" align="center" gutterBottom sx={{ marginBottom: '6px' }}>
                   Увійти до особистого кабінету
@@ -164,7 +161,7 @@ export const LoginPage = () => {
                     color="primary"
                     fullWidth
                     type="submit"
-                    disabled={isLoading} // Disable button while loading
+                    disabled={isLoading}
                     sx={{
                       backgroundColor: isLoading ? 'rgba(0, 0, 0, 0.12)' : 'orange',
                       color: 'white',
@@ -181,8 +178,7 @@ export const LoginPage = () => {
                         backgroundColor: 'orange',
                         color: 'white'
                       }
-                    }}
-                  >
+                    }}>
                     {isLoading ? <LoadingDots /> : 'Увійти'}
                   </Button>
                 </form>
@@ -233,8 +229,7 @@ const LoadingDots = () => {
             transform: 'translateX(0)'
           }
         }
-      }}
-    >
+      }}>
       <div></div>
       <div></div>
     </Box>
