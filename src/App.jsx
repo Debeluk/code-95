@@ -27,6 +27,7 @@ import { useAutoAnimate } from '@formkit/auto-animate/react';
 
 export const App = () => {
   const wsRef = useRef(null);
+  const reconnectTimeoutRef = useRef(null);
   const [block] = useAutoAnimate();
   const {
     accessToken,
@@ -78,7 +79,7 @@ export const App = () => {
           });
       }
     } else if (wsRef.current) {
-      wsRef.current.close();
+      wsRef.current.close(1000);
     }
   }, [accessToken, refreshToken, sessionId, backupLoaded]);
 
@@ -99,9 +100,12 @@ export const App = () => {
     };
 
     ws.onmessage = (event) => {
-      const sessionId = event.data;
-      console.log('Session ID received:', sessionId);
-      setSessionId(sessionId);
+      const message = event.data;
+      if (message.startsWith('SESSION:')) {
+        const sessionId = message.split(' ')[1];
+        console.log('Session ID received:', sessionId);
+        setSessionId(sessionId);
+      }
     };
 
     ws.onclose = (event) => {
@@ -129,17 +133,32 @@ export const App = () => {
         setWebsocketConnectionFailed(true);
       } else {
         console.error('WebSocket closed with code: ', event.code);
+        if (event.code !== 1000) {
+          reconnectWebSocket();
+        }
         setSessionId(null);
       }
     };
 
     ws.onerror = (error) => {
       console.error('WebSocket error:', error);
+      reconnectWebSocket();
     };
 
     return () => {
-      ws.close();
+      ws.close(1000);
     };
+  };
+
+  const reconnectWebSocket = () => {
+    if (reconnectTimeoutRef.current) {
+      clearTimeout(reconnectTimeoutRef.current);
+    }
+    reconnectTimeoutRef.current = setTimeout(() => {
+      if (accessToken && refreshToken) {
+        connectWebSocket();
+      }
+    }, 5000);
   };
 
   return (
