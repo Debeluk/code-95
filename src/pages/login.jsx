@@ -199,11 +199,11 @@ export const LoginPage = () => {
                 zIndex: 2,
                 position: 'relative',
                 padding: 4,
-                paddingTop: { xs: '0px', md: '4' }, // убираем верхний паддинг для мобильной версии
+                paddingTop: { xs: '0px', md: '4' },
                 backgroundColor: 'white',
                 borderTopRightRadius: '16px',
                 borderBottomRightRadius: '16px',
-                borderBottomLeftRadius: { xs: '16px', md: '0px' } // добавляем округление для нижнего левого угла на мобильной версии
+                borderBottomLeftRadius: { xs: '16px', md: '0px' }
               }}
             >
               <Typography variant="h5" align="center" gutterBottom sx={{ marginBottom: '6px' }}>

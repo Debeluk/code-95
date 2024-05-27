@@ -84,10 +84,10 @@ const InputField = ({
             borderColor: error || errorMessage ? '#CC2E2E' : disabled ? '#D9D9D9' : '#5C5C5C'
           },
           '& .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline': {
-            borderColor: '#66A4FF'
+            borderColor: 'black'
           },
           '& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline': {
-            borderColor: '#0D6EFD',
+            borderColor: 'black',
             outline: 'none'
           },
           '& .MuiOutlinedInput-root.Mui-error .MuiOutlinedInput-notchedOutline': {
