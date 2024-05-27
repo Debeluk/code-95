@@ -62,7 +62,8 @@ export const Header = () => {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between'
-          }}>
+          }}
+        >
           <Typography sx={{ fontSize: '18px', fontWeight: 'bold' }}>ADR test</Typography>
           <Button
             color="inherit"
@@ -77,7 +78,8 @@ export const Header = () => {
                 backgroundColor: 'orange',
                 transform: 'scale(1.02)'
               }
-            }}>
+            }}
+          >
             <Box display="flex" alignItems="center">
               <Typography variant="subtitle1" sx={{ marginRight: 1 }}>
                 {user.name ?? 'Name'}
@@ -107,7 +109,8 @@ export const Header = () => {
             marginTop: '20px',
             backgroundColor: 'white'
           }
-        }}>
+        }}
+      >
         <Collapse in={open}>
           <MenuItem disabled sx={{ padding: '0px', backgroundColor: 'white', color: 'black' }}>
             <Box
@@ -119,7 +122,8 @@ export const Header = () => {
                 padding: '8px',
                 backgroundColor: 'white',
                 color: 'black'
-              }}>
+              }}
+            >
               Доступ до: {new Date(user.expireAt).toLocaleDateString('uk-UA') ?? 'дата не вказана'}
             </Box>
           </MenuItem>
@@ -134,7 +138,8 @@ export const Header = () => {
                 color: 'black',
                 transform: 'scale(1.02)'
               }
-            }}>
+            }}
+          >
             <Box
               sx={{
                 backgroundColor: 'white',
@@ -144,7 +149,8 @@ export const Header = () => {
                   backgroundColor: 'orange',
                   color: 'white'
                 }
-              }}>
+              }}
+            >
               Вийти
             </Box>
           </MenuItem>
@@ -160,7 +166,8 @@ export const Header = () => {
           '& .MuiDialog-paper': {
             borderRadius: '16px'
           }
-        }}>
+        }}
+      >
         <DialogTitle id="alert-dialog-title">{'Підтвердіть вихід'}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
@@ -180,7 +187,8 @@ export const Header = () => {
               '&:hover': {
                 backgroundColor: 'white'
               }
-            }}>
+            }}
+          >
             Скасувати
           </Button>
           <Button
@@ -197,7 +205,8 @@ export const Header = () => {
                 color: 'black'
               }
             }}
-            autoFocus>
+            autoFocus
+          >
             Вийти
           </Button>
         </DialogActions>

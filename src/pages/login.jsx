@@ -83,7 +83,8 @@ export const LoginPage = () => {
           alignItems: 'center',
           minHeight: '100vh',
           padding: 8 // увеличиваем отступы
-        }}>
+        }}
+      >
         <Paper elevation={3} sx={{ width: '100%', maxWidth: '900px', borderRadius: '16px' }}>
           <Grid container spacing={0}>
             {/* Left Section for Desktop */}
@@ -97,7 +98,8 @@ export const LoginPage = () => {
                 justifyContent: 'center',
                 padding: '16px',
                 position: 'relative'
-              }}>
+              }}
+            >
               <Typography variant="h4" gutterBottom align="center">
                 ADR Online
               </Typography>
@@ -137,18 +139,21 @@ export const LoginPage = () => {
                 justifyContent: 'center',
                 padding: '16px 16px 0 16px',
                 position: 'relative'
-              }}>
+              }}
+            >
               <Typography
                 variant="h4"
                 gutterBottom
                 align="center"
                 onClick={() => setShowCourses(!showCourses)}
-                sx={{ cursor: 'pointer', marginBottom: '0px' }}>
+                sx={{ cursor: 'pointer', marginBottom: '0px' }}
+              >
                 ADR Online
               </Typography>
               <IconButton
                 sx={{ margin: '0 auto', paddingTop: '0px' }}
-                onClick={() => setShowCourses(!showCourses)}>
+                onClick={() => setShowCourses(!showCourses)}
+              >
                 <ExpandMoreIcon />
               </IconButton>
               <Collapse in={showCourses} timeout="auto" unmountOnExit>
@@ -199,7 +204,8 @@ export const LoginPage = () => {
                 borderTopRightRadius: '16px',
                 borderBottomRightRadius: '16px',
                 borderBottomLeftRadius: { xs: '16px', md: '0px' } // добавляем округление для нижнего левого угла на мобильной версии
-              }}>
+              }}
+            >
               <Typography variant="h5" align="center" gutterBottom sx={{ marginBottom: '6px' }}>
                 Увійти до особистого кабінету
               </Typography>
@@ -247,7 +253,8 @@ export const LoginPage = () => {
                       backgroundColor: 'orange',
                       color: 'white'
                     }
-                  }}>
+                  }}
+                >
                   {isLoading ? <LoadingDots /> : 'Увійти'}
                 </Button>
               </form>
@@ -297,7 +304,8 @@ const LoadingDots = () => {
             transform: 'translateX(0)'
           }
         }
-      }}>
+      }}
+    >
       <div></div>
       <div></div>
     </Box>

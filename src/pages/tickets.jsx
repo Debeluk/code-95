@@ -50,7 +50,8 @@ export const TicketsPage = () => {
         marginBottom: 6,
         marginLeft: 'auto',
         marginRight: 'auto'
-      }}>
+      }}
+    >
       <Box
         sx={{
           marginBottom: 4,
@@ -58,11 +59,12 @@ export const TicketsPage = () => {
           justifyContent: 'flex-start',
           backgroundColor: 'transparent',
           paddingLeft: { xs: 0, md: '256px' }
-        }}>
+        }}
+      >
         <BackButton sx={{ marginRight: 2 }} />
       </Box>
 
-      <Box textAlign="center" marginBottom={4} sx={{ paddingLeft: "32px", paddingRight: "32px" }}>
+      <Box textAlign="center" marginBottom={4} sx={{ paddingLeft: '32px', paddingRight: '32px' }}>
         <Typography variant="h5" gutterBottom>
           {courseName}
         </Typography>
@@ -77,7 +79,8 @@ export const TicketsPage = () => {
         justifyContent="center"
         alignItems="center"
         marginBottom={4}
-        sx={{ maxWidth: { xs: '290px', md: '620px' }, margin: '0 auto 16px', padding: 0 }}>
+        sx={{ maxWidth: { xs: '290px', md: '620px' }, margin: '0 auto 16px', padding: 0 }}
+      >
         {ticketNumbers.map((number) => (
           <Grid item key={number} sx={{ width: 'auto', padding: 0 }}>
             <Button
@@ -100,7 +103,8 @@ export const TicketsPage = () => {
                   borderWidth: '2px',
                   borderStyle: 'solid'
                 }
-              }}>
+              }}
+            >
               {number}
             </Button>
           </Grid>
@@ -114,7 +118,8 @@ export const TicketsPage = () => {
         marginBottom={4}
         spacing={2}
         direction={{ xs: 'column', md: 'row' }}
-        sx={{ padding: 0 }}>
+        sx={{ padding: 0 }}
+      >
         <Grid item sx={{ width: 'auto', padding: 0 }}>
           <Button
             variant="contained"
@@ -134,7 +139,8 @@ export const TicketsPage = () => {
                 borderWidth: '2px',
                 borderStyle: 'solid'
               }
-            }}>
+            }}
+          >
             Випадковий білет
           </Button>
         </Grid>
@@ -157,7 +163,8 @@ export const TicketsPage = () => {
                 borderWidth: '2px',
                 borderStyle: 'solid'
               }
-            }}>
+            }}
+          >
             Випадкові питання
           </Button>
         </Grid>
