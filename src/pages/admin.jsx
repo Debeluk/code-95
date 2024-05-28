@@ -48,14 +48,16 @@ const renderRow = ({ index, style, data, onEdit, onDelete }) => {
         borderBottom: '1px solid #ddd',
         padding: 2,
         gap: '4px'
-      }}>
+      }}
+    >
       <Box
         sx={{
           textAlign: 'center',
           whiteSpace: 'nowrap',
           overflow: 'hidden',
           textOverflow: 'ellipsis'
-        }}>
+        }}
+      >
         {item.id}
       </Box>
       <Box
@@ -64,7 +66,8 @@ const renderRow = ({ index, style, data, onEdit, onDelete }) => {
           whiteSpace: 'nowrap',
           overflow: 'hidden',
           textOverflow: 'ellipsis'
-        }}>
+        }}
+      >
         {item.name}
       </Box>
       <Box
@@ -73,7 +76,8 @@ const renderRow = ({ index, style, data, onEdit, onDelete }) => {
           whiteSpace: 'nowrap',
           overflow: 'hidden',
           textOverflow: 'ellipsis'
-        }}>
+        }}
+      >
         {expireDate}
       </Box>
       <Box sx={{ textAlign: 'center', display: 'flex', justifyContent: 'center' }}>
@@ -100,7 +104,8 @@ const renderRow = ({ index, style, data, onEdit, onDelete }) => {
               borderColor: 'black'
             }
           }}
-          onClick={() => onEdit(item, true)}>
+          onClick={() => onEdit(item, true)}
+        >
           <EditIcon fontSize="small" />
         </Button>
         <Button
@@ -125,7 +130,8 @@ const renderRow = ({ index, style, data, onEdit, onDelete }) => {
               borderColor: 'black'
             }
           }}
-          onClick={() => onDelete(item)}>
+          onClick={() => onDelete(item)}
+        >
           <DeleteIcon fontSize="small" />
         </Button>
       </Box>
@@ -328,17 +334,20 @@ export const Admin = () => {
         flexDirection: 'column',
         maxWidth: '1120px',
         padding: '0 8px'
-      }}>
+      }}
+    >
       <Box
         display="flex"
         flexDirection="row"
         justifyContent="space-between"
-        sx={{ minHeight: '80px', marginBottom: 4, flexWrap: 'wrap' }}>
+        sx={{ minHeight: '80px', marginBottom: 4, flexWrap: 'wrap' }}
+      >
         <Box
           display="flex"
           flexDirection="column"
           justifyContent="flex-end"
-          sx={{ width: { xs: '100%', md: '70%' }, gap: '4px', padding: '0 8px' }}>
+          sx={{ width: { xs: '100%', md: '70%' }, gap: '4px', padding: '0 8px' }}
+        >
           <Typography sx={{ fontSize: '18px' }}>Фільтр</Typography>
           <TextField
             variant="outlined"
@@ -372,7 +381,8 @@ export const Admin = () => {
             width: { xs: '100%', md: '256px' },
             marginTop: { xs: 2, md: 0 },
             padding: '0 8px'
-          }}>
+          }}
+        >
           <Button
             variant="outlined"
             color="primary"
@@ -396,7 +406,8 @@ export const Admin = () => {
                 borderColor: 'black'
               }
             }}
-            onClick={() => handleEdit(null, false)}>
+            onClick={() => handleEdit(null, false)}
+          >
             Додати
           </Button>
         </Box>
@@ -412,7 +423,8 @@ export const Admin = () => {
           padding: 2,
           overflowX: 'auto',
           overflowY: 'auto'
-        }}>
+        }}
+      >
         {isLoadingUsers ? (
           <Loader />
         ) : (
@@ -422,7 +434,8 @@ export const Admin = () => {
             itemSize={50}
             width="100%"
             itemData={filteredUsers}
-            itemKey={(index, data) => data[index].id}>
+            itemKey={(index, data) => data[index].id}
+          >
             {({ index, style, data }) =>
               renderRow({
                 index,
@@ -458,7 +471,8 @@ export const Admin = () => {
               backgroundColor: 'white',
               borderColor: 'black'
             }
-          }}>
+          }}
+        >
           Додати курс
         </Button>
       </Box>
@@ -474,14 +488,16 @@ export const Admin = () => {
             maxWidth: '412px', // Fixed width for the modal
             margin: 'auto' // Center the modal horizontally
           }
-        }}>
+        }}
+      >
         <DialogContent
           sx={{
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',
             padding: '12px'
-          }}>
+          }}
+        >
           <UserInfoModal
             user={selectedUser}
             onClose={handleCloseModal}
@@ -505,7 +521,8 @@ export const Admin = () => {
                 justifyContent: 'center',
                 alignItems: 'center',
                 height: '100px'
-              }}>
+              }}
+            >
               <CircularProgress sx={{ color: '#000000' }} />
             </Box>
           ) : (
@@ -537,7 +554,8 @@ export const Admin = () => {
                             borderColor: 'black'
                           }
                         }}
-                        onClick={() => handleDeleteCourse(course.id)}>
+                        onClick={() => handleDeleteCourse(course.id)}
+                      >
                         <DeleteIcon fontSize="small" />
                       </Button>
                     </ListItemSecondaryAction>
@@ -565,7 +583,8 @@ export const Admin = () => {
                   backgroundColor: 'white',
                   borderColor: 'black'
                 }
-              }}>
+              }}
+            >
               Завантажити курс
               <input type="file" hidden onChange={handleFileUpload} />
             </Button>
@@ -582,7 +601,8 @@ export const Admin = () => {
           '& .MuiDialog-paper': {
             borderRadius: '16px'
           }
-        }}>
+        }}
+      >
         <DialogTitle id="alert-dialog-title">Підтвердити видалення</DialogTitle>
         <DialogContent>
           {isLoadingUsers && <Loader />}
@@ -596,7 +616,8 @@ export const Admin = () => {
             justifyContent: 'flex-end',
             gap: '8px',
             padding: '8px 16px 16px 8px'
-          }}>
+          }}
+        >
           <Button
             onClick={handleCloseDeleteDialog}
             sx={{
@@ -607,7 +628,8 @@ export const Admin = () => {
               '&:hover': {
                 backgroundColor: 'white'
               }
-            }}>
+            }}
+          >
             Скасувати
           </Button>
           <Button
@@ -622,7 +644,8 @@ export const Admin = () => {
                 color: '#d32f2f'
               }
             }}
-            autoFocus>
+            autoFocus
+          >
             Видалити
           </Button>
         </DialogActions>

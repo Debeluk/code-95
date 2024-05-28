@@ -59,7 +59,8 @@ const AnswerButton = ({ onClick, backgroundColor, children, disabled }) => {
         cursor: disabled ? 'default' : 'pointer',
         margin: 0,
         color: disabled ? 'black' : 'black'
-      }}>
+      }}
+    >
       {children}
     </button>
   );
@@ -280,7 +281,8 @@ export const FormedTest = () => {
           display: 'flex',
           justifyContent: 'center'
         }}
-        ref={block}>
+        ref={block}
+      >
         <Box sx={{ marginLeft: 20, marginRight: 20 }}>
           {showBackButton && (
             <Box sx={{ marginBottom: 2 }}>
@@ -298,7 +300,8 @@ export const FormedTest = () => {
               maxWidth: '1220px',
               minWidth: '400px'
             }}
-            ref={block}>
+            ref={block}
+          >
             <Paper
               elevation={3}
               sx={{
@@ -308,7 +311,8 @@ export const FormedTest = () => {
                 borderRadius: 2,
                 boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)'
               }}
-              ref={block}>
+              ref={block}
+            >
               {loadingQuestions ? (
                 <Box
                   sx={{
@@ -316,7 +320,8 @@ export const FormedTest = () => {
                     justifyContent: 'center',
                     alignItems: 'center',
                     minHeight: '50vh'
-                  }}>
+                  }}
+                >
                   <CircularProgress sx={{ color: '#000000' }} />
                 </Box>
               ) : (
@@ -364,7 +369,8 @@ export const FormedTest = () => {
                               borderColor: 'black',
                               backgroundColor: 'white'
                             }
-                          }}>
+                          }}
+                        >
                           {index + 1}
                         </Button>
                       </Grid>
@@ -386,7 +392,8 @@ export const FormedTest = () => {
                             flexDirection: 'column',
                             alignItems: 'center'
                           }
-                        }}>
+                        }}
+                      >
                         <Grid
                           item
                           md={4}
@@ -398,13 +405,15 @@ export const FormedTest = () => {
                               alignItems: 'center',
                               flexDirection: 'column'
                             }
-                          }}>
+                          }}
+                        >
                           <Box
                             display="flex"
                             flexDirection="column"
                             justifyContent="center"
                             alignItems="center"
-                            ref={block}>
+                            ref={block}
+                          >
                             <Typography variant="h6" gutterBottom sx={{ lineHeight: 1.25 }}>
                               {questions[currentQuestionIndex].question}
                             </Typography>
@@ -427,7 +436,8 @@ export const FormedTest = () => {
                         <Grid
                           item
                           md={8}
-                          sx={{ [customTheme.breakpoints.down('md')]: { width: '100%' } }}>
+                          sx={{ [customTheme.breakpoints.down('md')]: { width: '100%' } }}
+                        >
                           <FormControl component="fieldset" sx={{ width: '100%' }}>
                             <Grid container spacing={2} direction="column" sx={{ height: '100%' }}>
                               {questions[currentQuestionIndex].answers.map((answer, idx) => (
@@ -441,7 +451,8 @@ export const FormedTest = () => {
                                       )
                                     }
                                     backgroundColor={getButtonColor(currentQuestionIndex, answer)}
-                                    disabled={!!answeredQuestions[currentQuestionIndex]}>
+                                    disabled={!!answeredQuestions[currentQuestionIndex]}
+                                  >
                                     {answer.answer}
                                   </AnswerButton>
                                 </Grid>
@@ -467,7 +478,8 @@ export const FormedTest = () => {
                               padding: 1,
                               fontSize: '0.875rem'
                             }
-                          }}>
+                          }}
+                        >
                           {questions[currentQuestionIndex].hint}
                         </Typography>
                       )}
@@ -481,7 +493,8 @@ export const FormedTest = () => {
                             justifyContent: 'space-between',
                             width: '100%'
                           }
-                        }}>
+                        }}
+                      >
                         <Button
                           variant="contained"
                           onClick={handlePreviousQuestion}
@@ -512,7 +525,8 @@ export const FormedTest = () => {
                               minHeight: '30px',
                               fontSize: '0.875rem'
                             }
-                          }}>
+                          }}
+                        >
                           <ArrowBackIcon />
                         </Button>
                         <Button
@@ -546,7 +560,8 @@ export const FormedTest = () => {
                               minHeight: '30px',
                               fontSize: '0.875rem'
                             }
-                          }}>
+                          }}
+                        >
                           <ArrowForwardIcon />
                         </Button>
                       </Box>
@@ -569,7 +584,8 @@ export const FormedTest = () => {
                             minHeight: '30px',
                             fontSize: '0.875rem'
                           }
-                        }}>
+                        }}
+                      >
                         Завершити тест
                       </Button>
                     </Box>
@@ -593,7 +609,8 @@ export const FormedTest = () => {
                       minWidth: '370px'
                     }
                   }}
-                  ref={block}>
+                  ref={block}
+                >
                   <DialogTitle id="confirm-dialog-title">Підтвердити завершення тесту</DialogTitle>
                   <DialogContent>
                     <DialogContentText id="confirm-dialog-description">
@@ -616,7 +633,8 @@ export const FormedTest = () => {
                         '&:focus': {
                           backgroundColor: 'white'
                         }
-                      }}>
+                      }}
+                    >
                       Скасувати
                     </Button>
                     <Button
@@ -636,7 +654,8 @@ export const FormedTest = () => {
                         '&:focus': {
                           backgroundColor: 'white'
                         }
-                      }}>
+                      }}
+                    >
                       Завершити тест
                     </Button>
                   </DialogActions>
@@ -657,7 +676,8 @@ export const FormedTest = () => {
                       minWidth: '370px'
                     }
                   }}
-                  fullWidth>
+                  fullWidth
+                >
                   <DialogTitle id="results-dialog-title">Результати тесту</DialogTitle>
                   <DialogContent>
                     <DialogContentText id="results-dialog-description">
@@ -686,7 +706,8 @@ export const FormedTest = () => {
                         '&:focus': {
                           backgroundColor: 'white'
                         }
-                      }}>
+                      }}
+                    >
                       Переглянути запитання
                     </Button>
                     <Button
@@ -706,7 +727,8 @@ export const FormedTest = () => {
                         '&:focus': {
                           backgroundColor: 'white'
                         }
-                      }}>
+                      }}
+                    >
                       Повернутися до вибору
                     </Button>
                   </DialogActions>
