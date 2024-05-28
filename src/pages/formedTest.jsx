@@ -58,11 +58,43 @@ const AnswerButton = ({ onClick, backgroundColor, children, disabled }) => {
         pointerEvents: disabled ? 'none' : 'auto',
         cursor: disabled ? 'default' : 'pointer',
         margin: 0,
-        color: disabled ? 'black' : 'black',
+        color: disabled ? 'black' : 'black'
       }}>
       {children}
     </button>
   );
+};
+
+const processAnswers = (answers) => {
+  return answers.map((answer) => {
+    let processedAnswer = answer.answer.trim();
+    if (processedAnswer.endsWith('.') || processedAnswer.endsWith(';')) {
+      processedAnswer = processedAnswer.slice(0, -1);
+    }
+    processedAnswer = processedAnswer.charAt(0).toUpperCase() + processedAnswer.slice(1);
+    return { ...answer, answer: processedAnswer };
+  });
+};
+
+const shuffleQuestions = (questions) => {
+  const shuffleArray = (array) => {
+    let currentIndex = array.length,
+      randomIndex;
+
+    while (currentIndex !== 0) {
+      randomIndex = Math.floor(Math.random() * currentIndex);
+      currentIndex--;
+
+      [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
+    }
+
+    return array;
+  };
+
+  return questions.map((question) => ({
+    ...question,
+    answers: shuffleArray(processAnswers(question.answers))
+  }));
 };
 
 export const FormedTest = () => {
@@ -94,27 +126,6 @@ export const FormedTest = () => {
   }));
 
   const navigate = useNavigate();
-
-  const shuffleQuestions = (questions) => {
-    const shuffleArray = (array) => {
-      let currentIndex = array.length,
-        randomIndex;
-
-      while (currentIndex !== 0) {
-        randomIndex = Math.floor(Math.random() * currentIndex);
-        currentIndex--;
-
-        [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
-      }
-
-      return array;
-    };
-
-    return questions.map((question) => ({
-      ...question,
-      answers: shuffleArray(question.answers)
-    }));
-  };
 
   useEffect(() => {
     if (!backupLoaded) return;
@@ -388,11 +399,9 @@ export const FormedTest = () => {
                               <Box
                                 component="img"
                                 sx={{
-                                  maxHeight: 400,
-                                  maxWidth: 400,
+                                  maxWidth: 360,
                                   [customTheme.breakpoints.down('md')]: {
-                                    maxHeight: 200,
-                                    maxWidth: 200
+                                    maxWidth: 330
                                   }
                                 }}
                                 alt="Question Image"
@@ -567,7 +576,7 @@ export const FormedTest = () => {
                     margin: 'auto',
                     '& .MuiDialog-paper': {
                       borderRadius: '16px',
-                      minWidth: '370px',
+                      minWidth: '370px'
                     }
                   }}
                   ref={block}>
@@ -631,7 +640,7 @@ export const FormedTest = () => {
                     margin: 'auto',
                     '& .MuiDialog-paper': {
                       borderRadius: '16px',
-                      minWidth: '370px',
+                      minWidth: '370px'
                     }
                   }}
                   fullWidth>
