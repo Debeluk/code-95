@@ -69,7 +69,16 @@ export const Header = () => {
             alignItems: 'center',
             justifyContent: 'space-between'
           }}>
-          <Button onClick={handleLogoClick} sx={{ textTransform: 'none' }}>
+          <Button
+            onClick={handleLogoClick}
+            sx={{
+              textTransform: 'none',
+              '&:hover': {
+                backgroundColor: 'transparent'
+              }
+            }}
+            disableRipple
+            disableElevation>
             <Typography sx={{ fontSize: '18px', fontWeight: 'bold', color: 'black' }}>
               ADR test
             </Typography>
@@ -143,7 +152,7 @@ export const Header = () => {
               backgroundColor: 'white',
               '&:hover': {
                 backgroundColor: 'white',
-                cursor: 'auto',
+                cursor: 'auto'
               }
             }}>
             <Box
@@ -155,7 +164,7 @@ export const Header = () => {
                 '&:hover': {
                   backgroundColor: 'orange',
                   color: 'white',
-                  cursor: 'pointer',
+                  cursor: 'pointer'
                 }
               }}>
               Вийти

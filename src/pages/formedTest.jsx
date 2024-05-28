@@ -169,6 +169,20 @@ export const FormedTest = () => {
     fetchQuestions();
   }, [selectedQuestionTicket, isSelectedRandomQuestions, selectedCourse, backupLoaded, navigate]);
 
+  useEffect(() => {
+    const handleBeforeUnload = (event) => {
+      event.preventDefault();
+      event.returnValue =
+        'Ваш прогрес буде втрачено. Ви впевнені, що хочете перезавантажити сторінку?';
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+  }, []);
+
   const handleOpenDialog = () => {
     setOpenDialog(true);
   };
