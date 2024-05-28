@@ -40,7 +40,8 @@ export const App = () => {
     setAccessToken,
     setRefreshToken,
     setSessionId,
-    backupLoaded
+    backupLoaded,
+    resetStore
   } = useStore((state) => ({
     accessToken: state.accessToken,
     refreshToken: state.refreshToken,
@@ -52,7 +53,8 @@ export const App = () => {
     backupLoaded: state.backupLoaded,
     setCurrentUser: state.setCurrentUser,
     websocketConnectionFailed: state.websocketConnectionFailed,
-    setWebsocketConnectionFailed: state.setWebsocketConnectionFailed
+    setWebsocketConnectionFailed: state.setWebsocketConnectionFailed,
+    resetStore: state.resetStore,
   }));
   useEffect(() => {
     loadState();
@@ -113,6 +115,7 @@ export const App = () => {
         switch (event.reason) {
           case 'Bad token':
             console.error('WebSocket closed: Bad token');
+            resetStore();
             clearSession();
             setWebsocketConnectionFailed(true);
             break;
