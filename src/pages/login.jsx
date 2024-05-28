@@ -304,7 +304,7 @@ export const LoginPage = () => {
                   <IconButton
                     color="primary"
                     aria-label="Viber"
-                    href="viber://chat?number=+380937698333"
+                    href="https://goo.su/hFQYE"
                     sx={{
                       backgroundColor: 'white',
                       border: '1px solid #ccc',
