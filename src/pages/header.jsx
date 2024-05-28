@@ -70,7 +70,9 @@ export const Header = () => {
             justifyContent: 'space-between'
           }}>
           <Button onClick={handleLogoClick} sx={{ textTransform: 'none' }}>
-            <Typography sx={{ fontSize: '18px', fontWeight: 'bold', color: 'black' }}>ADR test</Typography>
+            <Typography sx={{ fontSize: '18px', fontWeight: 'bold', color: 'black' }}>
+              ADR test
+            </Typography>
           </Button>
           <Button
             color="inherit"
@@ -117,7 +119,10 @@ export const Header = () => {
           }
         }}>
         <Collapse in={open}>
-          <MenuItem disabled sx={{ padding: '0px', backgroundColor: 'white', color: 'black' }}>
+          <MenuItem
+            disabled
+            disableRipple
+            sx={{ padding: '0px', backgroundColor: 'white', color: 'black' }}>
             <Box
               sx={{
                 width: '100%',
@@ -132,25 +137,25 @@ export const Header = () => {
             </Box>
           </MenuItem>
           <MenuItem
-            onClick={handleOpenDialog}
+            disableRipple
             sx={{
               justifyContent: 'center',
               backgroundColor: 'white',
-              color: 'black',
               '&:hover': {
                 backgroundColor: 'white',
-                color: 'black',
-                transform: 'scale(1.02)'
+                cursor: 'auto',
               }
             }}>
             <Box
+              onClick={handleOpenDialog}
               sx={{
                 backgroundColor: 'white',
                 padding: '8px 24px',
                 borderRadius: '24px',
                 '&:hover': {
                   backgroundColor: 'orange',
-                  color: 'white'
+                  color: 'white',
+                  cursor: 'pointer',
                 }
               }}>
               Вийти
@@ -205,7 +210,8 @@ export const Header = () => {
                 color: 'black'
               }
             }}
-            autoFocus>
+            autoFocus
+            disableRipple>
             Вийти
           </Button>
         </DialogActions>

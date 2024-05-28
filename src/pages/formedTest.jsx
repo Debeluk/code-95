@@ -228,7 +228,7 @@ export const FormedTest = () => {
   const handleReviewQuestions = () => {
     setResultsDialog(false);
     setShowBackButton(true);
-    setShowEndTestButton(false); // Hide "Завершити тест" button
+    setShowEndTestButton(false);
   };
 
   const handleNextQuestion = () => {
@@ -566,7 +566,8 @@ export const FormedTest = () => {
                     maxWidth: '460px',
                     margin: 'auto',
                     '& .MuiDialog-paper': {
-                      borderRadius: '16px'
+                      borderRadius: '16px',
+                      minWidth: '370px',
                     }
                   }}
                   ref={block}>
@@ -629,7 +630,8 @@ export const FormedTest = () => {
                     maxWidth: '590px',
                     margin: 'auto',
                     '& .MuiDialog-paper': {
-                      borderRadius: '16px'
+                      borderRadius: '16px',
+                      minWidth: '370px',
                     }
                   }}
                   fullWidth>
