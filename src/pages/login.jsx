@@ -286,7 +286,7 @@ export const LoginPage = () => {
                   <IconButton
                     color="primary"
                     aria-label="Telegram"
-                    href="#"
+                    href="https://t.me/adrtest"
                     sx={{
                       backgroundColor: 'white',
                       border: '1px solid #ccc',
