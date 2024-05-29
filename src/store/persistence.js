@@ -4,6 +4,7 @@ import { ACCESS_TOKEN, APP_STATE, REFRESH_TOKEN } from '../constants/authConstan
 
 export const saveState = () => {
   secureLocalStorage.setItem(APP_STATE, useStore.getState());
+  console.log('saved state');
 };
 
 export const loadState = () => {

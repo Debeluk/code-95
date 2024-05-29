@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Box,
   Typography,
@@ -23,81 +23,80 @@ import BackButton from '../components/buttons/backButton.jsx';
 import { useAutoAnimate } from '@formkit/auto-animate/react';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
-const customTheme = createTheme({
-  breakpoints: {
-    values: {
-      xs: 0,
-      sm: 0,
-      md: 1280,
-      lg: 1440,
-      xl: 1920
+export const FormedTest = () => {
+  const customTheme = createTheme({
+    breakpoints: {
+      values: {
+        xs: 0,
+        sm: 0,
+        md: 1280,
+        lg: 1440,
+        xl: 1920
+      }
     }
-  }
-});
-
-const dialogTheme = createTheme({});
-
-const AnswerButton = ({ onClick, backgroundColor, children, disabled }) => {
-  return (
-    <button
-      onClick={onClick}
-      disabled={disabled}
-      style={{
-        width: '100%',
-        minHeight: '75px',
-        fontSize: '1rem',
-        backgroundColor,
-        lineHeight: '1',
-        borderTop: '2px solid #ccc',
-        borderBottom: '2px solid #ccc',
-        borderLeft: 'none',
-        borderRight: 'none',
-        borderRadius: '0',
-        boxShadow: 'none',
-        transition: 'background-color 0.3s ease',
-        pointerEvents: disabled ? 'none' : 'auto',
-        cursor: disabled ? 'default' : 'pointer',
-        margin: 0,
-        color: disabled ? 'black' : 'black'
-      }}>
-      {children}
-    </button>
-  );
-};
-
-const processAnswers = (answers) => {
-  return answers.map((answer) => {
-    let processedAnswer = answer.answer.trim();
-    if (processedAnswer.endsWith('.') || processedAnswer.endsWith(';')) {
-      processedAnswer = processedAnswer.slice(0, -1);
-    }
-    processedAnswer = processedAnswer.charAt(0).toUpperCase() + processedAnswer.slice(1);
-    return { ...answer, answer: processedAnswer };
   });
-};
 
-const shuffleQuestions = (questions) => {
-  const shuffleArray = (array) => {
-    let currentIndex = array.length,
-      randomIndex;
+  const dialogTheme = createTheme({});
 
-    while (currentIndex !== 0) {
-      randomIndex = Math.floor(Math.random() * currentIndex);
-      currentIndex--;
-
-      [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
-    }
-
-    return array;
+  const AnswerButton = ({ onClick, backgroundColor, children, disabled }) => {
+    return (
+      <button
+        onClick={onClick}
+        disabled={disabled}
+        style={{
+          width: '100%',
+          minHeight: '75px',
+          fontSize: '1rem',
+          backgroundColor,
+          lineHeight: '1',
+          borderTop: '2px solid #ccc',
+          borderBottom: '2px solid #ccc',
+          borderLeft: 'none',
+          borderRight: 'none',
+          borderRadius: '0',
+          boxShadow: 'none',
+          transition: 'background-color 0.3s ease',
+          pointerEvents: disabled ? 'none' : 'auto',
+          cursor: disabled ? 'default' : 'pointer',
+          margin: 0,
+          color: 'black'
+        }}>
+        {children}
+      </button>
+    );
   };
 
-  return questions.map((question) => ({
-    ...question,
-    answers: shuffleArray(processAnswers(question.answers))
-  }));
-};
+  const processAnswers = (answers) => {
+    return answers.map((answer) => {
+      let processedAnswer = answer.answer.trim();
+      if (processedAnswer.endsWith('.') || processedAnswer.endsWith(';')) {
+        processedAnswer = processedAnswer.slice(0, -1);
+      }
+      processedAnswer = processedAnswer.charAt(0).toUpperCase() + processedAnswer.slice(1);
+      return { ...answer, answer: processedAnswer };
+    });
+  };
 
-export const FormedTest = () => {
+  const shuffleQuestions = (questions) => {
+    const shuffleArray = (array) => {
+      let currentIndex = array.length,
+        randomIndex;
+
+      while (currentIndex !== 0) {
+        randomIndex = Math.floor(Math.random() * currentIndex);
+        currentIndex--;
+
+        [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
+      }
+
+      return array;
+    };
+
+    return questions.map((question) => ({
+      ...question,
+      answers: shuffleArray(processAnswers(question.answers))
+    }));
+  };
   const [block] = useAutoAnimate();
   const [openDialog, setOpenDialog] = useState(false);
   const [resultsDialog, setResultsDialog] = useState(false);
@@ -106,10 +105,7 @@ export const FormedTest = () => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [questions, setQuestions] = useState([]);
   const [answeredQuestions, setAnsweredQuestions] = useState({});
-  const [correctAnswers, setCorrectAnswers] = useState(0);
-  const [incorrectAnswers, setIncorrectAnswers] = useState(0);
   const [loadingQuestions, setLoadingQuestions] = useState(true);
-  const [, setState] = useState({}); // Dummy state to force re-render
 
   const {
     selectedCourse,
@@ -129,9 +125,8 @@ export const FormedTest = () => {
 
   useEffect(() => {
     if (!backupLoaded) return;
-    if (!selectedCourse) return;
 
-    if (!isSelectedRandomQuestions && selectedQuestionTicket === null) {
+    if (!selectedCourse || (!isSelectedRandomQuestions && selectedQuestionTicket === null)) {
       console.log('No questions found, No random found');
       navigate('/courses');
       return;
@@ -201,50 +196,35 @@ export const FormedTest = () => {
   const handleQuestionSelect = (index) => {
     setCurrentQuestionIndex(index);
   };
-
-  const forceUpdate = useCallback(() => setState({}), [setState]);
+  const [userChoice, setUserChoice] = useState({});
 
   const handleAnswerSelect = (questionIndex, question, answer) => {
-    const updatedAnswers = {
-      ...answeredQuestions,
-      [questionIndex]: answer.isCorrect ? 'correct' : 'incorrect',
-      [`selected-${questionIndex}`]: answer.id
-    };
+    setAnsweredQuestions(prevState => {
+      return { ...prevState, [questionIndex]: answer.isCorrect }
+    });
+    setUserChoice(prev => {
+      return { ...prev, [questionIndex]: answer.id }
+    })
+  };
 
-    if (!answer.isCorrect) {
-      question.answers.forEach((ans) => {
-        if (ans.isCorrect) {
-          updatedAnswers[`correct-${questionIndex}`] = ans.id;
-        }
-      });
-    }
-
-    setAnsweredQuestions(updatedAnswers);
-
-    if (answer.isCorrect) {
-      setCorrectAnswers((prev) => prev + 1);
-    } else {
-      setIncorrectAnswers((prev) => prev + 1);
-    }
-
+  useEffect(() => {
     if (
-      Object.keys(updatedAnswers).filter((key) => key.includes('selected-')).length ===
-      questions.length
+      Object.keys(userChoice).length === questions.length && questions.length > 0
     ) {
       setResultsDialog(true);
     }
-
-    forceUpdate();
-  };
+  }, [userChoice, questions.length]);
 
   const getButtonColor = (questionIndex, answer) => {
-    if (!answeredQuestions[questionIndex]) return 'white';
-    if (answeredQuestions[questionIndex] === 'correct' && answer.isCorrect) return '#71B378';
-    if (answeredQuestions[questionIndex] === 'incorrect') {
+    if (answeredQuestions[questionIndex] === undefined) return '#FFF';
+    if (answeredQuestions[questionIndex] && userChoice[questionIndex] === answer.id) {
+      return '#71B378';
+    } else {
+      console.log('we are herer');
       if (answer.isCorrect) return '#71B378';
-      if (answer.id === answeredQuestions[`selected-${questionIndex}`]) return '#CC4E5C';
+      if (answer.id === userChoice[questionIndex]) return '#CC4E5C';
     }
-    return 'white';
+    return '#FFF';
   };
 
   const handleReviewQuestions = () => {
@@ -266,18 +246,19 @@ export const FormedTest = () => {
       return newIndex >= 0 ? newIndex : prevIndex;
     });
   };
+  const isMdDown = customTheme.breakpoints.down('md');
 
   return (
     <ThemeProvider theme={customTheme}>
       <Box
         sx={{
+          overflowX: 'hidden',
           minHeight: '70vh',
           backgroundColor: '#f5f5f5',
           paddingTop: 2,
           display: 'flex',
           justifyContent: 'center'
-        }}
-        ref={block}>
+        }}>
         <Box sx={{ marginLeft: 20, marginRight: 20 }}>
           {showBackButton && (
             <Box sx={{ marginBottom: 2 }}>
@@ -303,11 +284,10 @@ export const FormedTest = () => {
                 padding: 4,
                 marginBottom: 4,
                 borderRadius: 2,
-                marginLeft: "16px",
-                marginRight: "16px",
+                marginLeft: '16px',
+                marginRight: '16px',
                 boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)'
-              }}
-              ref={block}>
+              }}>
               {loadingQuestions ? (
                 <Box
                   sx={{
@@ -342,17 +322,16 @@ export const FormedTest = () => {
                             textTransform: 'none',
                             padding: '0',
                             color:
-                              answeredQuestions[index] === 'correct'
-                                ? 'green'
-                                : answeredQuestions[index] === 'incorrect'
+                              answeredQuestions[index] === true ? 'green'
+                                : answeredQuestions[index] === false
                                   ? 'red'
                                   : currentQuestionIndex === index
                                     ? 'black'
                                     : '#ccc',
                             borderColor:
-                              answeredQuestions[index] === 'correct'
+                              answeredQuestions[index] === true
                                 ? 'green'
-                                : answeredQuestions[index] === 'incorrect'
+                                : answeredQuestions[index] === false
                                   ? 'red'
                                   : currentQuestionIndex === index
                                     ? 'black'
@@ -381,22 +360,22 @@ export const FormedTest = () => {
                           borderRadius: '12px',
                           backgroundColor: 'transparent',
                           boxShadow: 0,
-                          [customTheme.breakpoints.down('md')]: {
+                          ...(isMdDown && {
                             flexDirection: 'column',
                             alignItems: 'center'
-                          }
+                          })
                         }}>
                         <Grid
                           item
                           md={4}
                           sx={{
-                            [customTheme.breakpoints.down('md')]: {
+                            ...(isMdDown && {
                               width: '100%',
                               display: 'flex',
                               justifyContent: 'center',
                               alignItems: 'center',
                               flexDirection: 'column'
-                            }
+                            })
                           }}>
                           <Box
                             display="flex"
@@ -414,10 +393,7 @@ export const FormedTest = () => {
                                 <Box
                                   component="img"
                                   sx={{
-                                    maxWidth: 300,
-                                    [customTheme.breakpoints.down('md')]: {
-                                      maxWidth: 300
-                                    }
+                                    maxWidth: 300
                                   }}
                                   alt="Question Image"
                                   src={questions[currentQuestionIndex].image}
@@ -429,7 +405,9 @@ export const FormedTest = () => {
                         <Grid
                           item
                           md={8}
-                          sx={{ [customTheme.breakpoints.down('md')]: { width: '100%' } }}>
+                          sx={{ ...(isMdDown && {
+                              width: '100%'
+                            }) }}>
                           <FormControl component="fieldset" sx={{ width: '100%' }}>
                             <Grid container spacing={2} direction="column" sx={{ height: '100%' }}>
                               {questions[currentQuestionIndex].answers.map((answer, idx) => (
@@ -443,7 +421,7 @@ export const FormedTest = () => {
                                       )
                                     }
                                     backgroundColor={getButtonColor(currentQuestionIndex, answer)}
-                                    disabled={!!answeredQuestions[currentQuestionIndex]}>
+                                    disabled={answeredQuestions[currentQuestionIndex] === true || answeredQuestions[currentQuestionIndex] === false}>
                                     {answer.answer}
                                   </AnswerButton>
                                 </Grid>
@@ -452,7 +430,7 @@ export const FormedTest = () => {
                           </FormControl>
                         </Grid>
                       </Grid>
-                      {!!answeredQuestions[currentQuestionIndex] && (
+                      {(answeredQuestions[currentQuestionIndex] !== undefined && questions[currentQuestionIndex].hint) && (
                         <Typography
                           variant="body2"
                           sx={{
@@ -464,11 +442,11 @@ export const FormedTest = () => {
                             backgroundColor: 'white',
                             transition: 'max-height 0.5s ease',
                             border: '1px solid black',
-                            [customTheme.breakpoints.down('md')]: {
+                            ...(isMdDown && {
                               marginTop: 2,
                               padding: 1,
                               fontSize: '0.875rem'
-                            }
+                            })
                           }}>
                           {questions[currentQuestionIndex].hint}
                         </Typography>
@@ -478,11 +456,11 @@ export const FormedTest = () => {
                         justifyContent="space-between"
                         marginTop={2}
                         sx={{
-                          [customTheme.breakpoints.down('md')]: {
+                          ...(isMdDown && {
                             flexDirection: 'row',
                             justifyContent: 'space-between',
                             width: '100%'
-                          }
+                          })
                         }}>
                         <Button
                           variant="contained"
@@ -498,22 +476,58 @@ export const FormedTest = () => {
                             borderColor: 'black',
                             border: '1px solid black',
                             transition: 'all 0.3s ease',
-                            pointerEvents: currentQuestionIndex === 0 ? 'none' : 'auto',
                             '&.Mui-disabled': {
                               opacity: 1,
                               color: 'black',
-                              borderColor: 'black'
+                              borderColor: 'black',
+                              '&:hover': {
+                                backgroundColor: 'white',
+                                color: 'black',
+                                borderColor: 'black'
+                              },
+                              '&:focus': {
+                                backgroundColor: 'white',
+                                color: 'black',
+                                borderColor: 'black'
+                              }
                             },
                             '&:hover': {
                               color: 'white',
                               backgroundColor: 'black',
                               borderColor: 'black'
                             },
-                            [customTheme.breakpoints.down('md')]: {
+                            '&:focus': {
+                              outline: 'none',
+                              boxShadow: 'none'
+                            },
+                            '&:focus-visible': {
+                              outline: 'none',
+                              boxShadow: 'none'
+                            },
+                            '&:active': {
+                              outline: 'none',
+                              boxShadow: 'none',
+                              backgroundColor: 'black',
+                              color: 'white',
+                              borderColor: 'black'
+                            },
+                            '@media (hover: none)': {
+                              '&:hover': {
+                                backgroundColor: 'white',
+                                color: 'black',
+                                borderColor: 'black'
+                              },
+                              '&:active': {
+                                backgroundColor: 'black',
+                                color: 'white',
+                                borderColor: 'black'
+                              }
+                            },
+                            ...(isMdDown && {
                               minWidth: '100px',
                               minHeight: '30px',
                               fontSize: '0.875rem'
-                            }
+                            })
                           }}>
                           <ArrowBackIcon />
                         </Button>
@@ -531,23 +545,58 @@ export const FormedTest = () => {
                             borderColor: 'black',
                             border: '1px solid black',
                             transition: 'all 0.3s ease',
-                            pointerEvents:
-                              currentQuestionIndex === questions.length - 1 ? 'none' : 'auto',
                             '&.Mui-disabled': {
                               opacity: 1,
                               color: 'black',
-                              borderColor: 'black'
+                              borderColor: 'black',
+                              '&:hover': {
+                                backgroundColor: 'white',
+                                color: 'black',
+                                borderColor: 'black'
+                              },
+                              '&:focus': {
+                                backgroundColor: 'white',
+                                color: 'black',
+                                borderColor: 'black'
+                              }
                             },
                             '&:hover': {
                               color: 'white',
                               backgroundColor: 'black',
                               borderColor: 'black'
                             },
-                            [customTheme.breakpoints.down('md')]: {
+                            '&:focus': {
+                              outline: 'none',
+                              boxShadow: 'none'
+                            },
+                            '&:focus-visible': {
+                              outline: 'none',
+                              boxShadow: 'none'
+                            },
+                            '&:active': {
+                              outline: 'none',
+                              boxShadow: 'none',
+                              backgroundColor: 'black',
+                              color: 'white',
+                              borderColor: 'black'
+                            },
+                            '@media (hover: none)': {
+                              '&:hover': {
+                                backgroundColor: 'white',
+                                color: 'black',
+                                borderColor: 'black'
+                              },
+                              '&:active': {
+                                backgroundColor: 'black',
+                                color: 'white',
+                                borderColor: 'black'
+                              }
+                            },
+                            ...(isMdDown && {
                               minWidth: '100px',
                               minHeight: '30px',
                               fontSize: '0.875rem'
-                            }
+                            })
                           }}>
                           <ArrowForwardIcon />
                         </Button>
@@ -566,11 +615,11 @@ export const FormedTest = () => {
                           textTransform: 'none',
                           minWidth: '120px',
                           minHeight: '40px',
-                          [customTheme.breakpoints.down('md')]: {
+                          ...(isMdDown && {
                             minWidth: '100px',
                             minHeight: '30px',
                             fontSize: '0.875rem'
-                          }
+                          })
                         }}>
                         Завершити тест
                       </Button>
@@ -663,12 +712,12 @@ export const FormedTest = () => {
                   <DialogTitle id="results-dialog-title">Результати тесту</DialogTitle>
                   <DialogContent>
                     <DialogContentText id="results-dialog-description">
-                      Правильні відповіді: {correctAnswers}
+                      {`Правильні відповіді: ${Object.values(answeredQuestions).reduce((partialSum, a) => partialSum + a, 0)}`}
                       <br />
-                      Неправильні відповіді: {incorrectAnswers}
+                      {`Неправильні відповіді: ${Object.values(answeredQuestions).length - Object.values(answeredQuestions).reduce((partialSum, a) => partialSum + a, 0)}`}
                       <br />
                       <Typography component="span" fontWeight="bold" fontSize={20} color="black">
-                        {incorrectAnswers >= 3 ? 'Тест не складений' : 'Тест складений'}
+                        {Object.values(answeredQuestions).length - Object.values(answeredQuestions).reduce((partialSum, a) => partialSum + a, 0) >= 3 ? 'Тест не складений' : 'Тест складений'}
                       </Typography>
                     </DialogContentText>
                   </DialogContent>
