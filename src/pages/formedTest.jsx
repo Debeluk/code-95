@@ -11,7 +11,7 @@ import {
   DialogContentText,
   DialogTitle,
   Paper,
-  CircularProgress
+  CircularProgress, useMediaQuery
 } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
@@ -106,6 +106,7 @@ export const FormedTest = () => {
   const [questions, setQuestions] = useState([]);
   const [answeredQuestions, setAnsweredQuestions] = useState({});
   const [loadingQuestions, setLoadingQuestions] = useState(true);
+  const [userChoice, setUserChoice] = useState({});
 
   const {
     selectedCourse,
@@ -196,7 +197,6 @@ export const FormedTest = () => {
   const handleQuestionSelect = (index) => {
     setCurrentQuestionIndex(index);
   };
-  const [userChoice, setUserChoice] = useState({});
 
   const handleAnswerSelect = (questionIndex, question, answer) => {
     setAnsweredQuestions(prevState => {
@@ -246,7 +246,7 @@ export const FormedTest = () => {
       return newIndex >= 0 ? newIndex : prevIndex;
     });
   };
-  const isMdDown = customTheme.breakpoints.down('md');
+  const isMdDown = useMediaQuery(customTheme.breakpoints.down('md'));
 
   return (
     <ThemeProvider theme={customTheme}>
