@@ -96,7 +96,8 @@ export const LoginPage = () => {
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
-          margin: { xs: '32px', md: 'auto' }
+          margin: { xs: '32px', md: 'auto' },
+          minHeight: '100vh'
         }}>
         <Box
           sx={{
@@ -106,7 +107,7 @@ export const LoginPage = () => {
             justifyContent: 'center',
             alignItems: 'center'
           }}>
-          <Paper elevation={3} sx={{ width: '100%', borderRadius: '16px' }}>
+          <Paper elevation={3} sx={{ width: '100%', borderRadius: '16px'}}>
             <Grid container spacing={0}>
               {/* Left Section for Desktop */}
               <Grid

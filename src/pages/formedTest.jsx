@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Box,
   Typography,
@@ -109,7 +109,6 @@ export const FormedTest = () => {
   const [correctAnswers, setCorrectAnswers] = useState(0);
   const [incorrectAnswers, setIncorrectAnswers] = useState(0);
   const [loadingQuestions, setLoadingQuestions] = useState(true);
-  const [, setState] = useState({}); // Dummy state to force re-render
 
   const {
     selectedCourse,
@@ -202,8 +201,6 @@ export const FormedTest = () => {
     setCurrentQuestionIndex(index);
   };
 
-  const forceUpdate = useCallback(() => setState({}), [setState]);
-
   const handleAnswerSelect = (questionIndex, question, answer) => {
     const updatedAnswers = {
       ...answeredQuestions,
@@ -233,8 +230,6 @@ export const FormedTest = () => {
     ) {
       setResultsDialog(true);
     }
-
-    forceUpdate();
   };
 
   const getButtonColor = (questionIndex, answer) => {
@@ -275,7 +270,8 @@ export const FormedTest = () => {
           backgroundColor: '#f5f5f5',
           paddingTop: 2,
           display: 'flex',
-          justifyContent: 'center'
+          justifyContent: 'center',
+          overflowX: 'hidden'
         }}
         ref={block}>
         <Box sx={{ marginLeft: 20, marginRight: 20 }}>
@@ -303,8 +299,8 @@ export const FormedTest = () => {
                 padding: 4,
                 marginBottom: 4,
                 borderRadius: 2,
-                marginLeft: "16px",
-                marginRight: "16px",
+                marginLeft: '16px',
+                marginRight: '16px',
                 boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)'
               }}
               ref={block}>
@@ -502,12 +498,49 @@ export const FormedTest = () => {
                             '&.Mui-disabled': {
                               opacity: 1,
                               color: 'black',
-                              borderColor: 'black'
+                              borderColor: 'black',
+                              '&:hover': {
+                                backgroundColor: 'white',
+                                color: 'black',
+                                borderColor: 'black'
+                              },
+                              '&:focus': {
+                                backgroundColor: 'white',
+                                color: 'black',
+                                borderColor: 'black'
+                              }
                             },
                             '&:hover': {
                               color: 'white',
                               backgroundColor: 'black',
                               borderColor: 'black'
+                            },
+                            '&:focus': {
+                              outline: 'none',
+                              boxShadow: 'none'
+                            },
+                            '&:focus-visible': {
+                              outline: 'none',
+                              boxShadow: 'none'
+                            },
+                            '&:active': {
+                              outline: 'none',
+                              boxShadow: 'none',
+                              backgroundColor: 'black',
+                              color: 'white',
+                              borderColor: 'black'
+                            },
+                            '@media (hover: none)': {
+                              '&:hover': {
+                                backgroundColor: 'white',
+                                color: 'black',
+                                borderColor: 'black'
+                              },
+                              '&:active': {
+                                backgroundColor: 'black',
+                                color: 'white',
+                                borderColor: 'black'
+                              }
                             },
                             [customTheme.breakpoints.down('md')]: {
                               minWidth: '100px',
@@ -536,12 +569,49 @@ export const FormedTest = () => {
                             '&.Mui-disabled': {
                               opacity: 1,
                               color: 'black',
-                              borderColor: 'black'
+                              borderColor: 'black',
+                              '&:hover': {
+                                backgroundColor: 'white',
+                                color: 'black',
+                                borderColor: 'black'
+                              },
+                              '&:focus': {
+                                backgroundColor: 'white',
+                                color: 'black',
+                                borderColor: 'black'
+                              }
                             },
                             '&:hover': {
                               color: 'white',
                               backgroundColor: 'black',
                               borderColor: 'black'
+                            },
+                            '&:focus': {
+                              outline: 'none',
+                              boxShadow: 'none'
+                            },
+                            '&:focus-visible': {
+                              outline: 'none',
+                              boxShadow: 'none'
+                            },
+                            '&:active': {
+                              outline: 'none',
+                              boxShadow: 'none',
+                              backgroundColor: 'black',
+                              color: 'white',
+                              borderColor: 'black'
+                            },
+                            '@media (hover: none)': {
+                              '&:hover': {
+                                backgroundColor: 'white',
+                                color: 'black',
+                                borderColor: 'black'
+                              },
+                              '&:active': {
+                                backgroundColor: 'black',
+                                color: 'white',
+                                borderColor: 'black'
+                              }
                             },
                             [customTheme.breakpoints.down('md')]: {
                               minWidth: '100px',
