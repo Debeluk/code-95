@@ -23,6 +23,7 @@ import {
 import { axiosInstance } from './axiosInterceptor.js';
 import { useStore } from './store/store.js';
 import { useAutoAnimate } from '@formkit/auto-animate/react';
+import { ScrollTop } from './components/scrollTop/scrollTop.js';
 
 export const App = () => {
   const wsRef = useRef(null);
@@ -189,6 +190,7 @@ export const App = () => {
             path={LOGIN_PATH}
             element={
               <ProtectedRoute>
+                <ScrollTop />
                 <LoginPage />
               </ProtectedRoute>
             }
@@ -198,6 +200,7 @@ export const App = () => {
             element={
               <ProtectedRoute requiredRole="USER">
                 <Header />
+                <ScrollTop />
                 <Courses />
                 {/*<Footer />*/}
               </ProtectedRoute>
@@ -208,6 +211,7 @@ export const App = () => {
             element={
               <ProtectedRoute requiredRole="USER">
                 <Header />
+                <ScrollTop />
                 <TicketsPage />
                 {/*<Footer />*/}
               </ProtectedRoute>
@@ -218,6 +222,7 @@ export const App = () => {
             element={
               <ProtectedRoute requiredRole="USER">
                 <Header />
+                <ScrollTop />
                 <FormedTest />
               </ProtectedRoute>
             }
@@ -227,6 +232,7 @@ export const App = () => {
             element={
               <ProtectedRoute requiredRole="ADMIN">
                 <Header />
+                <ScrollTop />
                 <Admin />
               </ProtectedRoute>
             }
