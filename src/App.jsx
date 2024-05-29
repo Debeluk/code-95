@@ -2,7 +2,6 @@ import React, { useEffect, useRef } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { LoginPage } from './pages/login.jsx';
 import { Header } from './pages/header.jsx';
-// import { Footer } from './pages/footer.jsx';
 import { Courses } from './pages/courses.jsx';
 import { TicketsPage } from './pages/tickets.jsx';
 import { FormedTest } from './pages/formedTest.jsx';
@@ -58,9 +57,26 @@ export const App = () => {
   }));
   useEffect(() => {
     loadState();
-    window.addEventListener('beforeunload', saveState);
+
+    const handleBeforeUnload = () => {
+      saveState();
+    };
+
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'hidden') {
+        saveState();
+      }
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
+    const intervalId = setInterval(saveState, 10000);
+
     return () => {
-      window.removeEventListener('beforeunload', saveState);
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      clearInterval(intervalId);
     };
   }, []);
 
@@ -122,7 +138,8 @@ export const App = () => {
           case 'Session exists':
             console.error('WebSocket closed: Session exists');
             Notiflix.Notify.failure('Session already exists. Please logout from other device.');
-            setSessionId(null);
+            resetStore();
+            clearSession();
             setWebsocketConnectionFailed(true);
             break;
           default:
@@ -131,9 +148,9 @@ export const App = () => {
             setWebsocketConnectionFailed(true);
         }
       } else if (event.code === 1006) {
-        Notiflix.Notify.failure('Something went wrong, please try again later');
         setSessionId(null);
         setWebsocketConnectionFailed(true);
+        reconnectWebSocket();
       } else {
         console.error('WebSocket closed with code: ', event.code);
         if (event.code !== 1000) {
