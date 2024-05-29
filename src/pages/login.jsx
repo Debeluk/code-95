@@ -67,7 +67,6 @@ export const LoginPage = () => {
     axiosInstance
       .post(LOGIN, { username, password })
       .then((res) => {
-        console.log('Login successful:', res.data);
         secureLocalStorage.setItem('accessToken', res.data.accessToken);
         secureLocalStorage.setItem('refreshToken', res.data.refreshToken);
         setAccessToken(res.data.accessToken);
@@ -97,82 +96,33 @@ export const LoginPage = () => {
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
-          minHeight: '100vh',
-          padding: 8 // увеличиваем отступы
-        }}
-      >
-        <Paper elevation={3} sx={{ width: '100%', maxWidth: '900px', borderRadius: '16px' }}>
-          <Grid container spacing={0}>
-            {/* Left Section for Desktop */}
-            <Grid
-              item
-              xs={12}
-              md={6}
-              sx={{
-                display: { xs: 'none', md: 'flex' },
-                flexDirection: 'column',
-                justifyContent: 'center',
-                padding: '16px',
-                position: 'relative'
-              }}
-            >
-              <Typography variant="h4" gutterBottom align="center">
-                ADR Online
-              </Typography>
-              <Box>
-                <Typography variant="body1" paragraph>
-                  Тестові питання та завдання з курсів спеціального навчання у сфері перевезення
-                  небезпечних вантажів:
+          margin: { xs: '32px', md: 'auto' }
+        }}>
+        <Box
+          sx={{
+            width: '100%',
+            maxWidth: '900px',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center'
+          }}>
+          <Paper elevation={3} sx={{ width: '100%', borderRadius: '16px' }}>
+            <Grid container spacing={0}>
+              {/* Left Section for Desktop */}
+              <Grid
+                item
+                xs={12}
+                md={6}
+                sx={{
+                  display: { xs: 'none', md: 'flex' },
+                  flexDirection: 'column',
+                  justifyContent: 'center',
+                  padding: '16px',
+                  position: 'relative'
+                }}>
+                <Typography variant="h4" gutterBottom align="center">
+                  ADR Online
                 </Typography>
-                <List>
-                  <ListItem>• Базового курсу</ListItem>
-                  <ListItem>• Спеціалізованого курсу підготовки з перевезення в цистернах</ListItem>
-                  <ListItem>
-                    • Спеціалізованого курсу підготовки з перевезення вибухових речовин та виробів
-                    класу 1
-                  </ListItem>
-                  <ListItem>
-                    • Спеціалізованого курсу підготовки з перевезення радіоактивних матеріалів класу
-                    7
-                  </ListItem>
-                  <ListItem>• Курсу перепідготовки водіїв</ListItem>
-                  <ListItem>
-                    • Курсу підготовки уповноважених з питань безпеки перевезень небезпечних
-                    вантажів
-                  </ListItem>
-                </List>
-              </Box>
-            </Grid>
-
-            {/* Left Section for Mobile */}
-            <Grid
-              item
-              xs={12}
-              md={6}
-              sx={{
-                display: { xs: 'flex', md: 'none' },
-                flexDirection: 'column',
-                justifyContent: 'center',
-                padding: '16px 16px 0 16px',
-                position: 'relative'
-              }}
-            >
-              <Typography
-                variant="h4"
-                gutterBottom
-                align="center"
-                onClick={() => setShowCourses(!showCourses)}
-                sx={{ cursor: 'pointer', marginBottom: '0px' }}
-              >
-                ADR Online
-              </Typography>
-              <IconButton
-                sx={{ margin: '0 auto', paddingTop: '0px' }}
-                onClick={() => setShowCourses(!showCourses)}
-              >
-                <ExpandMoreIcon />
-              </IconButton>
-              <Collapse in={showCourses} timeout="auto" unmountOnExit>
                 <Box>
                   <Typography variant="body1" paragraph>
                     Тестові питання та завдання з курсів спеціального навчання у сфері перевезення
@@ -198,132 +148,181 @@ export const LoginPage = () => {
                     </ListItem>
                   </List>
                 </Box>
-              </Collapse>
-            </Grid>
+              </Grid>
 
-            {/* Right Section for Login */}
-            <Grid
-              item
-              xs={12}
-              md={6}
-              sx={{
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'center',
-                boxShadow: { md: '-12px 0px 24px rgba(0, 0, 0, 0.25)' },
-                borderLeft: { md: '1px solid rgba(0, 0, 0, 0.12)' },
-                zIndex: 2,
-                position: 'relative',
-                padding: 4,
-                paddingTop: { xs: '4', md: '4' },
-                backgroundColor: 'white',
-                borderTopRightRadius: '16px',
-                borderBottomRightRadius: '16px',
-                borderBottomLeftRadius: { xs: '16px', md: '0px' }
-              }}
-            >
-              <Typography variant="h5" align="center" gutterBottom sx={{ marginBottom: '6px' }}>
-                Увійти до особистого кабінету
-              </Typography>
-              <form onSubmit={handleLogin}>
-                <Box marginBottom={3} marginTop={3}>
-                  <InputField
-                    label={'Логін'}
-                    value={username}
-                    handleValueChange={(value) => setUsername(value)}
-                    error={!!usernameError}
-                    disabled={isLoading}
-                    errorMessage={usernameError}
-                  />
-                </Box>
-                <Box marginBottom={3}>
-                  <InputField
-                    label={'Пароль'}
-                    value={password}
-                    handleValueChange={(value) => setPassword(value)}
-                    password
-                    error={!!passwordError}
-                    disabled={isLoading}
-                    errorMessage={passwordError}
-                  />
-                </Box>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  fullWidth
-                  type="submit"
-                  disabled={isLoading}
-                  sx={{
-                    backgroundColor: isLoading ? 'rgba(0, 0, 0, 0.12)' : 'orange',
-                    color: 'white',
-                    cursor: isLoading ? 'not-allowed' : 'pointer',
-                    height: '40px',
-                    '&:hover': {
-                      backgroundColor: 'orange',
-                      transform: 'scale(1.02)'
-                    },
-                    '&:active': {
-                      backgroundColor: 'orange'
-                    },
-                    '&.Mui-disabled': {
-                      backgroundColor: 'orange',
-                      color: 'white'
-                    }
-                  }}
-                >
-                  {isLoading ? <LoadingDots /> : 'Увійти'}
-                </Button>
-              </form>
-              <Box
+              {/* Left Section for Mobile */}
+              <Grid
+                item
+                xs={12}
+                md={6}
                 sx={{
-                  marginTop: '0',
-                  textAlign: 'center',
-                  padding: 2
-                }}
-              >
-                <Typography variant="body2">Зворотній зв`язок</Typography>
-                <Box display="flex" justifyContent="center" marginTop={1} gap={2}>
-                  <IconButton
+                  display: { xs: 'flex', md: 'none' },
+                  flexDirection: 'column',
+                  justifyContent: 'center',
+                  padding: '16px 16px 0 16px',
+                  position: 'relative'
+                }}>
+                <Typography
+                  variant="h4"
+                  gutterBottom
+                  align="center"
+                  onClick={() => setShowCourses(!showCourses)}
+                  sx={{ cursor: 'pointer', marginBottom: '0px' }}>
+                  ADR Online
+                </Typography>
+                <IconButton
+                  sx={{ margin: '0 auto', paddingTop: '0px' }}
+                  onClick={() => setShowCourses(!showCourses)}>
+                  <ExpandMoreIcon />
+                </IconButton>
+                <Collapse in={showCourses} timeout="auto" unmountOnExit>
+                  <Box>
+                    <Typography variant="body1" paragraph>
+                      Тестові питання та завдання з курсів спеціального навчання у сфері перевезення
+                      небезпечних вантажів:
+                    </Typography>
+                    <List>
+                      <ListItem>• Базового курсу</ListItem>
+                      <ListItem>
+                        • Спеціалізованого курсу підготовки з перевезення в цистернах
+                      </ListItem>
+                      <ListItem>
+                        • Спеціалізованого курсу підготовки з перевезення вибухових речовин та
+                        виробів класу 1
+                      </ListItem>
+                      <ListItem>
+                        • Спеціалізованого курсу підготовки з перевезення радіоактивних матеріалів
+                        класу 7
+                      </ListItem>
+                      <ListItem>• Курсу перепідготовки водіїв</ListItem>
+                      <ListItem>
+                        • Курсу підготовки уповноважених з питань безпеки перевезень небезпечних
+                        вантажів
+                      </ListItem>
+                    </List>
+                  </Box>
+                </Collapse>
+              </Grid>
+
+              {/* Right Section for Login */}
+              <Grid
+                item
+                xs={12}
+                md={6}
+                sx={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'center',
+                  boxShadow: { md: '-12px 0px 24px rgba(0, 0, 0, 0.25)' },
+                  borderLeft: { md: '1px solid rgba(0, 0, 0, 0.12)' },
+                  zIndex: 2,
+                  position: 'relative',
+                  padding: 4,
+                  paddingTop: { xs: '4', md: '4' },
+                  backgroundColor: 'white',
+                  borderTopRightRadius: '16px',
+                  borderBottomRightRadius: '16px',
+                  borderBottomLeftRadius: { xs: '16px', md: '0px' }
+                }}>
+                <Typography variant="h5" align="center" gutterBottom sx={{ marginBottom: '6px' }}>
+                  Увійти до особистого кабінету
+                </Typography>
+                <form onSubmit={handleLogin}>
+                  <Box marginBottom={3} marginTop={3}>
+                    <InputField
+                      label={'Логін'}
+                      value={username}
+                      handleValueChange={(value) => setUsername(value)}
+                      error={!!usernameError}
+                      disabled={isLoading}
+                      errorMessage={usernameError}
+                    />
+                  </Box>
+                  <Box marginBottom={3}>
+                    <InputField
+                      label={'Пароль'}
+                      value={password}
+                      handleValueChange={(value) => setPassword(value)}
+                      password
+                      error={!!passwordError}
+                      disabled={isLoading}
+                      errorMessage={passwordError}
+                    />
+                  </Box>
+                  <Button
+                    variant="contained"
                     color="primary"
-                    aria-label="Telegram"
-                    href="https://t.me/adrtest"
+                    fullWidth
+                    type="submit"
+                    disabled={isLoading}
                     sx={{
-                      backgroundColor: 'white',
-                      border: '1px solid #ccc',
-                      borderRadius: '50%',
+                      backgroundColor: isLoading ? 'rgba(0, 0, 0, 0.12)' : 'orange',
+                      color: 'white',
+                      cursor: isLoading ? 'not-allowed' : 'pointer',
+                      height: '40px',
                       '&:hover': {
-                        backgroundColor: 'white'
+                        backgroundColor: 'orange',
+                        transform: 'scale(1.02)'
                       },
                       '&:active': {
-                        backgroundColor: 'white'
-                      }
-                    }}
-                  >
-                    <TelegramIcon width="24px" height="24px" sx={{ color: 'black' }} />
-                  </IconButton>
-                  <IconButton
-                    color="primary"
-                    aria-label="Viber"
-                    href="https://goo.su/hFQYE"
-                    sx={{
-                      backgroundColor: 'white',
-                      border: '1px solid #ccc',
-                      borderRadius: '50%',
-                      '&:hover': {
-                        backgroundColor: 'white'
+                        backgroundColor: 'orange'
                       },
-                      '&:active': {
-                        backgroundColor: 'white'
+                      '&.Mui-disabled': {
+                        backgroundColor: 'orange',
+                        color: 'white'
                       }
-                    }}
-                  >
-                    <ViberIcon width="24px" height="24px" sx={{ color: 'black' }} />
-                  </IconButton>
+                    }}>
+                    {isLoading ? <LoadingDots /> : 'Увійти'}
+                  </Button>
+                </form>
+                <Box
+                  sx={{
+                    marginTop: '0',
+                    textAlign: 'center',
+                    padding: 2
+                  }}>
+                  <Typography variant="body2">Зворотній зв`язок</Typography>
+                  <Box display="flex" justifyContent="center" marginTop={1} gap={2}>
+                    <IconButton
+                      color="primary"
+                      aria-label="Telegram"
+                      href="https://t.me/adrtest"
+                      sx={{
+                        backgroundColor: 'white',
+                        border: '1px solid #ccc',
+                        borderRadius: '50%',
+                        '&:hover': {
+                          backgroundColor: 'white'
+                        },
+                        '&:active': {
+                          backgroundColor: 'white'
+                        }
+                      }}>
+                      <TelegramIcon width="24px" height="24px" sx={{ color: 'black' }} />
+                    </IconButton>
+                    <IconButton
+                      color="primary"
+                      aria-label="Viber"
+                      href="https://goo.su/hFQYE"
+                      sx={{
+                        backgroundColor: 'white',
+                        border: '1px solid #ccc',
+                        borderRadius: '50%',
+                        '&:hover': {
+                          backgroundColor: 'white'
+                        },
+                        '&:active': {
+                          backgroundColor: 'white'
+                        }
+                      }}>
+                      <ViberIcon width="24px" height="24px" sx={{ color: 'black' }} />
+                    </IconButton>
+                  </Box>
                 </Box>
-              </Box>
+              </Grid>
             </Grid>
-          </Grid>
-        </Paper>
+          </Paper>
+        </Box>
       </Box>
     </>
   );
@@ -367,8 +366,7 @@ const LoadingDots = () => {
             transform: 'translateX(0)'
           }
         }
-      }}
-    >
+      }}>
       <div></div>
       <div></div>
       <div></div>

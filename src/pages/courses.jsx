@@ -35,8 +35,6 @@ export const Courses = () => {
   const handleCardClick = (courseName) => {
     const course = courses.find((c) => c.name === courseName);
     if (course) {
-      console.log(`You clicked course with ID: ${course.id}`);
-      console.log(`Number of tickets in this course: ${course.tickets}`);
       setSelectedCourse(course);
       navigate('/tickets');
     } else {
@@ -47,7 +45,6 @@ export const Courses = () => {
   return (
     <Box
       sx={{
-        minHeight: '70vh',
         paddingY: 2,
         marginTop: 4,
         marginBottom: 6,

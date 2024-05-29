@@ -168,7 +168,6 @@ export const Admin = () => {
       axiosInstance
         .get(CREATE_GET_USER)
         .then((response) => {
-          console.log('Users data:', response.data); // Log the data to check the structure
           setUsers(response.data);
           setFilteredUsers(response.data);
         })
@@ -485,8 +484,8 @@ export const Admin = () => {
         sx={{
           '& .MuiDialog-paper': {
             width: '100%',
-            maxWidth: '412px', // Fixed width for the modal
-            margin: 'auto' // Center the modal horizontally
+            maxWidth: '412px',
+            margin: 'auto'
           }
         }}
       >

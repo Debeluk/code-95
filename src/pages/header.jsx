@@ -12,12 +12,15 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
-  Collapse
+  Collapse,
+  useMediaQuery,
+  useTheme
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { useStore } from '../store/store.js';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { logout } from '../axiosInterceptor.js';
+import { TEST_PATH } from '../constants/PathURL.js';
 
 const COURSES_PATH = '/courses';
 
@@ -29,6 +32,11 @@ export const Header = () => {
     user: state.currentUser
   }));
   const navigate = useNavigate();
+  const location = useLocation();
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+
+  const isSticky = location.pathname !== TEST_PATH;
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -57,8 +65,35 @@ export const Header = () => {
   };
 
   return (
-    <AppBar position="sticky" color="default" elevation={3}>
-      <Toolbar disableGutters>
+    <AppBar
+      position={isSticky ? 'sticky' : 'static'}
+      color="default"
+      elevation={3}
+      sx={{
+        backgroundColor: '#fff',
+        color: 'rgba(0, 0, 0, 0.87)',
+        transition: 'box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms',
+        boxShadow: isSticky
+          ? '0px 3px 3px -2px rgba(0,0,0,0.2), 0px 3px 4px 0px rgba(0,0,0,0.14), 0px 1px 8px 0px rgba(0,0,0,0.12)'
+          : 'none',
+        display: 'flex',
+        flexDirection: 'column',
+        width: '100%',
+        boxSizing: 'border-box',
+        flexShrink: 0,
+        zIndex: 1100,
+        top: 0,
+        left: 'auto',
+        right: 0
+      }}>
+      <Toolbar
+        sx={{
+          backgroundColor: '#fff',
+          boxShadow: !isSticky
+            ? '0px 3px 3px -2px rgba(0,0,0,0.2), 0px 3px 4px 0px rgba(0,0,0,0.14), 0px 1px 8px 0px rgba(0,0,0,0.12)'
+            : 'none',
+          zIndex: 1100
+        }}>
         <Box
           sx={{
             marginTop: 2,
@@ -68,8 +103,7 @@ export const Header = () => {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between'
-          }}
-        >
+          }}>
           <Button
             onClick={handleLogoClick}
             sx={{
@@ -79,8 +113,7 @@ export const Header = () => {
               }
             }}
             disableRipple
-            disableElevation
-          >
+            disableElevation>
             <Typography sx={{ fontSize: '18px', fontWeight: 'bold', color: 'black' }}>
               ADR test
             </Typography>
@@ -98,8 +131,7 @@ export const Header = () => {
                 backgroundColor: 'orange',
                 transform: 'scale(1.02)'
               }
-            }}
-          >
+            }}>
             <Box display="flex" alignItems="center">
               <Typography variant="subtitle1" sx={{ marginRight: 1 }}>
                 {user.name ?? 'Name'}
@@ -129,14 +161,12 @@ export const Header = () => {
             marginTop: '20px',
             backgroundColor: 'white'
           }
-        }}
-      >
+        }}>
         <Collapse in={open}>
           <MenuItem
             disabled
             disableRipple
-            sx={{ padding: '0px', backgroundColor: 'white', color: 'black' }}
-          >
+            sx={{ padding: '0px', backgroundColor: 'white', color: 'black' }}>
             <Box
               sx={{
                 width: '100%',
@@ -146,8 +176,7 @@ export const Header = () => {
                 padding: '8px',
                 backgroundColor: 'white',
                 color: 'black'
-              }}
-            >
+              }}>
               Доступ до: {new Date(user.expireAt).toLocaleDateString('uk-UA') ?? 'дата не вказана'}
             </Box>
           </MenuItem>
@@ -160,12 +189,12 @@ export const Header = () => {
                 backgroundColor: 'white',
                 cursor: 'auto'
               }
-            }}
-          >
+            }}>
             <Box
               onClick={handleOpenDialog}
               sx={{
-                backgroundColor: 'white',
+                backgroundColor: isMobile ? 'orange' : 'white',
+                color: isMobile ? 'white' : 'black',
                 padding: '8px 24px',
                 borderRadius: '24px',
                 '&:hover': {
@@ -173,8 +202,7 @@ export const Header = () => {
                   color: 'white',
                   cursor: 'pointer'
                 }
-              }}
-            >
+              }}>
               Вийти
             </Box>
           </MenuItem>
@@ -190,8 +218,7 @@ export const Header = () => {
           '& .MuiDialog-paper': {
             borderRadius: '16px'
           }
-        }}
-      >
+        }}>
         <DialogTitle id="alert-dialog-title">{'Підтвердіть вихід'}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
@@ -211,8 +238,7 @@ export const Header = () => {
               '&:hover': {
                 backgroundColor: 'white'
               }
-            }}
-          >
+            }}>
             Скасувати
           </Button>
           <Button
@@ -230,8 +256,7 @@ export const Header = () => {
               }
             }}
             autoFocus
-            disableRipple
-          >
+            disableRipple>
             Вийти
           </Button>
         </DialogActions>

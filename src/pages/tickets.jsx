@@ -44,7 +44,6 @@ export const TicketsPage = () => {
   return (
     <Box
       sx={{
-        minHeight: '70vh',
         paddingBottom: 10,
         marginTop: 4,
         marginBottom: 6,
