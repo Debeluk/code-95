@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Typography, Grid, Button } from '@mui/material';
+import { Box, Typography, Grid, Button, Switch, FormControlLabel } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { useStore } from '../store/store.js';
 import BackButton from '../components/buttons/backButton.jsx';
@@ -8,6 +8,8 @@ export const TicketsPage = () => {
   const navigate = useNavigate();
   const [ticketNumbers, setTicketNumbers] = useState([]);
   const [courseName, setCourseName] = useState('');
+  const examMode = useStore((state) => state.examOn);
+  const setExamMode = useStore((state) => state.setExamOn);
   const { selectedCourse, backupLoaded, setTicket, selectRandomQuestions } = useStore((state) => ({
     selectedCourse: state.selectedCourse,
     backupLoaded: state.backupLoaded,
@@ -41,6 +43,10 @@ export const TicketsPage = () => {
     navigate('/test');
   };
 
+  const handleToggleChange = (event) => {
+    setExamMode(event.target.checked);
+  };
+
   return (
     <Box
       sx={{
@@ -49,8 +55,7 @@ export const TicketsPage = () => {
         marginBottom: 6,
         marginLeft: 'auto',
         marginRight: 'auto'
-      }}
-    >
+      }}>
       <Box
         sx={{
           marginBottom: 4,
@@ -58,8 +63,7 @@ export const TicketsPage = () => {
           justifyContent: 'flex-start',
           backgroundColor: 'transparent',
           paddingLeft: { xs: 0, md: '256px' }
-        }}
-      >
+        }}>
         <BackButton sx={{ marginRight: 2 }} />
       </Box>
 
@@ -78,8 +82,7 @@ export const TicketsPage = () => {
         justifyContent="center"
         alignItems="center"
         marginBottom={4}
-        sx={{ maxWidth: { xs: '290px', md: '620px' }, margin: '0 auto 16px', padding: 0 }}
-      >
+        sx={{ maxWidth: { xs: '290px', md: '620px' }, margin: '0 auto 16px', padding: 0 }}>
         {ticketNumbers.map((number) => (
           <Grid item key={number} sx={{ width: 'auto', padding: 0 }}>
             <Button
@@ -102,8 +105,7 @@ export const TicketsPage = () => {
                   borderWidth: '2px',
                   borderStyle: 'solid'
                 }
-              }}
-            >
+              }}>
               {number}
             </Button>
           </Grid>
@@ -117,8 +119,7 @@ export const TicketsPage = () => {
         marginBottom={4}
         spacing={2}
         direction={{ xs: 'column', md: 'row' }}
-        sx={{ padding: 0 }}
-      >
+        sx={{ padding: 0 }}>
         <Grid item sx={{ width: 'auto', padding: 0 }}>
           <Button
             variant="contained"
@@ -138,8 +139,7 @@ export const TicketsPage = () => {
                 borderWidth: '2px',
                 borderStyle: 'solid'
               }
-            }}
-          >
+            }}>
             Випадковий білет
           </Button>
         </Grid>
@@ -162,12 +162,43 @@ export const TicketsPage = () => {
                 borderWidth: '2px',
                 borderStyle: 'solid'
               }
-            }}
-          >
+            }}>
             Випадкові питання
           </Button>
         </Grid>
       </Grid>
+
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          marginTop: 4
+        }}>
+        <FormControlLabel
+          labelPlacement="start"
+          control={
+            <Switch
+              checked={examMode}
+              onChange={handleToggleChange}
+              color="default"
+              sx={{
+                '& .MuiSwitch-switchBase.Mui-checked': {
+                  color: 'orange'
+                },
+                '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
+                  backgroundColor: 'orange'
+                }
+              }}
+            />
+          }
+          label={
+            <Typography variant="h6" color={examMode ? 'orange' : 'textSecondary'}>
+              Режим Екзамену
+            </Typography>
+          }
+        />
+      </Box>
     </Box>
   );
 };

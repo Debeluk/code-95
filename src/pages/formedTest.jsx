@@ -11,7 +11,8 @@ import {
   DialogContentText,
   DialogTitle,
   Paper,
-  CircularProgress, useMediaQuery
+  CircularProgress,
+  useMediaQuery
 } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
@@ -97,6 +98,7 @@ export const FormedTest = () => {
       answers: shuffleArray(processAnswers(question.answers))
     }));
   };
+
   const [block] = useAutoAnimate();
   const [openDialog, setOpenDialog] = useState(false);
   const [resultsDialog, setResultsDialog] = useState(false);
@@ -107,19 +109,23 @@ export const FormedTest = () => {
   const [answeredQuestions, setAnsweredQuestions] = useState({});
   const [loadingQuestions, setLoadingQuestions] = useState(true);
   const [userChoice, setUserChoice] = useState({});
+  const [testFailed, setTestFailed] = useState(false);
+  const [hasAnswered, setHasAnswered] = useState(false);
 
   const {
     selectedCourse,
     selectedQuestionTicket,
     isSelectedRandomQuestions,
     backupLoaded,
-    clearSelectedQuestionTicket
+    clearSelectedQuestionTicket,
+    examOn
   } = useStore((state) => ({
     selectedCourse: state.selectedCourse,
     selectedQuestionTicket: state.selectedQuestionTicket,
     isSelectedRandomQuestions: state.isSelectedRandomQuestions,
     backupLoaded: state.backupLoaded,
-    clearSelectedQuestionTicket: state.clearSelectedQuestionTicket
+    clearSelectedQuestionTicket: state.clearSelectedQuestionTicket,
+    examOn: state.examOn
   }));
 
   const navigate = useNavigate();
@@ -199,28 +205,38 @@ export const FormedTest = () => {
   };
 
   const handleAnswerSelect = (questionIndex, question, answer) => {
-    setAnsweredQuestions(prevState => {
-      return { ...prevState, [questionIndex]: answer.isCorrect }
-    });
-    setUserChoice(prev => {
-      return { ...prev, [questionIndex]: answer.id }
-    })
+    if (answeredQuestions[questionIndex] !== undefined || testFailed) return;
+
+    setAnsweredQuestions((prevState) => ({
+      ...prevState,
+      [questionIndex]: answer.isCorrect
+    }));
+    setUserChoice((prev) => ({
+      ...prev,
+      [questionIndex]: answer.id
+    }));
+
+    setHasAnswered(true); // Отметим, что был дан хотя бы один ответ
   };
 
   useEffect(() => {
-    if (
-      Object.keys(userChoice).length === questions.length && questions.length > 0
-    ) {
+    const incorrectAnswersCount =
+      Object.values(answeredQuestions).length -
+      Object.values(answeredQuestions).reduce((partialSum, a) => partialSum + a, 0);
+
+    if (examOn && incorrectAnswersCount >= 4) {
+      setTestFailed(true);
+      setResultsDialog(true);
+    } else if (hasAnswered && Object.keys(answeredQuestions).length === questions.length) {
       setResultsDialog(true);
     }
-  }, [userChoice, questions.length]);
+  }, [answeredQuestions, examOn, questions.length, hasAnswered]);
 
   const getButtonColor = (questionIndex, answer) => {
     if (answeredQuestions[questionIndex] === undefined) return '#FFF';
     if (answeredQuestions[questionIndex] && userChoice[questionIndex] === answer.id) {
       return '#71B378';
     } else {
-      console.log('we are herer');
       if (answer.isCorrect) return '#71B378';
       if (answer.id === userChoice[questionIndex]) return '#CC4E5C';
     }
@@ -246,6 +262,7 @@ export const FormedTest = () => {
       return newIndex >= 0 ? newIndex : prevIndex;
     });
   };
+
   const isMdDown = useMediaQuery(customTheme.breakpoints.down('md'));
 
   return (
@@ -322,7 +339,8 @@ export const FormedTest = () => {
                             textTransform: 'none',
                             padding: '0',
                             color:
-                              answeredQuestions[index] === true ? 'green'
+                              answeredQuestions[index] === true
+                                ? 'green'
                                 : answeredQuestions[index] === false
                                   ? 'red'
                                   : currentQuestionIndex === index
@@ -405,9 +423,11 @@ export const FormedTest = () => {
                         <Grid
                           item
                           md={8}
-                          sx={{ ...(isMdDown && {
+                          sx={{
+                            ...(isMdDown && {
                               width: '100%'
-                            }) }}>
+                            })
+                          }}>
                           <FormControl component="fieldset" sx={{ width: '100%' }}>
                             <Grid container spacing={2} direction="column" sx={{ height: '100%' }}>
                               {questions[currentQuestionIndex].answers.map((answer, idx) => (
@@ -421,7 +441,11 @@ export const FormedTest = () => {
                                       )
                                     }
                                     backgroundColor={getButtonColor(currentQuestionIndex, answer)}
-                                    disabled={answeredQuestions[currentQuestionIndex] === true || answeredQuestions[currentQuestionIndex] === false}>
+                                    disabled={
+                                      answeredQuestions[currentQuestionIndex] === true ||
+                                      answeredQuestions[currentQuestionIndex] === false ||
+                                      testFailed
+                                    }>
                                     {answer.answer}
                                   </AnswerButton>
                                 </Grid>
@@ -430,27 +454,28 @@ export const FormedTest = () => {
                           </FormControl>
                         </Grid>
                       </Grid>
-                      {(answeredQuestions[currentQuestionIndex] !== undefined && questions[currentQuestionIndex].hint) && (
-                        <Typography
-                          variant="body2"
-                          sx={{
-                            color: 'black',
-                            marginTop: 2,
-                            boxShadow: '0px 6px 12px rgba(0, 0, 0, 0.15)',
-                            padding: 2,
-                            borderRadius: '8px',
-                            backgroundColor: 'white',
-                            transition: 'max-height 0.5s ease',
-                            border: '1px solid black',
-                            ...(isMdDown && {
+                      {answeredQuestions[currentQuestionIndex] !== undefined &&
+                        questions[currentQuestionIndex].hint && (
+                          <Typography
+                            variant="body2"
+                            sx={{
+                              color: 'black',
                               marginTop: 2,
-                              padding: 1,
-                              fontSize: '0.875rem'
-                            })
-                          }}>
-                          {questions[currentQuestionIndex].hint}
-                        </Typography>
-                      )}
+                              boxShadow: '0px 6px 12px rgba(0, 0, 0, 0.15)',
+                              padding: 2,
+                              borderRadius: '8px',
+                              backgroundColor: 'white',
+                              transition: 'max-height 0.5s ease',
+                              border: '1px solid black',
+                              ...(isMdDown && {
+                                marginTop: 2,
+                                padding: 1,
+                                fontSize: '0.875rem'
+                              })
+                            }}>
+                            {questions[currentQuestionIndex].hint}
+                          </Typography>
+                        )}
                       <Box
                         display="flex"
                         justifyContent="space-between"
@@ -717,7 +742,14 @@ export const FormedTest = () => {
                       {`Неправильні відповіді: ${Object.values(answeredQuestions).length - Object.values(answeredQuestions).reduce((partialSum, a) => partialSum + a, 0)}`}
                       <br />
                       <Typography component="span" fontWeight="bold" fontSize={20} color="black">
-                        {Object.values(answeredQuestions).length - Object.values(answeredQuestions).reduce((partialSum, a) => partialSum + a, 0) >= 3 ? 'Тест не складений' : 'Тест складений'}
+                        {Object.values(answeredQuestions).length -
+                          Object.values(answeredQuestions).reduce(
+                            (partialSum, a) => partialSum + a,
+                            0
+                          ) >=
+                        3
+                          ? 'Тест не складений'
+                          : 'Тест складений'}
                       </Typography>
                     </DialogContentText>
                   </DialogContent>
