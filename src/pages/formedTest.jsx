@@ -216,7 +216,7 @@ export const FormedTest = () => {
       [questionIndex]: answer.id
     }));
 
-    setHasAnswered(true); // Отметим, что был дан хотя бы один ответ
+    setHasAnswered(true);
   };
 
   useEffect(() => {
