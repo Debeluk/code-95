@@ -11,6 +11,7 @@ export const useStore = create((set) => ({
   selectedQuestionTicket: null,
   websocketConnectionFailed: false,
   backupLoaded: false,
+  examOn: false,
   setCourses: (courses) => set({ courses: courses }),
   setCurrentUser: (user) => set({ currentUser: user }),
   setSelectedCourse: (course) => set({ selectedCourse: course }),
@@ -30,7 +31,8 @@ export const useStore = create((set) => ({
       accessToken: null,
       refreshToken: null,
       sessionId: null,
-      websocketConnectionFailed: false
+      websocketConnectionFailed: false,
+      examOn: false
     }),
   deselectCourse: () =>
     set({
@@ -42,5 +44,6 @@ export const useStore = create((set) => ({
     set({
       selectedQuestionTicket: null,
       isSelectedRandomQuestions: null
-    })
+    }),
+  setExamOn: (value) => set({ examOn: value })
 }));

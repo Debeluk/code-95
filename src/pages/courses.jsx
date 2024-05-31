@@ -49,7 +49,11 @@ export const Courses = () => {
         marginTop: 4,
         marginBottom: 6,
         marginLeft: { xs: 2, sm: 4, md: 8, lg: 16, xl: 32 },
-        marginRight: { xs: 2, sm: 4, md: 8, lg: 16, xl: 32 }
+        marginRight: { xs: 2, sm: 4, md: 8, lg: 16, xl: 32 },
+        borderRadius: 4,
+        backgroundColor: 'white',
+        boxShadow: '0px 4px 12px rgba(0,0,0,0.1)',
+        padding: 4,
       }}
     >
       <Box textAlign="center" sx={{ marginBottom: 6 }}>
@@ -72,15 +76,15 @@ export const Courses = () => {
                 width: '100%',
                 padding: 2,
                 cursor: 'pointer',
-                boxShadow: '0px 4px 12px rgba(0,0,0,0.1)',
+                boxShadow: '0px 4px 12px rgba(0,0,0,0.3)',
                 transition: 'box-shadow 0.3s ease-in-out, border 0.3s ease-in-out',
-                border: '1px solid transparent',
+                border: '2px solid transparent',
                 '&:hover': {
                   boxShadow: '0px 4px 12px rgba(0,0,0,0.1)',
-                  border: '1px solid black'
+                  border: '2px solid black'
                 }
               }}
-              onClick={() => handleCardClick(course.name)}
+              onClick={() => handleCardClick(course?.name)}
             >
               <Typography
                 color="inherit"

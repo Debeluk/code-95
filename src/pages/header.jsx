@@ -127,7 +127,7 @@ export const Header = () => {
             }}>
             <Box display="flex" alignItems="center">
               <Typography variant="subtitle1" sx={{ marginRight: 1 }}>
-                {user.name ?? 'Name'}
+                {user?.name ?? 'Name'}
               </Typography>
               <ExpandMoreIcon />
             </Box>

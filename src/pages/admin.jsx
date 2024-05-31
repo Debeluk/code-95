@@ -332,7 +332,10 @@ export const Admin = () => {
         display: 'flex',
         flexDirection: 'column',
         maxWidth: '1120px',
-        padding: '0 8px'
+        padding: 3,
+        borderRadius: 4,
+        backgroundColor: 'white',
+        boxShadow: '0px 4px 12px rgba(0,0,0,0.1)',
       }}
     >
       <Box
@@ -429,11 +432,11 @@ export const Admin = () => {
         ) : (
           <FList
             height={360}
-            itemCount={filteredUsers.length}
+            itemCount={filteredUsers?.length}
             itemSize={50}
             width="100%"
             itemData={filteredUsers}
-            itemKey={(index, data) => data[index].id}
+            itemKey={(index, data) => data[index]?.id}
           >
             {({ index, style, data }) =>
               renderRow({
@@ -529,7 +532,7 @@ export const Admin = () => {
               {Array.isArray(courses) &&
                 courses.map((course) => (
                   <ListItem key={course.id} sx={{ borderBottom: '1px solid #ddd' }}>
-                    <ListItemText primary={course.name} />
+                    <ListItemText primary={course?.name} />
                     <ListItemSecondaryAction>
                       <Button
                         variant="outlined"
@@ -553,7 +556,7 @@ export const Admin = () => {
                             borderColor: 'black'
                           }
                         }}
-                        onClick={() => handleDeleteCourse(course.id)}
+                        onClick={() => handleDeleteCourse(course?.id)}
                       >
                         <DeleteIcon fontSize="small" />
                       </Button>

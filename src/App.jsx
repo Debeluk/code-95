@@ -99,6 +99,9 @@ export const App = () => {
       }
     } else if (wsRef.current) {
       wsRef.current.close(1000);
+    } else {
+      resetStore();
+      clearSession();
     }
   }, [accessToken, refreshToken, sessionId, backupLoaded]);
 

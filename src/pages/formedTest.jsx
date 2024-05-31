@@ -11,7 +11,8 @@ import {
   DialogContentText,
   DialogTitle,
   Paper,
-  CircularProgress, useMediaQuery
+  CircularProgress,
+  useMediaQuery
 } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
@@ -37,13 +38,18 @@ export const FormedTest = () => {
   });
 
   const dialogTheme = createTheme({});
+  const isMdDown = useMediaQuery(customTheme.breakpoints.down('md'));
+  const isMdUp = useMediaQuery(customTheme.breakpoints.up('md'));
+  const [showQuestionNumbers, setShowQuestionNumbers] = useState(false);
 
-  const AnswerButton = ({ onClick, backgroundColor, children, disabled }) => {
+  const AnswerButton = ({ onClick, backgroundColor, children, selected, disabled }) => {
     return (
       <button
         onClick={onClick}
         disabled={disabled}
         style={{
+          display: 'flex',
+          alignItems: 'center',
           width: '100%',
           minHeight: '75px',
           fontSize: '1rem',
@@ -59,8 +65,37 @@ export const FormedTest = () => {
           pointerEvents: disabled ? 'none' : 'auto',
           cursor: disabled ? 'default' : 'pointer',
           margin: 0,
-          color: 'black'
+          color: 'black',
+          textAlign: isMdUp ? 'left' : 'center',
+          paddingLeft: isMdUp ? '16px' : '0',
+          position: 'relative'
         }}>
+        <span
+          style={{
+            width: '20px',
+            height: '20px',
+            border: '1px solid black',
+            borderRadius: '50%',
+            display: 'inline-block',
+            marginRight: '8px',
+            position: 'relative',
+            paddingLeft: '4px',
+          }}>
+          {selected && (
+            <span
+              style={{
+                width: '8px',
+                height: '8px',
+                borderRadius: '50%',
+                backgroundColor: 'black',
+                position: 'absolute',
+                top: '50%',
+                left: '50%',
+                transform: 'translate(-50%, -50%)'
+              }}
+            />
+          )}
+        </span>
         {children}
       </button>
     );
@@ -97,6 +132,7 @@ export const FormedTest = () => {
       answers: shuffleArray(processAnswers(question.answers))
     }));
   };
+
   const [block] = useAutoAnimate();
   const [openDialog, setOpenDialog] = useState(false);
   const [resultsDialog, setResultsDialog] = useState(false);
@@ -107,19 +143,23 @@ export const FormedTest = () => {
   const [answeredQuestions, setAnsweredQuestions] = useState({});
   const [loadingQuestions, setLoadingQuestions] = useState(true);
   const [userChoice, setUserChoice] = useState({});
+  const [testFailed, setTestFailed] = useState(false);
+  const [hasAnswered, setHasAnswered] = useState(false);
 
   const {
     selectedCourse,
     selectedQuestionTicket,
     isSelectedRandomQuestions,
     backupLoaded,
-    clearSelectedQuestionTicket
+    clearSelectedQuestionTicket,
+    examOn
   } = useStore((state) => ({
     selectedCourse: state.selectedCourse,
     selectedQuestionTicket: state.selectedQuestionTicket,
     isSelectedRandomQuestions: state.isSelectedRandomQuestions,
     backupLoaded: state.backupLoaded,
-    clearSelectedQuestionTicket: state.clearSelectedQuestionTicket
+    clearSelectedQuestionTicket: state.clearSelectedQuestionTicket,
+    examOn: state.examOn
   }));
 
   const navigate = useNavigate();
@@ -199,30 +239,40 @@ export const FormedTest = () => {
   };
 
   const handleAnswerSelect = (questionIndex, question, answer) => {
-    setAnsweredQuestions(prevState => {
-      return { ...prevState, [questionIndex]: answer.isCorrect }
-    });
-    setUserChoice(prev => {
-      return { ...prev, [questionIndex]: answer.id }
-    })
+    if (answeredQuestions[questionIndex] !== undefined || testFailed) return;
+
+    setAnsweredQuestions((prevState) => ({
+      ...prevState,
+      [questionIndex]: answer.isCorrect
+    }));
+    setUserChoice((prev) => ({
+      ...prev,
+      [questionIndex]: answer.id
+    }));
+
+    setHasAnswered(true);
   };
 
   useEffect(() => {
-    if (
-      Object.keys(userChoice).length === questions.length && questions.length > 0
-    ) {
+    const incorrectAnswersCount =
+      Object.values(answeredQuestions).length -
+      Object.values(answeredQuestions).reduce((partialSum, a) => partialSum + a, 0);
+
+    if (examOn && incorrectAnswersCount >= 4) {
+      setTestFailed(true);
+      setResultsDialog(true);
+    } else if (hasAnswered && Object.keys(answeredQuestions).length === questions.length) {
       setResultsDialog(true);
     }
-  }, [userChoice, questions.length]);
+  }, [answeredQuestions, examOn, questions.length, hasAnswered]);
 
   const getButtonColor = (questionIndex, answer) => {
     if (answeredQuestions[questionIndex] === undefined) return '#FFF';
     if (answeredQuestions[questionIndex] && userChoice[questionIndex] === answer.id) {
-      return '#71B378';
+      return '#6BC06B';
     } else {
-      console.log('we are herer');
-      if (answer.isCorrect) return '#71B378';
-      if (answer.id === userChoice[questionIndex]) return '#CC4E5C';
+      if (answer.isCorrect) return '#6BC06B';
+      if (answer.id === userChoice[questionIndex]) return '#d32f2f';
     }
     return '#FFF';
   };
@@ -246,7 +296,6 @@ export const FormedTest = () => {
       return newIndex >= 0 ? newIndex : prevIndex;
     });
   };
-  const isMdDown = useMediaQuery(customTheme.breakpoints.down('md'));
 
   return (
     <ThemeProvider theme={customTheme}>
@@ -254,7 +303,6 @@ export const FormedTest = () => {
         sx={{
           overflowX: 'hidden',
           minHeight: '70vh',
-          backgroundColor: '#f5f5f5',
           paddingTop: 2,
           display: 'flex',
           justifyContent: 'center'
@@ -309,45 +357,125 @@ export const FormedTest = () => {
                     </Typography>
                   </Box>
 
-                  <Grid container spacing={1} marginBottom={4} className="question-grid">
-                    {questions.map((_, index) => (
-                      <Grid item xs="auto" key={index}>
-                        <Button
-                          variant="outlined"
-                          onClick={() => handleQuestionSelect(index)}
-                          sx={{
-                            minWidth: '38px',
-                            minHeight: '38px',
-                            borderRadius: '8px',
-                            textTransform: 'none',
-                            padding: '0',
-                            color:
-                              answeredQuestions[index] === true ? 'green'
-                                : answeredQuestions[index] === false
-                                  ? 'red'
-                                  : currentQuestionIndex === index
-                                    ? 'black'
-                                    : '#ccc',
-                            borderColor:
-                              answeredQuestions[index] === true
-                                ? 'green'
-                                : answeredQuestions[index] === false
-                                  ? 'red'
-                                  : currentQuestionIndex === index
-                                    ? 'black'
-                                    : '#ccc',
+                  {isMdDown ? (
+                    <Box textAlign="center" marginBottom={2}>
+                      <Button
+                        variant="contained"
+                        onClick={() => setShowQuestionNumbers(!showQuestionNumbers)}
+                        sx={{
+                          textTransform: 'none',
+                          backgroundColor: 'white',
+                          color: 'black',
+                          '&:hover': {
                             backgroundColor: 'white',
-                            '&:hover': {
-                              color: 'black',
-                              borderColor: 'black',
-                              backgroundColor: 'white'
-                            }
-                          }}>
-                          {index + 1}
-                        </Button>
-                      </Grid>
-                    ))}
-                  </Grid>
+                            borderColor: 'black',
+                            boxShadow: 'none'
+                          },
+                          boxShadow: 'none',
+                          border: '1px solid black'
+                        }}>
+                        Показати питання
+                      </Button>
+                      <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+                        {showQuestionNumbers && (
+                          <Grid
+                            container
+                            spacing={1}
+                            marginTop={2}
+                            gap={'4px'}
+                            padding={0}
+                            maxWidth={'290px'}
+                            marginLeft={0}
+                            className="question-grid">
+                            {questions.map((_, index) => (
+                              <Grid item key={index} className={"questionNumbers"}>
+                                <Button
+                                  variant="outlined"
+                                  onClick={() => handleQuestionSelect(index)}
+                                  sx={{
+                                    minWidth: '38px',
+                                    minHeight: '38px',
+                                    borderRadius: '8px',
+                                    textTransform: 'none',
+                                    padding: '0px',
+                                    color:
+                                      answeredQuestions[index] === true
+                                        ? 'green'
+                                        : answeredQuestions[index] === false
+                                          ? 'red'
+                                          : currentQuestionIndex === index
+                                            ? 'black'
+                                            : '#ccc',
+                                    borderColor:
+                                      answeredQuestions[index] === true
+                                        ? 'green'
+                                        : answeredQuestions[index] === false
+                                          ? 'red'
+                                          : currentQuestionIndex === index
+                                            ? 'black'
+                                            : '#ccc',
+                                    backgroundColor: 'white',
+                                    '&:hover': {
+                                      color: 'black',
+                                      borderColor: 'black',
+                                      backgroundColor: 'white'
+                                    }
+                                  }}>
+                                  {index + 1}
+                                </Button>
+                              </Grid>
+                            ))}
+                          </Grid>
+                        )}
+                      </Box>
+                    </Box>
+                  ) : (
+                    <Grid
+                      container
+                      spacing={1}
+                      marginBottom={4}
+                      justifyContent="center"
+                      className="question-grid">
+                      {questions.map((_, index) => (
+                        <Grid item xs="auto" key={index}>
+                          <Button
+                            variant="outlined"
+                            onClick={() => handleQuestionSelect(index)}
+                            sx={{
+                              minWidth: '38px',
+                              minHeight: '38px',
+                              borderRadius: '8px',
+                              textTransform: 'none',
+                              padding: '0',
+                              color:
+                                answeredQuestions[index] === true
+                                  ? 'green'
+                                  : answeredQuestions[index] === false
+                                    ? 'red'
+                                    : currentQuestionIndex === index
+                                      ? 'black'
+                                      : '#ccc',
+                              borderColor:
+                                answeredQuestions[index] === true
+                                  ? 'green'
+                                  : answeredQuestions[index] === false
+                                    ? 'red'
+                                    : currentQuestionIndex === index
+                                      ? 'black'
+                                      : '#ccc',
+                              backgroundColor: 'white',
+                              '&:hover': {
+                                color: 'black',
+                                borderColor: 'black',
+                                backgroundColor: 'white'
+                              }
+                            }}>
+                            {index + 1}
+                          </Button>
+                        </Grid>
+                      ))}
+                    </Grid>
+                  )}
 
                   {questions.length > 0 && (
                     <>
@@ -367,8 +495,9 @@ export const FormedTest = () => {
                         }}>
                         <Grid
                           item
-                          md={4}
+                          xs={12}
                           sx={{
+                            textAlign: isMdUp ? 'left' : 'center',
                             ...(isMdDown && {
                               width: '100%',
                               display: 'flex',
@@ -381,22 +510,25 @@ export const FormedTest = () => {
                             display="flex"
                             flexDirection="column"
                             justifyContent="center"
-                            alignItems="center"
+                            alignItems={isMdUp ? 'flex-start' : 'center'}
                             ref={block}>
                             <Typography variant="h6" gutterBottom sx={{ lineHeight: 1.25 }}>
                               {questions[currentQuestionIndex].question}
                             </Typography>
                             <div
-                              style={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
-                              {' '}
-                              {questions[currentQuestionIndex].image && (
+                              style={{
+                                width: '100%',
+                                display: 'flex',
+                                justifyContent: isMdUp ? 'flex-start' : 'center'
+                              }}>
+                              {questions[currentQuestionIndex]?.image && (
                                 <Box
                                   component="img"
                                   sx={{
                                     maxWidth: 300
                                   }}
                                   alt="Question Image"
-                                  src={questions[currentQuestionIndex].image}
+                                  src={questions[currentQuestionIndex]?.image}
                                 />
                               )}
                             </div>
@@ -404,10 +536,13 @@ export const FormedTest = () => {
                         </Grid>
                         <Grid
                           item
-                          md={8}
-                          sx={{ ...(isMdDown && {
+                          xs={12}
+                          sx={{
+                            textAlign: isMdUp ? 'left' : 'center',
+                            ...(isMdDown && {
                               width: '100%'
-                            }) }}>
+                            })
+                          }}>
                           <FormControl component="fieldset" sx={{ width: '100%' }}>
                             <Grid container spacing={2} direction="column" sx={{ height: '100%' }}>
                               {questions[currentQuestionIndex].answers.map((answer, idx) => (
@@ -421,7 +556,12 @@ export const FormedTest = () => {
                                       )
                                     }
                                     backgroundColor={getButtonColor(currentQuestionIndex, answer)}
-                                    disabled={answeredQuestions[currentQuestionIndex] === true || answeredQuestions[currentQuestionIndex] === false}>
+                                    disabled={
+                                      answeredQuestions[currentQuestionIndex] === true ||
+                                      answeredQuestions[currentQuestionIndex] === false ||
+                                      testFailed
+                                    }
+                                    selected={userChoice[currentQuestionIndex] === answer?.id}>
                                     {answer.answer}
                                   </AnswerButton>
                                 </Grid>
@@ -430,27 +570,29 @@ export const FormedTest = () => {
                           </FormControl>
                         </Grid>
                       </Grid>
-                      {(answeredQuestions[currentQuestionIndex] !== undefined && questions[currentQuestionIndex].hint) && (
-                        <Typography
-                          variant="body2"
-                          sx={{
-                            color: 'black',
-                            marginTop: 2,
-                            boxShadow: '0px 6px 12px rgba(0, 0, 0, 0.15)',
-                            padding: 2,
-                            borderRadius: '8px',
-                            backgroundColor: 'white',
-                            transition: 'max-height 0.5s ease',
-                            border: '1px solid black',
-                            ...(isMdDown && {
+                      {answeredQuestions[currentQuestionIndex] !== undefined &&
+                        questions[currentQuestionIndex].hint && (
+                          <Typography
+                            variant="body2"
+                            sx={{
+                              color: 'black',
                               marginTop: 2,
-                              padding: 1,
-                              fontSize: '0.875rem'
-                            })
-                          }}>
-                          {questions[currentQuestionIndex].hint}
-                        </Typography>
-                      )}
+                              boxShadow: '0px 6px 12px rgba(0, 0, 0, 0.15)',
+                              padding: 2,
+                              borderRadius: '8px',
+                              backgroundColor: 'white',
+                              transition: 'max-height 0.5s ease',
+                              border: '1px solid black',
+                              textAlign: isMdUp ? 'left' : 'center',
+                              ...(isMdDown && {
+                                marginTop: 2,
+                                padding: 1,
+                                fontSize: '0.875rem'
+                              })
+                            }}>
+                            {questions[currentQuestionIndex]?.hint}
+                          </Typography>
+                        )}
                       <Box
                         display="flex"
                         justifyContent="space-between"
@@ -717,7 +859,14 @@ export const FormedTest = () => {
                       {`Неправильні відповіді: ${Object.values(answeredQuestions).length - Object.values(answeredQuestions).reduce((partialSum, a) => partialSum + a, 0)}`}
                       <br />
                       <Typography component="span" fontWeight="bold" fontSize={20} color="black">
-                        {Object.values(answeredQuestions).length - Object.values(answeredQuestions).reduce((partialSum, a) => partialSum + a, 0) >= 3 ? 'Тест не складений' : 'Тест складений'}
+                        {Object.values(answeredQuestions).length -
+                          Object.values(answeredQuestions).reduce(
+                            (partialSum, a) => partialSum + a,
+                            0
+                          ) >=
+                        3
+                          ? 'Тест не складений'
+                          : 'Тест складений'}
                       </Typography>
                     </DialogContentText>
                   </DialogContent>
