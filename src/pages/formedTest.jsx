@@ -267,10 +267,10 @@ export const FormedTest = () => {
   const getButtonColor = (questionIndex, answer) => {
     if (answeredQuestions[questionIndex] === undefined) return '#FFF';
     if (answeredQuestions[questionIndex] && userChoice[questionIndex] === answer.id) {
-      return '#71B378';
+      return '#6BC06B';
     } else {
-      if (answer.isCorrect) return '#71B378';
-      if (answer.id === userChoice[questionIndex]) return '#CC4E5C';
+      if (answer.isCorrect) return '#6BC06B';
+      if (answer.id === userChoice[questionIndex]) return '#d32f2f';
     }
     return '#FFF';
   };
