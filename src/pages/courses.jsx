@@ -84,7 +84,7 @@ export const Courses = () => {
                   border: '2px solid black'
                 }
               }}
-              onClick={() => handleCardClick(course.name)}
+              onClick={() => handleCardClick(course?.name)}
             >
               <Typography
                 color="inherit"
