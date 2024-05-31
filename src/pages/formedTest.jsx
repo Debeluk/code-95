@@ -101,38 +101,6 @@ export const FormedTest = () => {
     );
   };
 
-  const processAnswers = (answers) => {
-    return answers.map((answer) => {
-      let processedAnswer = answer.answer.trim();
-      if (processedAnswer.endsWith('.') || processedAnswer.endsWith(';')) {
-        processedAnswer = processedAnswer.slice(0, -1);
-      }
-      processedAnswer = processedAnswer.charAt(0).toUpperCase() + processedAnswer.slice(1);
-      return { ...answer, answer: processedAnswer };
-    });
-  };
-
-  const shuffleQuestions = (questions) => {
-    const shuffleArray = (array) => {
-      let currentIndex = array.length,
-        randomIndex;
-
-      while (currentIndex !== 0) {
-        randomIndex = Math.floor(Math.random() * currentIndex);
-        currentIndex--;
-
-        [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
-      }
-
-      return array;
-    };
-
-    return questions.map((question) => ({
-      ...question,
-      answers: shuffleArray(processAnswers(question.answers))
-    }));
-  };
-
   const [block] = useAutoAnimate();
   const [openDialog, setOpenDialog] = useState(false);
   const [resultsDialog, setResultsDialog] = useState(false);
@@ -179,7 +147,7 @@ export const FormedTest = () => {
         axiosInstance
           .get(GET_TICKET_QUESTIONS(selectedCourse.id, selectedQuestionTicket))
           .then((response) => {
-            setQuestions(shuffleQuestions(response.data));
+            setQuestions(response.data);
           })
           .catch((error) => {
             console.error('Failed to fetch questions for the ticket:', error);
@@ -191,7 +159,7 @@ export const FormedTest = () => {
         axiosInstance
           .get(GET_RANDOM_TICKET_QUESTIONS(selectedCourse.id))
           .then((response) => {
-            setQuestions(shuffleQuestions(response.data));
+            setQuestions(response.data);
           })
           .catch((error) => {
             console.error('Failed to fetch random questions:', error);
@@ -258,7 +226,7 @@ export const FormedTest = () => {
       Object.values(answeredQuestions).length -
       Object.values(answeredQuestions).reduce((partialSum, a) => partialSum + a, 0);
 
-    if (examOn && incorrectAnswersCount >= 4) {
+    if (examOn && incorrectAnswersCount >= (selectedCourse?.maxMistakes ?? 3)) {
       setTestFailed(true);
       setResultsDialog(true);
     } else if (hasAnswered && Object.keys(answeredQuestions).length === questions.length) {
