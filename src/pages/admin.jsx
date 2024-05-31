@@ -332,7 +332,10 @@ export const Admin = () => {
         display: 'flex',
         flexDirection: 'column',
         maxWidth: '1120px',
-        padding: '0 8px'
+        padding: 3,
+        borderRadius: 4,
+        backgroundColor: 'white',
+        boxShadow: '0px 4px 12px rgba(0,0,0,0.1)',
       }}
     >
       <Box

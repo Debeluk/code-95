@@ -139,7 +139,8 @@ export const TicketsPage = () => {
               backgroundColor: 'white',
               color: 'black',
               boxShadow: '0px 2px 5px rgba(0, 0, 0, 0.3)',
-              transition: 'border-color 0.3s',
+              transition: 'box-shadow 0.3s ease-in-out, border 0.3s ease-in-out',
+              border: '2px solid transparent',
               '&:hover': {
                 backgroundColor: 'white',
                 borderColor: 'black',
@@ -162,7 +163,8 @@ export const TicketsPage = () => {
               backgroundColor: 'white',
               color: 'black',
               boxShadow: '0px 2px 5px rgba(0, 0, 0, 0.3)',
-              transition: 'border-color 0.3s',
+              transition: 'box-shadow 0.3s ease-in-out, border 0.3s ease-in-out',
+              border: '2px solid transparent',
               '&:hover': {
                 backgroundColor: 'white',
                 borderColor: 'black',
