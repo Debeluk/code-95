@@ -53,8 +53,14 @@ export const TicketsPage = () => {
         paddingBottom: 10,
         marginTop: 4,
         marginBottom: 6,
-        marginLeft: 'auto',
-        marginRight: 'auto'
+        marginLeft: { xs: 2, md: "auto"},
+        marginRight: { xs: 2, md: "auto"},
+        borderRadius: 4,
+        backgroundColor: 'white',
+        boxShadow: '0px 4px 12px rgba(0,0,0,0.1)',
+        padding: 4,
+        maxWidth: "1080px",
+        minHeight: "560px",
       }}>
       <Box
         sx={{
@@ -62,7 +68,7 @@ export const TicketsPage = () => {
           display: 'flex',
           justifyContent: 'flex-start',
           backgroundColor: 'transparent',
-          paddingLeft: { xs: 0, md: '256px' }
+          paddingLeft: { xs: 0, md: '0px' }
         }}>
         <BackButton sx={{ marginRight: 2 }} />
       </Box>
@@ -98,7 +104,8 @@ export const TicketsPage = () => {
                 backgroundColor: 'white',
                 color: 'black',
                 boxShadow: '0px 2px 5px rgba(0, 0, 0, 0.1)',
-                transition: 'border-color 0.3s',
+                transition: 'box-shadow 0.3s ease-in-out, border 0.3s ease-in-out',
+                border: '2px solid transparent',
                 '&:hover': {
                   backgroundColor: 'white',
                   borderColor: 'black',

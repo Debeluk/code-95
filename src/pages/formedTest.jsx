@@ -39,12 +39,16 @@ export const FormedTest = () => {
 
   const dialogTheme = createTheme({});
 
-  const AnswerButton = ({ onClick, backgroundColor, children, disabled }) => {
+  const AnswerButton = ({ onClick, backgroundColor, children, selected, disabled }) => {
+    const isMdUp = useMediaQuery(customTheme.breakpoints.up('md'));
+
     return (
       <button
         onClick={onClick}
         disabled={disabled}
         style={{
+          display: 'flex',
+          alignItems: 'center',
           width: '100%',
           minHeight: '75px',
           fontSize: '1rem',
@@ -60,8 +64,36 @@ export const FormedTest = () => {
           pointerEvents: disabled ? 'none' : 'auto',
           cursor: disabled ? 'default' : 'pointer',
           margin: 0,
-          color: 'black'
+          color: 'black',
+          textAlign: isMdUp ? 'left' : 'center',
+          paddingLeft: isMdUp ? '16px' : '0',
+          position: 'relative'
         }}>
+        <span
+          style={{
+            width: '20px',
+            height: '20px',
+            border: '1px solid black',
+            borderRadius: '50%',
+            display: 'inline-block',
+            marginRight: '8px',
+            position: 'relative'
+          }}>
+          {selected && (
+            <span
+              style={{
+                width: '8px',
+                height: '8px',
+                borderRadius: '50%',
+                backgroundColor: 'black',
+                position: 'absolute',
+                top: '50%',
+                left: '50%',
+                transform: 'translate(-50%, -50%)'
+              }}
+            />
+          )}
+        </span>
         {children}
       </button>
     );
@@ -264,6 +296,7 @@ export const FormedTest = () => {
   };
 
   const isMdDown = useMediaQuery(customTheme.breakpoints.down('md'));
+  const isMdUp = useMediaQuery(customTheme.breakpoints.up('md'));
 
   return (
     <ThemeProvider theme={customTheme}>
@@ -385,8 +418,9 @@ export const FormedTest = () => {
                         }}>
                         <Grid
                           item
-                          md={4}
+                          xs={12}
                           sx={{
+                            textAlign: isMdUp ? 'left' : 'center',
                             ...(isMdDown && {
                               width: '100%',
                               display: 'flex',
@@ -399,14 +433,17 @@ export const FormedTest = () => {
                             display="flex"
                             flexDirection="column"
                             justifyContent="center"
-                            alignItems="center"
+                            alignItems={isMdUp ? 'flex-start' : 'center'}
                             ref={block}>
                             <Typography variant="h6" gutterBottom sx={{ lineHeight: 1.25 }}>
                               {questions[currentQuestionIndex].question}
                             </Typography>
                             <div
-                              style={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
-                              {' '}
+                              style={{
+                                width: '100%',
+                                display: 'flex',
+                                justifyContent: isMdUp ? 'flex-start' : 'center'
+                              }}>
                               {questions[currentQuestionIndex].image && (
                                 <Box
                                   component="img"
@@ -422,8 +459,9 @@ export const FormedTest = () => {
                         </Grid>
                         <Grid
                           item
-                          md={8}
+                          xs={12}
                           sx={{
+                            textAlign: isMdUp ? 'left' : 'center',
                             ...(isMdDown && {
                               width: '100%'
                             })
@@ -445,7 +483,8 @@ export const FormedTest = () => {
                                       answeredQuestions[currentQuestionIndex] === true ||
                                       answeredQuestions[currentQuestionIndex] === false ||
                                       testFailed
-                                    }>
+                                    }
+                                    selected={userChoice[currentQuestionIndex] === answer.id}>
                                     {answer.answer}
                                   </AnswerButton>
                                 </Grid>
@@ -467,6 +506,7 @@ export const FormedTest = () => {
                               backgroundColor: 'white',
                               transition: 'max-height 0.5s ease',
                               border: '1px solid black',
+                              textAlign: isMdUp ? 'left' : 'center',
                               ...(isMdDown && {
                                 marginTop: 2,
                                 padding: 1,
