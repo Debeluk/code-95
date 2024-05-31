@@ -16,7 +16,6 @@ import {
 } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-import CheckIcon from '@mui/icons-material/Check';
 import { useStore } from '../store/store.js';
 import { axiosInstance } from '../axiosInterceptor.js';
 import { GET_TICKET_QUESTIONS, GET_RANDOM_TICKET_QUESTIONS } from '../constants/ApiURL.js';
@@ -79,7 +78,8 @@ export const FormedTest = () => {
             borderRadius: '50%',
             display: 'inline-block',
             marginRight: '8px',
-            position: 'relative'
+            position: 'relative',
+            paddingLeft: '4px',
           }}>
           {selected && (
             <span
@@ -376,53 +376,58 @@ export const FormedTest = () => {
                         }}>
                         Показати питання
                       </Button>
-                      {showQuestionNumbers && (
-                        <Grid
-                          container
-                          spacing={1}
-                          marginTop={2}
-                          justifyContent="center"
-                          className="question-grid">
-                          {questions.map((_, index) => (
-                            <Grid item xs="auto" key={index}>
-                              <Button
-                                variant="outlined"
-                                onClick={() => handleQuestionSelect(index)}
-                                sx={{
-                                  minWidth: '38px',
-                                  minHeight: '38px',
-                                  borderRadius: '8px',
-                                  textTransform: 'none',
-                                  padding: '0',
-                                  color:
-                                    answeredQuestions[index] === true
-                                      ? 'green'
-                                      : answeredQuestions[index] === false
-                                        ? 'red'
-                                        : currentQuestionIndex === index
-                                          ? 'black'
-                                          : '#ccc',
-                                  borderColor:
-                                    answeredQuestions[index] === true
-                                      ? 'green'
-                                      : answeredQuestions[index] === false
-                                        ? 'red'
-                                        : currentQuestionIndex === index
-                                          ? 'black'
-                                          : '#ccc',
-                                  backgroundColor: 'white',
-                                  '&:hover': {
-                                    color: 'black',
-                                    borderColor: 'black',
-                                    backgroundColor: 'white'
-                                  }
-                                }}>
-                                {index + 1}
-                              </Button>
-                            </Grid>
-                          ))}
-                        </Grid>
-                      )}
+                      <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+                        {showQuestionNumbers && (
+                          <Grid
+                            container
+                            spacing={1}
+                            marginTop={2}
+                            gap={'4px'}
+                            padding={0}
+                            maxWidth={'290px'}
+                            marginLeft={0}
+                            className="question-grid">
+                            {questions.map((_, index) => (
+                              <Grid item key={index} className={"questionNumbers"}>
+                                <Button
+                                  variant="outlined"
+                                  onClick={() => handleQuestionSelect(index)}
+                                  sx={{
+                                    minWidth: '38px',
+                                    minHeight: '38px',
+                                    borderRadius: '8px',
+                                    textTransform: 'none',
+                                    padding: '0px',
+                                    color:
+                                      answeredQuestions[index] === true
+                                        ? 'green'
+                                        : answeredQuestions[index] === false
+                                          ? 'red'
+                                          : currentQuestionIndex === index
+                                            ? 'black'
+                                            : '#ccc',
+                                    borderColor:
+                                      answeredQuestions[index] === true
+                                        ? 'green'
+                                        : answeredQuestions[index] === false
+                                          ? 'red'
+                                          : currentQuestionIndex === index
+                                            ? 'black'
+                                            : '#ccc',
+                                    backgroundColor: 'white',
+                                    '&:hover': {
+                                      color: 'black',
+                                      borderColor: 'black',
+                                      backgroundColor: 'white'
+                                    }
+                                  }}>
+                                  {index + 1}
+                                </Button>
+                              </Grid>
+                            ))}
+                          </Grid>
+                        )}
+                      </Box>
                     </Box>
                   ) : (
                     <Grid

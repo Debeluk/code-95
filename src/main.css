@@ -13,15 +13,6 @@ body,
     background: linear-gradient(to bottom, #d3d3d3, #f5f5f5) no-repeat top left;
 }
 
-.css-1wtg167-MuiGrid-root {
-    margin-left: 0 !important;
-}
-
-.css-sp2ku9-MuiGrid-root > .MuiGrid-item {
-    padding-left: 0 !important;
-    padding-top: 0 !important;
-}
-
 button,
 a,
 input,
@@ -29,4 +20,17 @@ textarea,
 select {
     outline: none !important;
     -webkit-tap-highlight-color: transparent;
+}
+
+.questionNumbers{
+    padding-top: 0 !important;
+    padding-left: 0 !important;
+}
+
+.question-grid{
+    justify-content: flex-start !important;
+
+    @media (max-width: 599px) {
+        max-width: 290px;
+    }
 }
