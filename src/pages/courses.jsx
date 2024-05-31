@@ -76,7 +76,7 @@ export const Courses = () => {
                 width: '100%',
                 padding: 2,
                 cursor: 'pointer',
-                boxShadow: '0px 4px 12px rgba(0,0,0,0.1)',
+                boxShadow: '0px 4px 12px rgba(0,0,0,0.3)',
                 transition: 'box-shadow 0.3s ease-in-out, border 0.3s ease-in-out',
                 border: '2px solid transparent',
                 '&:hover': {

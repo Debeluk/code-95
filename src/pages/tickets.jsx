@@ -53,14 +53,14 @@ export const TicketsPage = () => {
         paddingBottom: 10,
         marginTop: 4,
         marginBottom: 6,
-        marginLeft: { xs: 2, md: "auto"},
-        marginRight: { xs: 2, md: "auto"},
+        marginLeft: { xs: 2, md: 'auto' },
+        marginRight: { xs: 2, md: 'auto' },
         borderRadius: 4,
         backgroundColor: 'white',
         boxShadow: '0px 4px 12px rgba(0,0,0,0.1)',
         padding: 4,
-        maxWidth: "1080px",
-        minHeight: "560px",
+        maxWidth: '1080px',
+        minHeight: '560px'
       }}>
       <Box
         sx={{
@@ -103,7 +103,7 @@ export const TicketsPage = () => {
                 textTransform: 'none',
                 backgroundColor: 'white',
                 color: 'black',
-                boxShadow: '0px 2px 5px rgba(0, 0, 0, 0.1)',
+                boxShadow: '0px 2px 5px rgba(0, 0, 0, 0.3)',
                 transition: 'box-shadow 0.3s ease-in-out, border 0.3s ease-in-out',
                 border: '2px solid transparent',
                 '&:hover': {
@@ -138,7 +138,7 @@ export const TicketsPage = () => {
               textTransform: 'none',
               backgroundColor: 'white',
               color: 'black',
-              boxShadow: '0px 2px 5px rgba(0, 0, 0, 0.1)',
+              boxShadow: '0px 2px 5px rgba(0, 0, 0, 0.3)',
               transition: 'border-color 0.3s',
               '&:hover': {
                 backgroundColor: 'white',
@@ -161,7 +161,7 @@ export const TicketsPage = () => {
               textTransform: 'none',
               backgroundColor: 'white',
               color: 'black',
-              boxShadow: '0px 2px 5px rgba(0, 0, 0, 0.1)',
+              boxShadow: '0px 2px 5px rgba(0, 0, 0, 0.3)',
               transition: 'border-color 0.3s',
               '&:hover': {
                 backgroundColor: 'white',
@@ -174,37 +174,51 @@ export const TicketsPage = () => {
           </Button>
         </Grid>
       </Grid>
-
       <Box
         sx={{
           display: 'flex',
           justifyContent: 'center',
-          alignItems: 'center',
-          marginTop: 4
+          alignItems: 'center'
         }}>
-        <FormControlLabel
-          labelPlacement="start"
-          control={
-            <Switch
-              checked={examMode}
-              onChange={handleToggleChange}
-              color="default"
-              sx={{
-                '& .MuiSwitch-switchBase.Mui-checked': {
-                  color: 'orange'
-                },
-                '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
-                  backgroundColor: 'orange'
-                }
-              }}
-            />
-          }
-          label={
-            <Typography variant="h6" color={examMode ? 'orange' : 'textSecondary'}>
-              Режим Екзамену
-            </Typography>
-          }
-        />
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            marginTop: 0,
+            borderRadius: '16px',
+            boxShadow: '0px 2px 5px rgba(0, 0, 0, 0.3)',
+            maxWidth: '270px',
+            paddingLeft: 3,
+            paddingRight: 3,
+            paddingTop: 1,
+            paddingBottom: 1,
+          }}>
+          <FormControlLabel
+            labelPlacement="start"
+            sx={{marginLeft:0}}
+            control={
+              <Switch
+                checked={examMode}
+                onChange={handleToggleChange}
+                color="default"
+                sx={{
+                  '& .MuiSwitch-switchBase.Mui-checked': {
+                    color: 'orange'
+                  },
+                  '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
+                    backgroundColor: 'orange'
+                  }
+                }}
+              />
+            }
+            label={
+              <Typography color={examMode ? 'orange' : 'textSecondary'} fontSize={18}>
+                Режим Екзамену
+              </Typography>
+            }
+          />
+        </Box>
       </Box>
     </Box>
   );
