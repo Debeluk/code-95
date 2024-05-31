@@ -77,7 +77,7 @@ export const FormedTest = () => {
             borderRadius: '50%',
             display: 'inline-block',
             marginRight: '8px',
-            position: 'relative'
+            position: 'relative',
           }}>
           {selected && (
             <span
@@ -89,7 +89,7 @@ export const FormedTest = () => {
                 position: 'absolute',
                 top: '50%',
                 left: '50%',
-                transform: 'translate(-50%, -50%)'
+                transform: 'translate(-50%, -50%)',
               }}
             />
           )}
@@ -304,7 +304,6 @@ export const FormedTest = () => {
         sx={{
           overflowX: 'hidden',
           minHeight: '70vh',
-          backgroundColor: '#f5f5f5',
           paddingTop: 2,
           display: 'flex',
           justifyContent: 'center'
