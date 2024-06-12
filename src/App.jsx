@@ -10,7 +10,7 @@ import { ProtectedRoute } from './components/req/protectedRoute.jsx';
 import { loadState, saveState } from './store/persistence.js';
 import { Box } from '@mui/material';
 import Notiflix from 'notiflix';
-import { GET_CURRENT_USER, WEB_SOCKET_CONNECTION } from './constants/ApiURL.js';
+import {GET_CURRENT_USER, REFRESH, WEB_SOCKET_CONNECTION} from './constants/ApiURL.js';
 import secureLocalStorage from 'react-secure-storage';
 import { ACCESS_TOKEN, REFRESH_TOKEN } from './constants/authConstants.js';
 import {
@@ -20,14 +20,17 @@ import {
   TEST_PATH,
   TICKETS_PATH
 } from './constants/PathURL.js';
-import { axiosInstance } from './axiosInterceptor.js';
+import {axiosInstance} from './axiosInterceptor.js';
 import { useStore } from './store/store.js';
 import { useAutoAnimate } from '@formkit/auto-animate/react';
 import { ScrollTop } from './components/scrollTop/scrollTop.js';
+import axios from "axios";
 
 export const App = () => {
   const wsRef = useRef(null);
   const reconnectTimeoutRef = useRef(null);
+  const [attemptsLeft, setAttemptsLeft] = React.useState(1);
+  const intervalRef = useRef(null);
   const [block] = useAutoAnimate();
   const {
     accessToken,
@@ -85,6 +88,7 @@ export const App = () => {
     if (!backupLoaded) return;
     if (accessToken && refreshToken) {
       if (!sessionId && !websocketConnectionFailed) {
+        setAttemptsLeft(1);
         connectWebSocket();
       }
       if (sessionId && !currentUser) {
@@ -119,11 +123,19 @@ export const App = () => {
 
     ws.onopen = () => {
       console.log('WebSocket connected');
+
+      intervalRef.current = setInterval(() => {
+        if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
+          const currentDateTime = new Date().toISOString();
+          wsRef.current.send(`Time: ${currentDateTime}`);
+        }
+      }, 85000);
     };
 
     ws.onmessage = (event) => {
       const message = event.data;
       if (message.startsWith('SESSION:')) {
+        setAttemptsLeft(1);
         const sessionId = message.split(' ')[1];
         console.log('Session ID received:', sessionId);
         setSessionId(sessionId);
@@ -135,9 +147,30 @@ export const App = () => {
         switch (event.reason) {
           case 'Bad token':
             console.error('WebSocket closed: Bad token');
-            resetStore();
-            clearSession();
-            setWebsocketConnectionFailed(true);
+            if (attemptsLeft > 0) {
+              setAttemptsLeft(attemptsLeft - 1);
+              if (refreshToken) {
+                axios
+                  .post(REFRESH, { token: refreshToken })
+                  .then(({ data }) => {
+                    secureLocalStorage.setItem(ACCESS_TOKEN, data.accessToken);
+                    secureLocalStorage.setItem(REFRESH_TOKEN, data.refreshToken);
+                    setAccessToken(data.accessToken);
+                    setRefreshToken(data.refreshToken);
+                    reconnectWebSocket();
+                  })
+                  .catch((err) => {
+                    console.error(err);
+                    resetStore();
+                    clearSession();
+                    setWebsocketConnectionFailed(true);
+                  });
+              }
+            } else {
+              resetStore();
+              clearSession();
+              setWebsocketConnectionFailed(true);
+            }
             break;
           case 'Session exists':
             console.error('WebSocket closed: Session exists');
@@ -161,6 +194,10 @@ export const App = () => {
           reconnectWebSocket();
         }
         setSessionId(null);
+      }
+
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
       }
     };
 
