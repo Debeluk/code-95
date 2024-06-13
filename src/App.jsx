@@ -1,16 +1,17 @@
 import React, { useEffect, useRef } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
 import { LoginPage } from './pages/login.jsx';
 import { Header } from './pages/header.jsx';
 import { Courses } from './pages/courses.jsx';
 import { TicketsPage } from './pages/tickets.jsx';
 import { FormedTest } from './pages/formedTest.jsx';
 import { Admin } from './pages/admin.jsx';
+import { ExistSession } from './pages/existSession.jsx';
 import { ProtectedRoute } from './components/req/protectedRoute.jsx';
 import { loadState, saveState } from './store/persistence.js';
 import { Box } from '@mui/material';
 import Notiflix from 'notiflix';
-import {GET_CURRENT_USER, REFRESH, WEB_SOCKET_CONNECTION} from './constants/ApiURL.js';
+import { GET_CURRENT_USER, REFRESH, WEB_SOCKET_CONNECTION } from './constants/ApiURL.js';
 import secureLocalStorage from 'react-secure-storage';
 import { ACCESS_TOKEN, REFRESH_TOKEN } from './constants/authConstants.js';
 import {
@@ -18,13 +19,14 @@ import {
   COURSES_PATH,
   LOGIN_PATH,
   TEST_PATH,
-  TICKETS_PATH
+  TICKETS_PATH,
+  EXIST_SESSION_PATH
 } from './constants/PathURL.js';
-import {axiosInstance} from './axiosInterceptor.js';
+import { axiosInstance } from './axiosInterceptor.js';
 import { useStore } from './store/store.js';
 import { useAutoAnimate } from '@formkit/auto-animate/react';
 import { ScrollTop } from './components/scrollTop/scrollTop.js';
-import axios from "axios";
+import axios from 'axios';
 
 export const App = () => {
   const wsRef = useRef(null);
@@ -44,7 +46,8 @@ export const App = () => {
     setRefreshToken,
     setSessionId,
     backupLoaded,
-    resetStore
+    resetStore,
+    setNeedNavigateToSessionExists
   } = useStore((state) => ({
     accessToken: state.accessToken,
     refreshToken: state.refreshToken,
@@ -58,7 +61,9 @@ export const App = () => {
     websocketConnectionFailed: state.websocketConnectionFailed,
     setWebsocketConnectionFailed: state.setWebsocketConnectionFailed,
     resetStore: state.resetStore,
+    setNeedNavigateToSessionExists: state.setNeedNavigateToSessionExists
   }));
+
   useEffect(() => {
     loadState();
 
@@ -94,12 +99,10 @@ export const App = () => {
       if (sessionId && !currentUser) {
         axiosInstance
           .get(GET_CURRENT_USER)
-          .then((response) => {
-            setCurrentUser(response.data);
-          })
-          .catch((err) => {
-            console.error('Error during login or fetching user details:', err.message);
-          });
+          .then((response) => setCurrentUser(response.data))
+          .catch((err) =>
+            console.error('Error during login or fetching user details:', err.message)
+          );
       }
     } else if (wsRef.current) {
       wsRef.current.close(1000);
@@ -122,8 +125,6 @@ export const App = () => {
     wsRef.current = ws;
 
     ws.onopen = () => {
-      console.log('WebSocket connected');
-
       intervalRef.current = setInterval(() => {
         if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
           const currentDateTime = new Date().toISOString();
@@ -137,7 +138,6 @@ export const App = () => {
       if (message.startsWith('SESSION:')) {
         setAttemptsLeft(1);
         const sessionId = message.split(' ')[1];
-        console.log('Session ID received:', sessionId);
         setSessionId(sessionId);
       }
     };
@@ -146,7 +146,6 @@ export const App = () => {
       if (event.code === 1008) {
         switch (event.reason) {
           case 'Bad token':
-            console.error('WebSocket closed: Bad token');
             if (attemptsLeft > 0) {
               setAttemptsLeft(attemptsLeft - 1);
               if (refreshToken) {
@@ -173,14 +172,12 @@ export const App = () => {
             }
             break;
           case 'Session exists':
-            console.error('WebSocket closed: Session exists');
             Notiflix.Notify.failure('Session already exists. Please logout from other device.');
             resetStore();
             clearSession();
-            setWebsocketConnectionFailed(true);
+            setNeedNavigateToSessionExists(true);
             break;
           default:
-            console.error('WebSocket closed: ', event.reason);
             setSessionId(null);
             setWebsocketConnectionFailed(true);
         }
@@ -189,7 +186,6 @@ export const App = () => {
         setWebsocketConnectionFailed(true);
         reconnectWebSocket();
       } else {
-        console.error('WebSocket closed with code: ', event.code);
         if (event.code !== 1000) {
           reconnectWebSocket();
         }
@@ -202,7 +198,6 @@ export const App = () => {
     };
 
     ws.onerror = (error) => {
-      console.error('WebSocket error:', error);
       reconnectWebSocket();
     };
 
@@ -225,60 +220,78 @@ export const App = () => {
   return (
     <Box sx={{ minHeight: '100vh', backgroundColor: 'transparent' }} ref={block}>
       <Router>
-        <Routes>
-          <Route
-            path={LOGIN_PATH}
-            element={
-              <ProtectedRoute>
-                <ScrollTop />
-                <LoginPage />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path={COURSES_PATH}
-            element={
-              <ProtectedRoute requiredRole="USER">
-                <Header />
-                <ScrollTop />
-                <Courses />
-                {/*<Footer />*/}
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path={TICKETS_PATH}
-            element={
-              <ProtectedRoute requiredRole="USER">
-                <Header />
-                <ScrollTop />
-                <TicketsPage />
-                {/*<Footer />*/}
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path={TEST_PATH}
-            element={
-              <ProtectedRoute requiredRole="USER">
-                <Header />
-                <ScrollTop />
-                <FormedTest />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path={ADMIN_PATH}
-            element={
-              <ProtectedRoute requiredRole="ADMIN">
-                <Header />
-                <ScrollTop />
-                <Admin />
-              </ProtectedRoute>
-            }
-          />
-        </Routes>
+        <AppRoutes />
       </Router>
     </Box>
+  );
+};
+
+const AppRoutes = () => {
+  const navigate = useNavigate();
+  const { needNavigateToSessionExists, setNeedNavigateToSessionExists } = useStore((state) => ({
+    needNavigateToSessionExists: state.needNavigateToSessionExists,
+    setNeedNavigateToSessionExists: state.setNeedNavigateToSessionExists
+  }));
+
+  useEffect(() => {
+    if (needNavigateToSessionExists) {
+      navigate(EXIST_SESSION_PATH);
+      setNeedNavigateToSessionExists(false);
+    }
+  }, [needNavigateToSessionExists, navigate, setNeedNavigateToSessionExists]);
+
+  return (
+    <Routes>
+      <Route
+        path={LOGIN_PATH}
+        element={
+          <ProtectedRoute>
+            <ScrollTop />
+            <LoginPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path={COURSES_PATH}
+        element={
+          <ProtectedRoute requiredRole="USER">
+            <Header />
+            <ScrollTop />
+            <Courses />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path={TICKETS_PATH}
+        element={
+          <ProtectedRoute requiredRole="USER">
+            <Header />
+            <ScrollTop />
+            <TicketsPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path={TEST_PATH}
+        element={
+          <ProtectedRoute requiredRole="USER">
+            <Header />
+            <ScrollTop />
+            <FormedTest />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path={ADMIN_PATH}
+        element={
+          <ProtectedRoute requiredRole="ADMIN">
+            <Header />
+            <ScrollTop />
+            <Admin />
+          </ProtectedRoute>
+        }
+      />
+      <Route path={EXIST_SESSION_PATH} element={<ExistSession />} />
+    </Routes>
   );
 };

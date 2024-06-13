@@ -170,7 +170,10 @@ export const Header = () => {
                 backgroundColor: 'white',
                 color: 'black'
               }}>
-              Доступ до: {new Date(user.expireAt).toLocaleDateString('uk-UA') ?? 'дата не вказана'}
+              Доступ до:{' '}
+              {user?.expireAt
+                ? new Date(user.expireAt).toLocaleDateString('uk-UA')
+                : 'дата не вказана'}
             </Box>
           </MenuItem>
           <MenuItem

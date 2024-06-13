@@ -4,3 +4,4 @@ export const TICKETS_PATH = '/tickets';
 export const TEST_PATH = '/test';
 export const ADMIN_PATH = '/admin';
 export const USER_INFO_PATH = '/user-info';
+export const EXIST_SESSION_PATH = '/session-error'
