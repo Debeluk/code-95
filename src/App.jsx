@@ -200,7 +200,7 @@ export const App = () => {
             }
             break;
           case 'Session exists':
-            Notiflix.Notify.failure('Session already exists. Please logout from other device.');
+            Notiflix.Notify.failure('Session already exists. Please logout from other device!');
             resetStore();
             clearSession();
             reject(new Error('Session exists'));
