@@ -14,7 +14,7 @@ const COURSE = '/course';
 
 export const LOGIN = `${BACKEND_URL}${API}${V1}${AUTH}/login`;
 export const REFRESH = `${BACKEND_URL}${API}${V1}${AUTH}/refresh`;
-export const CREATE_GET_USER = `${BACKEND_URL}${API}${V1}/user`; //GET TO GET ALL USERS, POST TO CREATE USER
+export const CREATE_GET_USER = `${BACKEND_URL}${API}${V1}/user`; //GET TO GET ALL USERS, POST TO CREATE USER!
 export const GET_CURRENT_USER = `${BACKEND_URL}${API}${V1}${USER}/current`; //USER INFO CURRENT
 export const USER_USE = `${BACKEND_URL}${API}${V1}${USER}/{user_id}`; //GET TO GET USER INFO BY ID, PUT TO UPDATE USER BY ID, DELETE TO DELETE USER BY ID
 export const CREATE_COURSE = `${BACKEND_URL}${API}${V1}${COURSE}`;

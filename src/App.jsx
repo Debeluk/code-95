@@ -1,16 +1,17 @@
-import React, { useEffect, useRef } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import React, { useEffect, useRef, useState } from 'react';
+import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
 import { LoginPage } from './pages/login.jsx';
 import { Header } from './pages/header.jsx';
 import { Courses } from './pages/courses.jsx';
 import { TicketsPage } from './pages/tickets.jsx';
 import { FormedTest } from './pages/formedTest.jsx';
 import { Admin } from './pages/admin.jsx';
+import { ExistSession } from './pages/existSession.jsx';
 import { ProtectedRoute } from './components/req/protectedRoute.jsx';
 import { loadState, saveState } from './store/persistence.js';
-import { Box } from '@mui/material';
+import { Box, CircularProgress } from '@mui/material';
 import Notiflix from 'notiflix';
-import {GET_CURRENT_USER, REFRESH, WEB_SOCKET_CONNECTION} from './constants/ApiURL.js';
+import { GET_CURRENT_USER, REFRESH, WEB_SOCKET_CONNECTION } from './constants/ApiURL.js';
 import secureLocalStorage from 'react-secure-storage';
 import { ACCESS_TOKEN, REFRESH_TOKEN } from './constants/authConstants.js';
 import {
@@ -18,20 +19,22 @@ import {
   COURSES_PATH,
   LOGIN_PATH,
   TEST_PATH,
-  TICKETS_PATH
+  TICKETS_PATH,
+  EXIST_SESSION_PATH
 } from './constants/PathURL.js';
-import {axiosInstance} from './axiosInterceptor.js';
+import { axiosInstance } from './axiosInterceptor.js';
 import { useStore } from './store/store.js';
 import { useAutoAnimate } from '@formkit/auto-animate/react';
 import { ScrollTop } from './components/scrollTop/scrollTop.js';
-import axios from "axios";
+import axios from 'axios';
 
 export const App = () => {
   const wsRef = useRef(null);
   const reconnectTimeoutRef = useRef(null);
-  const [attemptsLeft, setAttemptsLeft] = React.useState(1);
+  const [attemptsLeft, setAttemptsLeft] = useState(1);
   const intervalRef = useRef(null);
   const [block] = useAutoAnimate();
+  const [loading, setLoading] = useState(true);
   const {
     accessToken,
     refreshToken,
@@ -44,7 +47,8 @@ export const App = () => {
     setRefreshToken,
     setSessionId,
     backupLoaded,
-    resetStore
+    resetStore,
+    setNeedNavigateToSessionExists
   } = useStore((state) => ({
     accessToken: state.accessToken,
     refreshToken: state.refreshToken,
@@ -58,7 +62,9 @@ export const App = () => {
     websocketConnectionFailed: state.websocketConnectionFailed,
     setWebsocketConnectionFailed: state.setWebsocketConnectionFailed,
     resetStore: state.resetStore,
+    setNeedNavigateToSessionExists: state.setNeedNavigateToSessionExists
   }));
+
   useEffect(() => {
     loadState();
 
@@ -85,29 +91,50 @@ export const App = () => {
   }, []);
 
   useEffect(() => {
-    if (!backupLoaded) return;
-    if (accessToken && refreshToken) {
+    const initializeApp = async () => {
+      if (!backupLoaded) return;
+      if (accessToken && refreshToken) {
+        try {
+          await handleWebSocketConnection();
+        } catch (error) {
+          if (error.message === 'Session exists') {
+            setNeedNavigateToSessionExists(true);
+          } else {
+            setLoading(false);
+          }
+        }
+        setLoading(false);
+      } else {
+        resetStore();
+        clearSession();
+        setLoading(false);
+      }
+    };
+
+    initializeApp();
+  }, [accessToken, refreshToken, sessionId, backupLoaded]);
+
+  const handleWebSocketConnection = () => {
+    return new Promise((resolve, reject) => {
       if (!sessionId && !websocketConnectionFailed) {
         setAttemptsLeft(1);
-        connectWebSocket();
-      }
-      if (sessionId && !currentUser) {
+        connectWebSocket(resolve, reject);
+      } else if (sessionId && !currentUser) {
         axiosInstance
           .get(GET_CURRENT_USER)
           .then((response) => {
             setCurrentUser(response.data);
+            resolve();
           })
           .catch((err) => {
             console.error('Error during login or fetching user details:', err.message);
+            reject(err);
           });
+      } else {
+        resolve();
       }
-    } else if (wsRef.current) {
-      wsRef.current.close(1000);
-    } else {
-      resetStore();
-      clearSession();
-    }
-  }, [accessToken, refreshToken, sessionId, backupLoaded]);
+    });
+  };
 
   const clearSession = () => {
     setAccessToken(null);
@@ -115,15 +142,14 @@ export const App = () => {
     setSessionId(null);
     secureLocalStorage.removeItem(ACCESS_TOKEN);
     secureLocalStorage.removeItem(REFRESH_TOKEN);
+    reconnectTimeoutRef.current = null;
   };
 
-  const connectWebSocket = () => {
+  const connectWebSocket = (resolve, reject) => {
     const ws = new WebSocket(WEB_SOCKET_CONNECTION(accessToken, refreshToken));
     wsRef.current = ws;
 
     ws.onopen = () => {
-      console.log('WebSocket connected');
-
       intervalRef.current = setInterval(() => {
         if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
           const currentDateTime = new Date().toISOString();
@@ -137,8 +163,8 @@ export const App = () => {
       if (message.startsWith('SESSION:')) {
         setAttemptsLeft(1);
         const sessionId = message.split(' ')[1];
-        console.log('Session ID received:', sessionId);
         setSessionId(sessionId);
+        resolve();
       }
     };
 
@@ -146,7 +172,6 @@ export const App = () => {
       if (event.code === 1008) {
         switch (event.reason) {
           case 'Bad token':
-            console.error('WebSocket closed: Bad token');
             if (attemptsLeft > 0) {
               setAttemptsLeft(attemptsLeft - 1);
               if (refreshToken) {
@@ -157,41 +182,41 @@ export const App = () => {
                     secureLocalStorage.setItem(REFRESH_TOKEN, data.refreshToken);
                     setAccessToken(data.accessToken);
                     setRefreshToken(data.refreshToken);
-                    reconnectWebSocket();
+                    reconnectWebSocket(resolve, reject);
                   })
                   .catch((err) => {
                     console.error(err);
                     resetStore();
                     clearSession();
                     setWebsocketConnectionFailed(true);
+                    reject(err);
                   });
               }
             } else {
               resetStore();
               clearSession();
               setWebsocketConnectionFailed(true);
+              reject(new Error('Bad token'));
             }
             break;
           case 'Session exists':
-            console.error('WebSocket closed: Session exists');
-            Notiflix.Notify.failure('Session already exists. Please logout from other device.');
+            Notiflix.Notify.failure('Session already exists. Please logout from other device!');
             resetStore();
             clearSession();
-            setWebsocketConnectionFailed(true);
+            reject(new Error('Session exists'));
             break;
           default:
-            console.error('WebSocket closed: ', event.reason);
             setSessionId(null);
             setWebsocketConnectionFailed(true);
+            reject(new Error('WebSocket error'));
         }
       } else if (event.code === 1006) {
         setSessionId(null);
         setWebsocketConnectionFailed(true);
-        reconnectWebSocket();
+        reconnectWebSocket(resolve, reject);
       } else {
-        console.error('WebSocket closed with code: ', event.code);
         if (event.code !== 1000) {
-          reconnectWebSocket();
+          reconnectWebSocket(resolve, reject);
         }
         setSessionId(null);
       }
@@ -202,83 +227,103 @@ export const App = () => {
     };
 
     ws.onerror = (error) => {
-      console.error('WebSocket error:', error);
-      reconnectWebSocket();
-    };
-
-    return () => {
-      ws.close(1000);
+      reconnectWebSocket(resolve, reject);
     };
   };
 
-  const reconnectWebSocket = () => {
+  const reconnectWebSocket = (resolve, reject) => {
     if (reconnectTimeoutRef.current) {
       clearTimeout(reconnectTimeoutRef.current);
     }
     reconnectTimeoutRef.current = setTimeout(() => {
       if (accessToken && refreshToken) {
-        connectWebSocket();
+        connectWebSocket(resolve, reject);
       }
     }, 5000);
   };
 
   return (
     <Box sx={{ minHeight: '100vh', backgroundColor: 'transparent' }} ref={block}>
-      <Router>
-        <Routes>
-          <Route
-            path={LOGIN_PATH}
-            element={
-              <ProtectedRoute>
-                <ScrollTop />
-                <LoginPage />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path={COURSES_PATH}
-            element={
-              <ProtectedRoute requiredRole="USER">
-                <Header />
-                <ScrollTop />
-                <Courses />
-                {/*<Footer />*/}
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path={TICKETS_PATH}
-            element={
-              <ProtectedRoute requiredRole="USER">
-                <Header />
-                <ScrollTop />
-                <TicketsPage />
-                {/*<Footer />*/}
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path={TEST_PATH}
-            element={
-              <ProtectedRoute requiredRole="USER">
-                <Header />
-                <ScrollTop />
-                <FormedTest />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path={ADMIN_PATH}
-            element={
-              <ProtectedRoute requiredRole="ADMIN">
-                <Header />
-                <ScrollTop />
-                <Admin />
-              </ProtectedRoute>
-            }
-          />
-        </Routes>
-      </Router>
+      {loading ? (
+        <Box
+          sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+          <CircularProgress sx={{ color: 'black' }} />
+        </Box>
+      ) : (
+        <Router>
+          <AppRoutes />
+        </Router>
+      )}
     </Box>
+  );
+};
+
+const AppRoutes = () => {
+  const navigate = useNavigate();
+  const { needNavigateToSessionExists, setNeedNavigateToSessionExists } = useStore((state) => ({
+    needNavigateToSessionExists: state.needNavigateToSessionExists,
+    setNeedNavigateToSessionExists: state.setNeedNavigateToSessionExists
+  }));
+
+  useEffect(() => {
+    if (needNavigateToSessionExists) {
+      navigate(EXIST_SESSION_PATH);
+      setNeedNavigateToSessionExists(false);
+    }
+  }, [needNavigateToSessionExists, navigate, setNeedNavigateToSessionExists]);
+
+  return (
+    <Routes>
+      <Route
+        path={LOGIN_PATH}
+        element={
+          <ProtectedRoute>
+            <ScrollTop />
+            <LoginPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path={COURSES_PATH}
+        element={
+          <ProtectedRoute requiredRole="USER">
+            <Header />
+            <ScrollTop />
+            <Courses />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path={TICKETS_PATH}
+        element={
+          <ProtectedRoute requiredRole="USER">
+            <Header />
+            <ScrollTop />
+            <TicketsPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path={TEST_PATH}
+        element={
+          <ProtectedRoute requiredRole="USER">
+            <Header />
+            <ScrollTop />
+            <FormedTest />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path={ADMIN_PATH}
+        element={
+          <ProtectedRoute requiredRole="ADMIN">
+            <Header />
+            <ScrollTop />
+            <Admin />
+          </ProtectedRoute>
+        }
+      />
+      <Route path={EXIST_SESSION_PATH} element={<ExistSession />} />
+    </Routes>
   );
 };
