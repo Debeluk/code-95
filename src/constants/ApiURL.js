@@ -1,6 +1,6 @@
 const isProd = false;
 
-export const BACKEND_URL = isProd ? import.meta.env.VITE_BACKEND_URL : 'https://code-95-backend-buyxux5ycq-lm.a.run.app';
+export const BACKEND_URL = isProd ? import.meta.env.VITE_BACKEND_URL : 'http://localhost:8001';
 
 const API = '/api';
 
