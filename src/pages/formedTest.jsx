@@ -248,7 +248,7 @@ export const FormedTest = () => {
   const handleReviewQuestions = () => {
     setResultsDialog(false);
     setShowBackButton(true);
-    setShowEndTestButton(false);
+    // setShowEndTestButton(false);
   };
 
   const handleNextQuestion = () => {
