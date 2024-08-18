@@ -62,7 +62,7 @@ export const Courses = () => {
         </Typography>
       </Box>
       <Grid container spacing={4} justifyContent="center" alignItems="stretch">
-        {courses.map((course) => (
+        {courses.sort((a,b) => a.id - b.id).map((course) => (
           <Grid item xs={12} sm={6} md={4} key={course.id}>
             <Paper
               elevation={3}
