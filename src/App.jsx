@@ -99,11 +99,10 @@ export const App = () => {
         } catch (error) {
           if (error.message === 'Session exists') {
             setNeedNavigateToSessionExists(true);
-          } else {
-            setLoading(false);
           }
+        } finally {
+          setLoading(false);
         }
-        setLoading(false);
       } else {
         resetStore();
         clearSession();
@@ -143,6 +142,10 @@ export const App = () => {
     secureLocalStorage.removeItem(ACCESS_TOKEN);
     secureLocalStorage.removeItem(REFRESH_TOKEN);
     reconnectTimeoutRef.current = null;
+    if (wsRef.current) {
+      wsRef.current?.close(1000);
+      wsRef.current = null;
+    }
   };
 
   const connectWebSocket = (resolve, reject) => {

@@ -246,9 +246,9 @@ export const FormedTest = () => {
   };
 
   const handleReviewQuestions = () => {
-    setResultsDialog(false);
     setShowBackButton(true);
-    // setShowEndTestButton(false);
+    setShowEndTestButton(true);
+    setResultsDialog(false);
   };
 
   const handleNextQuestion = () => {
