@@ -72,6 +72,7 @@ export const FormedTest = () => {
         }}>
         <span
           style={{
+            minWidth: '20px',
             width: '20px',
             height: '20px',
             border: '1px solid black',
